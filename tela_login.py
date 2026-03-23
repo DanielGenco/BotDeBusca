@@ -5,7 +5,7 @@ from PIL import Image
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 SIDEBAR_BG   = "#7B2320"
-CARD_BG      = "#FFFFFF"
+CARD_BG      = "#7B2320"
 TEXT_DARK    = "#1A1A2E"
 TEXT_MUTED   = "#8A9BAE"
 ACCENT       = "#7B2320"

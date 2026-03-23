@@ -9,23 +9,21 @@ import fitz
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ── Paleta Moderna ────────────────────────────────────────────────
-SIDEBAR_BG      = "#1A1D23"
-SIDEBAR_ACCENT  = "#2D3240"
-SIDEBAR_LINE    = "#353B4A"
-CARD_BG         = "#FFFFFF"
-BG_MAIN         = "#F3F4F6"
+# ── Paleta ────────────────────────────────────────────────────────
+ACCENT          = "#7B2320"
+ACCENT_HOVER    = "#601A18"
+ACCENT_LIGHT    = "#FEF2F2"
+BG_MAIN         = "#F5F6F8"
 BG_WHITE        = "#FFFFFF"
-ACCENT          = "#C5461B"
-ACCENT_HOVER    = "#AF3D16"
-ACCENT_LIGHT    = "#FFF1EA"
+CARD_BG         = "#FFFFFF"
 TEXT_DARK       = "#111827"
-TEXT_SECONDARY  = "#4B5563"
+TEXT_SECONDARY  = "#374151"
 TEXT_MUTED      = "#6B7280"
 TEXT_LIGHT      = "#9CA3AF"
 BORDER_COLOR    = "#E5E7EB"
+BORDER_LIGHT    = "#F3F4F6"
 HEADER_BG       = "#FFFFFF"
-ROW_HOVER       = "#F9FAFB"
+ROW_HOVER       = "#FAFBFF"
 ROW_ALT         = "#FCFCFD"
 BTN_SECONDARY   = "#F3F4F6"
 BTN_SEC_HOVER   = "#E5E7EB"
@@ -33,7 +31,10 @@ BTN_SEC_TEXT    = "#374151"
 SUCCESS_BG      = "#ECFDF5"
 SUCCESS_TEXT    = "#065F46"
 INPUT_BG        = "#F9FAFB"
-INPUT_BORDER    = "#D1D5DB"
+INPUT_BORDER    = "#E5E7EB"
+COL_HEADER_BG   = "#FAFAFA"
+SIDEBAR_BG      = "#7B2320"
+SIDEBAR_LINE    = "#9B3330"
 
 BASE_PATH = r"C:\GencoServer"
 
@@ -44,27 +45,38 @@ PASTAS_DISPONIVEIS = [
 ]
 
 EXTENSOES_MAP = {
-    "Todos": "All",
-    ".pdf": ".pdf",
-    ".docx": ".docx",
-    ".xlsx": ".xlsx",
-    ".xls": ".xls",
-    ".txt": ".txt",
-    ".jpg": ".jpg",
-    ".png": ".png",
+    "Todos":  "All",
+    ".pdf":   ".pdf",
+    ".docx":  ".docx",
+    ".xlsx":  ".xlsx",
+    ".xls":   ".xls",
+    ".txt":   ".txt",
+    ".jpg":   ".jpg",
+    ".png":   ".png",
 }
 
 EXTENSOES_UI = list(EXTENSOES_MAP.keys())
 
 BADGE_MAP = {
-    ".pdf":  ("PDF",  "#DC2626", "#FEF2F2"),
-    ".docx": ("DOCX", "#2563EB", "#EFF6FF"),
-    ".xlsx": ("XLSX", "#059669", "#ECFDF5"),
-    ".xls":  ("XLS",  "#059669", "#ECFDF5"),
-    ".txt":  ("TXT",  "#6B7280", "#F3F4F6"),
-    ".jpg":  ("IMG",  "#7C3AED", "#F5F3FF"),
-    ".png":  ("IMG",  "#7C3AED", "#F5F3FF"),
+    ".pdf":   ("PDF",   "#DC2626", "#FEF2F2"),
+    ".docx":  ("DOCX",  "#2563EB", "#EFF6FF"),
+    ".xlsx":  ("XLSX",  "#059669", "#ECFDF5"),
+    ".xls":   ("XLS",   "#059669", "#ECFDF5"),
+    ".txt":   ("TXT",   "#6B7280", "#F3F4F6"),
+    ".jpg":   ("IMG",   "#7C3AED", "#F5F3FF"),
+    ".png":   ("IMG",   "#7C3AED", "#F5F3FF"),
     "folder": ("PASTA", "#B45309", "#FEF3C7"),
+}
+
+ICON_MAP = {
+    ".pdf":   ("📄", "#FEF2F2", "#DC2626"),
+    ".docx":  ("📝", "#EFF6FF", "#2563EB"),
+    ".xlsx":  ("📊", "#ECFDF5", "#059669"),
+    ".xls":   ("📊", "#ECFDF5", "#059669"),
+    ".txt":   ("📃", "#F3F4F6", "#6B7280"),
+    ".jpg":   ("🖼",  "#F5F3FF", "#7C3AED"),
+    ".png":   ("🖼",  "#F5F3FF", "#7C3AED"),
+    "folder": ("📂", "#FEF3C7", "#B45309"),
 }
 
 FONT_FAMILY = "Segoe UI"
@@ -97,12 +109,16 @@ class GencoBuscaApp(ctk.CTk):
         self.progress_label = None
         self.entrada_busca = None
         self.label_qtd = None
+        self.label_qtd_num = None
         self.result_scroll = None
         self.result_rows = []
+        self._search_frame = None
 
         self._centralizar(820, 520)
         self._carregar_spinner()
         self._mostrar_login()
+
+    # ── Utilitários ───────────────────────────────────────────────
 
     def _centralizar(self, w, h):
         self.update_idletasks()
@@ -134,7 +150,7 @@ class GencoBuscaApp(ctk.CTk):
         try:
             self.spinner_gif = Image.open(caminho)
             while True:
-                frame = self.spinner_gif.copy().convert("RGBA").resize((16, 16), Image.Resampling.LANCZOS)
+                frame = self.spinner_gif.copy().convert("RGBA").resize((14, 14), Image.Resampling.LANCZOS)
                 self.spinner_frames.append(ImageTk.PhotoImage(frame))
                 self.spinner_gif.seek(self.spinner_gif.tell() + 1)
         except EOFError:
@@ -145,9 +161,7 @@ class GencoBuscaApp(ctk.CTk):
     def _animar_spinner(self, ind=0):
         if self.fechando:
             return
-
         lbl = self.progress_label
-
         if self.spinner_running and self.spinner_frames and lbl and lbl.winfo_exists():
             frame = self.spinner_frames[ind]
             lbl.configure(image=frame, text="  Buscando...", fg=ACCENT)
@@ -172,7 +186,6 @@ class GencoBuscaApp(ctk.CTk):
             except Exception:
                 pass
             self.spinner_anim_id = None
-
         lbl = self.progress_label
         if lbl and lbl.winfo_exists():
             try:
@@ -180,6 +193,8 @@ class GencoBuscaApp(ctk.CTk):
                 lbl.image = None
             except Exception:
                 pass
+
+    # ── Tela de Login ─────────────────────────────────────────────
 
     def _mostrar_login(self):
         self._limpar_tela()
@@ -189,6 +204,7 @@ class GencoBuscaApp(ctk.CTk):
         container = ctk.CTkFrame(self, fg_color=BG_MAIN, corner_radius=0)
         container.pack(fill="both", expand=True)
 
+        # Sidebar esquerda
         sidebar = ctk.CTkFrame(container, fg_color=SIDEBAR_BG, corner_radius=0, width=300)
         sidebar.pack(side="left", fill="y")
         sidebar.pack_propagate(False)
@@ -196,23 +212,22 @@ class GencoBuscaApp(ctk.CTk):
         sb_body = ctk.CTkFrame(sidebar, fg_color="transparent")
         sb_body.pack(fill="both", expand=True, padx=36)
 
-        icon_outer = ctk.CTkFrame(sb_body, fg_color=ACCENT, corner_radius=16, width=52, height=52)
+        # Ícone
+        icon_outer = ctk.CTkFrame(sb_body, fg_color="#9B3330", corner_radius=16, width=52, height=52)
         icon_outer.pack(pady=(80, 0))
         icon_outer.pack_propagate(False)
-
         ctk.CTkLabel(
-            icon_outer,
-            text="G",
+            icon_outer, text="G",
             font=ctk.CTkFont(family=FONT_FAMILY, size=22, weight="bold"),
             text_color="white",
         ).place(relx=0.5, rely=0.5, anchor="center")
 
-        ctk.CTkFrame(sb_body, fg_color=SIDEBAR_LINE, height=1, width=200).pack(pady=(32, 24))
+        ctk.CTkFrame(sb_body, fg_color=SIDEBAR_LINE, height=1, width=220).pack(pady=(28, 22))
 
         ctk.CTkLabel(
             sb_body,
             text="GENCO BUSCA",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
             text_color="white",
         ).pack()
 
@@ -221,7 +236,7 @@ class GencoBuscaApp(ctk.CTk):
             text="Server File Finder",
             font=ctk.CTkFont(family=FONT_FAMILY, size=11),
             text_color="#9CA3AF",
-        ).pack(pady=(6, 0))
+        ).pack(pady=(5, 0))
 
         ctk.CTkLabel(
             sb_body,
@@ -229,7 +244,7 @@ class GencoBuscaApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=10),
             text_color="#6B7280",
             justify="center",
-        ).pack(pady=(20, 0))
+        ).pack(pady=(18, 0))
 
         ctk.CTkLabel(
             sidebar,
@@ -238,6 +253,7 @@ class GencoBuscaApp(ctk.CTk):
             text_color="#4B5563",
         ).pack(side="bottom", pady=20)
 
+        # Área direita
         right = ctk.CTkFrame(container, fg_color=CARD_BG, corner_radius=0)
         right.pack(side="left", fill="both", expand=True)
         right.grid_rowconfigure(0, weight=1)
@@ -290,6 +306,8 @@ class GencoBuscaApp(ctk.CTk):
             text_color=TEXT_LIGHT,
         ).pack(pady=(16, 0))
 
+    # ── Tela de Busca ─────────────────────────────────────────────
+
     def _mostrar_busca(self):
         self._limpar_tela()
         self.resizable(True, True)
@@ -300,139 +318,163 @@ class GencoBuscaApp(ctk.CTk):
         search_frame.pack(fill="both", expand=True)
         self._search_frame = search_frame
 
-        header = ctk.CTkFrame(search_frame, fg_color=HEADER_BG, corner_radius=0, height=70)
+        # ── Header compacto ──────────────────────────────────────
+        header = ctk.CTkFrame(search_frame, fg_color=HEADER_BG, corner_radius=0, height=60)
         header.pack(fill="x")
         header.pack_propagate(False)
 
         header_inner = ctk.CTkFrame(header, fg_color="transparent")
-        header_inner.pack(fill="both", expand=True, padx=28)
+        header_inner.pack(fill="both", expand=True, padx=24)
 
+        # Logo area (ícone + texto)
         logo_area = ctk.CTkFrame(header_inner, fg_color="transparent")
-        logo_area.pack(side="left", pady=14)
+        logo_area.pack(side="left", pady=0)
 
         try:
             logo_img = Image.open(os.path.join(BASE_DIR, "logo_genco_inicio.png"))
             logo_ctk = ctk.CTkImage(light_image=logo_img, dark_image=logo_img, size=(120, 32))
             logo_label = ctk.CTkLabel(logo_area, image=logo_ctk, text="")
-            logo_label.pack(side="left")
+            logo_label.pack(side="left", pady=14)
             logo_label.image = logo_ctk
-        except Exception as e:
-            print("Erro logo busca:", e)
+        except Exception:
+            # Fallback: ícone + texto
+            icon_box = ctk.CTkFrame(logo_area, fg_color=ACCENT, corner_radius=8, width=32, height=32)
+            icon_box.pack(side="left", pady=14)
+            icon_box.pack_propagate(False)
+            ctk.CTkLabel(icon_box, text="G", font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"), text_color="white").place(relx=0.5, rely=0.5, anchor="center")
 
+            txt_frame = ctk.CTkFrame(logo_area, fg_color="transparent")
+            txt_frame.pack(side="left", padx=(8, 0), pady=14)
+            ctk.CTkLabel(txt_frame, text="GENCO", font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"), text_color=TEXT_DARK).pack(anchor="w")
+            ctk.CTkLabel(txt_frame, text="Import & Export", font=ctk.CTkFont(family=FONT_FAMILY, size=9), text_color=TEXT_MUTED).pack(anchor="w")
+
+        # Pílula de versão
+        pill = ctk.CTkFrame(header_inner, fg_color=BTN_SECONDARY, corner_radius=8)
+        pill.pack(side="right", pady=18)
+        pill_inner = ctk.CTkFrame(pill, fg_color="transparent")
+        pill_inner.pack(padx=12, pady=5)
+
+        dot = ctk.CTkFrame(pill_inner, fg_color="#10B981", corner_radius=4, width=6, height=6)
+        dot.pack(side="left", padx=(0, 6))
+        dot.pack_propagate(False)
         ctk.CTkLabel(
-            header_inner,
+            pill_inner,
             text="Server File Finder v2.0",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=14),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11, weight="bold"),
             text_color=TEXT_MUTED,
-        ).pack(side="right", pady=18)
+        ).pack(side="left")
 
+        # Divisor do header
         ctk.CTkFrame(search_frame, fg_color=BORDER_COLOR, height=1, corner_radius=0).pack(fill="x")
 
+        # ── Área central ─────────────────────────────────────────
         center = ctk.CTkFrame(search_frame, fg_color=BG_MAIN, corner_radius=0)
-        center.pack(fill="both", expand=True, padx=36, pady=(26, 18))
+        center.pack(fill="both", expand=True, padx=32, pady=(24, 16))
         center.grid_columnconfigure(0, weight=1)
         center.grid_rowconfigure(4, weight=1)
 
-        title_row = ctk.CTkFrame(center, fg_color="transparent")
-        title_row.grid(row=0, column=0, sticky="w")
-
+        # Título da página
         ctk.CTkLabel(
-            title_row,
+            center,
             text="Busca de Arquivos",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=26, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=22, weight="bold"),
             text_color=TEXT_DARK,
-        ).pack(side="left")
+            anchor="w",
+        ).grid(row=0, column=0, sticky="w")
 
         ctk.CTkLabel(
             center,
             text="Pesquise arquivos e pastas no servidor da Genco",
             font=ctk.CTkFont(family=FONT_FAMILY, size=12),
             text_color=TEXT_MUTED,
-        ).grid(row=1, column=0, sticky="w", pady=(6, 20))
+            anchor="w",
+        ).grid(row=1, column=0, sticky="w", pady=(4, 18))
 
+        # ── Card de busca ─────────────────────────────────────────
         search_card = ctk.CTkFrame(
             center,
             fg_color=BG_WHITE,
-            corner_radius=16,
+            corner_radius=14,
             border_width=1,
             border_color=BORDER_COLOR,
         )
-        search_card.grid(row=2, column=0, sticky="ew", pady=(0, 18))
+        search_card.grid(row=2, column=0, sticky="ew", pady=(0, 6))
 
         card_inner = ctk.CTkFrame(search_card, fg_color="transparent")
-        card_inner.pack(fill="x", padx=22, pady=22)
+        card_inner.pack(fill="x", padx=20, pady=18)
         card_inner.grid_columnconfigure(0, weight=1)
 
         form_row = ctk.CTkFrame(card_inner, fg_color="transparent")
-        form_row.pack(fill="x", pady=(0, 16))
+        form_row.pack(fill="x", pady=(0, 14))
         form_row.grid_columnconfigure(0, weight=1)
 
+        # Coluna: Termo de busca
         col_s = ctk.CTkFrame(form_row, fg_color="transparent")
-        col_s.grid(row=0, column=0, sticky="ew", padx=(0, 14))
+        col_s.grid(row=0, column=0, sticky="ew", padx=(0, 12))
         col_s.grid_columnconfigure(0, weight=1)
 
         ctk.CTkLabel(
             col_s,
             text="TERMO DE BUSCA",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=9, weight="bold"),
             text_color=TEXT_LIGHT,
-        ).pack(anchor="w", pady=(0, 8))
+            anchor="w",
+        ).pack(anchor="w", pady=(0, 6))
 
         entry_wrap = ctk.CTkFrame(
             col_s,
-            fg_color=BG_WHITE,
-            corner_radius=12,
+            fg_color=INPUT_BG,
+            corner_radius=9,
             border_width=1,
             border_color=INPUT_BORDER,
-        height=44
+            height=40,
         )
         entry_wrap.pack(fill="x")
         entry_wrap.pack_propagate(False)
 
-        icon_label = ctk.CTkLabel(
+        ctk.CTkLabel(
             entry_wrap,
             text="⌕",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=16),
-            text_color=TEXT_MUTED,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=15),
+            text_color=TEXT_LIGHT,
             fg_color="transparent",
-            width=26
-        )
-        icon_label.pack(side="left", padx=(12, 4))
+            width=22,
+        ).pack(side="left", padx=(10, 2))
 
         self.entrada_busca = ctk.CTkEntry(
             entry_wrap,
-            height=42,
-            corner_radius=12,
+            height=38,
+            corner_radius=9,
             border_width=0,
-            fg_color=BG_WHITE,
+            fg_color="transparent",
             text_color=TEXT_DARK,
             placeholder_text="Nome do arquivo ou pasta...",
             placeholder_text_color=TEXT_LIGHT,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12)
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12),
         )
-        self.entrada_busca.pack(side="left", fill="both", expand=True, padx=(0, 12))
+        self.entrada_busca.pack(side="left", fill="both", expand=True, padx=(0, 10))
         self.entrada_busca.bind("<Return>", lambda e: self._iniciar_busca())
-        self.entrada_busca.bind("<FocusIn>", lambda e: entry_wrap.configure(border_color=INPUT_BORDER))
-        self.entrada_busca.bind("<FocusOut>", lambda e: entry_wrap.configure(border_color=INPUT_BORDER))
 
-        col_f = ctk.CTkFrame(form_row, fg_color="transparent", width=200)
-        col_f.grid(row=0, column=1, sticky="w", padx=(0, 14))
+        # Coluna: Pasta
+        col_f = ctk.CTkFrame(form_row, fg_color="transparent", width=190)
+        col_f.grid(row=0, column=1, sticky="w", padx=(0, 12))
         col_f.grid_propagate(False)
 
         ctk.CTkLabel(
             col_f,
             text="PASTA",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=9, weight="bold"),
             text_color=TEXT_LIGHT,
-        ).pack(anchor="w", pady=(0, 8))
+            anchor="w",
+        ).pack(anchor="w", pady=(0, 6))
 
         ctk.CTkComboBox(
             col_f,
             values=["Todas as pastas"] + PASTAS_DISPONIVEIS,
             variable=self.pasta_var,
-            width=200,
-            height=42,
-            corner_radius=12,
+            width=190,
+            height=40,
+            corner_radius=9,
             border_width=1,
             border_color=INPUT_BORDER,
             fg_color=INPUT_BG,
@@ -445,24 +487,26 @@ class GencoBuscaApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=12),
         ).pack()
 
-        col_e = ctk.CTkFrame(form_row, fg_color="transparent", width=150)
-        col_e.grid(row=0, column=2, sticky="w", padx=(0, 16))
+        # Coluna: Tipo
+        col_e = ctk.CTkFrame(form_row, fg_color="transparent", width=140)
+        col_e.grid(row=0, column=2, sticky="w", padx=(0, 12))
         col_e.grid_propagate(False)
 
         ctk.CTkLabel(
             col_e,
             text="TIPO",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=9, weight="bold"),
             text_color=TEXT_LIGHT,
-        ).pack(anchor="w", pady=(0, 8))
+            anchor="w",
+        ).pack(anchor="w", pady=(0, 6))
 
         ctk.CTkComboBox(
             col_e,
             values=EXTENSOES_UI,
             variable=self.extensao_var,
-            width=150,
-            height=42,
-            corner_radius=12,
+            width=140,
+            height=40,
+            corner_radius=9,
             border_width=1,
             border_color=INPUT_BORDER,
             fg_color=INPUT_BG,
@@ -475,10 +519,11 @@ class GencoBuscaApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=12),
         ).pack()
 
+        # Coluna: Botões
         col_b = ctk.CTkFrame(form_row, fg_color="transparent")
         col_b.grid(row=0, column=3, sticky="se")
 
-        ctk.CTkLabel(col_b, text="", height=1).pack(pady=(0, 8))
+        ctk.CTkLabel(col_b, text="", height=1).pack(pady=(0, 6))
 
         btns = ctk.CTkFrame(col_b, fg_color="transparent")
         btns.pack()
@@ -487,12 +532,14 @@ class GencoBuscaApp(ctk.CTk):
             btns,
             text="✕  Limpar",
             command=self._limpar,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11, weight="bold"),
             fg_color=BTN_SECONDARY,
             hover_color=BTN_SEC_HOVER,
             text_color=BTN_SEC_TEXT,
-            corner_radius=12,
-            width=106,
+            corner_radius=9,
+            border_width=1,
+            border_color=BORDER_COLOR,
+            width=100,
             height=40,
             cursor="hand2",
         ).pack(side="left", padx=(0, 8))
@@ -501,16 +548,17 @@ class GencoBuscaApp(ctk.CTk):
             btns,
             text="🔍  Buscar",
             command=self._iniciar_busca,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11, weight="bold"),
             fg_color=ACCENT,
             hover_color=ACCENT_HOVER,
             text_color="white",
-            corner_radius=12,
-            width=120,
+            corner_radius=9,
+            width=112,
             height=40,
             cursor="hand2",
         ).pack(side="left")
 
+        # Checkbox de conteúdo
         ctk.CTkCheckBox(
             card_inner,
             text="  Buscar dentro do conteúdo (.pdf e .docx)",
@@ -519,14 +567,15 @@ class GencoBuscaApp(ctk.CTk):
             border_color=INPUT_BORDER,
             fg_color=ACCENT,
             hover_color=ACCENT_HOVER,
-            checkbox_width=18,
-            checkbox_height=18,
-            corner_radius=6,
+            checkbox_width=16,
+            checkbox_height=16,
+            corner_radius=5,
             font=ctk.CTkFont(family=FONT_FAMILY, size=11),
         ).pack(anchor="w")
 
-        status_bar = ctk.CTkFrame(center, fg_color="transparent", height=24)
-        status_bar.grid(row=3, column=0, sticky="ew", pady=(0, 10))
+        # Barra de status / spinner
+        status_bar = ctk.CTkFrame(center, fg_color="transparent", height=22)
+        status_bar.grid(row=3, column=0, sticky="ew", pady=(4, 6))
         status_bar.grid_propagate(False)
 
         self.progress_label = tk.Label(
@@ -536,20 +585,22 @@ class GencoBuscaApp(ctk.CTk):
             fg=ACCENT,
             font=(FONT_FAMILY, 10),
             anchor="w",
-            compound="left"
+            compound="left",
         )
         self.progress_label.pack(side="left")
 
+        # ── Card de resultados ─────────────────────────────────────
         result_card = ctk.CTkFrame(
             center,
             fg_color=BG_WHITE,
-            corner_radius=16,
+            corner_radius=14,
             border_width=1,
             border_color=BORDER_COLOR,
         )
         result_card.grid(row=4, column=0, sticky="nsew")
 
-        result_header = ctk.CTkFrame(result_card, fg_color=BG_WHITE, corner_radius=0, height=52)
+        # Cabeçalho dos resultados
+        result_header = ctk.CTkFrame(result_card, fg_color=BG_WHITE, corner_radius=0, height=48)
         result_header.pack(fill="x")
         result_header.pack_propagate(False)
 
@@ -558,22 +609,62 @@ class GencoBuscaApp(ctk.CTk):
             text="Resultados",
             font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
             text_color=TEXT_DARK,
-        ).pack(side="left", padx=20, pady=14)
+        ).pack(side="left", padx=20, pady=12)
+
+        # Pílula de contagem: "47 arquivo(s) encontrado(s)"
+        qtd_pill = ctk.CTkFrame(result_header, fg_color=BTN_SECONDARY, corner_radius=7)
+        qtd_pill.pack(side="right", padx=16, pady=12)
+        qtd_pill_inner = ctk.CTkFrame(qtd_pill, fg_color="transparent")
+        qtd_pill_inner.pack(padx=10, pady=4)
+
+        self.label_qtd_num = ctk.CTkLabel(
+            qtd_pill_inner,
+            text="",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+            text_color=ACCENT,
+        )
+        self.label_qtd_num.pack(side="left")
 
         self.label_qtd = ctk.CTkLabel(
-            result_header,
+            qtd_pill_inner,
             text="",
-            font=ctk.CTkFont(family="Consolas", size=11, weight="bold"),
-            text_color=TEXT_DARK,
-            fg_color="#F3F4F6",
-            corner_radius=14,
-            padx=14,
-            pady=4,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            text_color=TEXT_MUTED,
         )
-        self.label_qtd.pack(side="right", padx=18, pady=10)
+        self.label_qtd.pack(side="left", padx=(4, 0))
 
+        # Divisor
         ctk.CTkFrame(result_card, fg_color=BORDER_COLOR, height=1, corner_radius=0).pack(fill="x")
 
+        # Cabeçalho das colunas
+        col_header = ctk.CTkFrame(result_card, fg_color=COL_HEADER_BG, corner_radius=0, height=30)
+        col_header.pack(fill="x")
+        col_header.pack_propagate(False)
+
+        col_h_inner = ctk.CTkFrame(col_header, fg_color="transparent")
+        col_h_inner.pack(fill="both", expand=True, padx=20)
+
+        ctk.CTkLabel(
+            col_h_inner,
+            text="NOME / CAMINHO",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=9, weight="bold"),
+            text_color=TEXT_LIGHT,
+            anchor="w",
+        ).pack(side="left", pady=8)
+
+        ctk.CTkLabel(
+            col_h_inner,
+            text="TIPO",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=9, weight="bold"),
+            text_color=TEXT_LIGHT,
+            anchor="e",
+            width=60,
+        ).pack(side="right", pady=8)
+
+        # Divisor fino
+        ctk.CTkFrame(result_card, fg_color=BORDER_LIGHT, height=1, corner_radius=0).pack(fill="x")
+
+        # Scroll de resultados
         self.result_scroll = ctk.CTkScrollableFrame(
             result_card,
             fg_color=BG_WHITE,
@@ -583,15 +674,18 @@ class GencoBuscaApp(ctk.CTk):
         )
         self.result_scroll.pack(fill="both", expand=True)
 
+        # Rodapé
         footer = ctk.CTkFrame(search_frame, fg_color="transparent")
-        footer.pack(fill="x", side="bottom", pady=(4, 10))
+        footer.pack(fill="x", side="bottom", pady=(2, 8))
 
         ctk.CTkLabel(
             footer,
             text="Genco Import & Export  •  Server File Finder  •  v2.0",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=10),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=9),
             text_color=TEXT_LIGHT,
         ).pack()
+
+    # ── Linhas de resultado ───────────────────────────────────────
 
     def _limpar_resultados(self):
         for w in self.result_scroll.winfo_children():
@@ -601,57 +695,43 @@ class GencoBuscaApp(ctk.CTk):
     def _adicionar_linha(self, caminho, idx):
         ext = os.path.splitext(caminho)[1].lower()
         is_folder = os.path.isdir(caminho)
-        row_bg = BG_WHITE if idx % 2 == 0 else ROW_ALT
+
+        if is_folder:
+            badge_text, badge_color, badge_bg = BADGE_MAP["folder"]
+            icon_char, icon_bg, icon_fg = ICON_MAP["folder"]
+        else:
+            badge_text, badge_color, badge_bg = BADGE_MAP.get(ext, ("FILE", "#6B7280", "#F3F4F6"))
+            icon_char, icon_bg, icon_fg = ICON_MAP.get(ext, ("📄", "#F3F4F6", "#6B7280"))
 
         row = ctk.CTkFrame(
             self.result_scroll,
-            fg_color=row_bg,
+            fg_color=BG_WHITE,
             corner_radius=0,
-            height=70
+            height=62,
         )
         row.pack(fill="x")
         row.pack_propagate(False)
 
         inner = ctk.CTkFrame(row, fg_color="transparent")
-        inner.pack(fill="both", expand=True, padx=20, pady=8)
+        inner.pack(fill="both", expand=True, padx=20, pady=10)
 
         left = ctk.CTkFrame(inner, fg_color="transparent")
         left.pack(side="left", fill="both", expand=True)
 
-        if is_folder:
-            badge_text, badge_color, badge_bg = BADGE_MAP["folder"]
-            icon_box = ctk.CTkFrame(left, fg_color="#F3F4F6", corner_radius=12, width=40, height=40)
-            icon_box.pack(side="left", padx=(0, 14))
-            icon_box.pack_propagate(False)
-            ctk.CTkLabel(
-                icon_box,
-                text="📂",
-                font=ctk.CTkFont(size=18),
-                text_color="#F59E0B"
-            ).place(relx=0.5, rely=0.5, anchor="center")
-        else:
-            badge_text, badge_color, badge_bg = BADGE_MAP.get(ext, ("FILE", "#6B7280", "#F3F4F6"))
-            icon_box = ctk.CTkFrame(left, fg_color="#F3F4F6", corner_radius=12, width=40, height=40)
-            icon_box.pack(side="left", padx=(0, 14))
-            icon_box.pack_propagate(False)
-
-            icon_char = "📄"
-            if ext in [".xlsx", ".xls"]:
-                icon_char = "📊"
-            elif ext == ".pdf":
-                icon_char = "📄"
-
-            ctk.CTkLabel(
-                icon_box,
-                text=icon_char,
-                font=ctk.CTkFont(size=16),
-            ).place(relx=0.5, rely=0.5, anchor="center")
+        # Ícone colorido por tipo
+        icon_box = ctk.CTkFrame(left, fg_color=icon_bg, corner_radius=10, width=36, height=36)
+        icon_box.pack(side="left", padx=(0, 14))
+        icon_box.pack_propagate(False)
+        ctk.CTkLabel(
+            icon_box,
+            text=icon_char,
+            font=ctk.CTkFont(size=15),
+        ).place(relx=0.5, rely=0.5, anchor="center")
 
         text_frame = ctk.CTkFrame(left, fg_color="transparent")
         text_frame.pack(side="left", fill="both", expand=True)
 
         nome_arquivo = os.path.basename(caminho)
-        dir_path = os.path.dirname(caminho)
 
         ctk.CTkLabel(
             text_frame,
@@ -659,35 +739,37 @@ class GencoBuscaApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
             text_color=TEXT_DARK,
             anchor="w",
-        ).pack(anchor="w", pady=(2, 2))
+        ).pack(anchor="w", pady=(1, 1))
 
         ctk.CTkLabel(
             text_frame,
             text=caminho,
             font=ctk.CTkFont(family="Consolas", size=10),
-            text_color=TEXT_MUTED,
+            text_color=TEXT_LIGHT,
             anchor="w",
         ).pack(anchor="w")
 
-        right = ctk.CTkFrame(inner, fg_color="transparent", width=100)
-        right.pack(side="right", fill="y")
-        right.pack_propagate(False)
+        # Badge de tipo
+        right_col = ctk.CTkFrame(inner, fg_color="transparent", width=72)
+        right_col.pack(side="right", fill="y")
+        right_col.pack_propagate(False)
 
         ctk.CTkLabel(
-            right,
+            right_col,
             text=badge_text,
             font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
             text_color=badge_color,
             fg_color=badge_bg,
-            corner_radius=14,
-            width=56,
-            height=26,
-        ).pack(anchor="e", pady=10)
+            corner_radius=6,
+            width=52,
+            height=24,
+        ).pack(anchor="e", pady=6)
 
-        divider = ctk.CTkFrame(self.result_scroll, fg_color=BORDER_COLOR, height=1, corner_radius=0)
+        # Divisor ultra-fino entre linhas
+        divider = ctk.CTkFrame(self.result_scroll, fg_color=BORDER_LIGHT, height=1, corner_radius=0)
         divider.pack(fill="x")
 
-        for w in [row, inner, left, text_frame, icon_box, right]:
+        for w in [row, inner, left, text_frame, icon_box, right_col]:
             w.bind("<Double-Button-1>", lambda e, c=caminho: self._abrir(c))
             w.bind("<Button-3>", lambda e, c=caminho: self._copiar(c))
 
@@ -699,14 +781,22 @@ class GencoBuscaApp(ctk.CTk):
 
         if not resultados:
             messagebox.showinfo("Aviso", "Nenhum arquivo encontrado.")
-            self.label_qtd.configure(text="")
+            if self.label_qtd_num:
+                self.label_qtd_num.configure(text="")
+            if self.label_qtd:
+                self.label_qtd.configure(text="")
             return
 
         for idx, caminho in enumerate(resultados):
             self._adicionar_linha(caminho, idx)
 
-        texto = f"{len(resultados)} arquivo(s) encontrado(s)"
-        self.label_qtd.configure(text=texto)
+        n = len(resultados)
+        if self.label_qtd_num:
+            self.label_qtd_num.configure(text=str(n))
+        if self.label_qtd:
+            self.label_qtd.configure(text=" arquivo(s) encontrado(s)")
+
+    # ── Busca ─────────────────────────────────────────────────────
 
     def _ler_docx(self, caminho):
         try:
@@ -802,7 +892,10 @@ class GencoBuscaApp(ctk.CTk):
     def _limpar(self):
         self._parar_spinner()
         self.entrada_busca.delete(0, "end")
-        self.label_qtd.configure(text="")
+        if self.label_qtd_num:
+            self.label_qtd_num.configure(text="")
+        if self.label_qtd:
+            self.label_qtd.configure(text="")
         self.pasta_var.set("Todas as pastas")
         self.extensao_var.set("Todos")
         self.buscar_conteudo_var.set(False)
