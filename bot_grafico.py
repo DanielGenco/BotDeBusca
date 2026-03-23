@@ -230,7 +230,7 @@ class GencoBuscaApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
             text_color="white",
         ).pack()
-#
+
         ctk.CTkLabel(
             sb_body,
             text="Server File Finder",
