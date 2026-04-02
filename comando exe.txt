@@ -1,0 +1,1 @@
+pyinstaller --onefile --windowed --icon=icon.ico --manifest=admin.manifest --add-data "icon.png;." --add-data "lupa_tela_inicial.png;." --add-data "spinner.gif;." bot_grafico.py

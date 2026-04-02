@@ -5,7 +5,7 @@ a = Analysis(
     ['bot_grafico.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('icon.png', '.'), ('lupa_tela_inicial.png', '.'), ('spinner.gif', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -36,4 +36,5 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=['icon.ico'],
+    manifest='admin.manifest',
 )
