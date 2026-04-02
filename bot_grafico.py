@@ -14,7 +14,7 @@ import fitz
 #
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-VERSION = "1.0.3"
+VERSION = "1.0.4"
 GITHUB_REPO = "DanielGenco/BotDeBusca"
 
 # ── Palette ───────────────────────────────────────────────────────
@@ -242,7 +242,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             busca_row,
-            text="BUSCA",
+            text="SEARCH",
             font=ctk.CTkFont(family=FONT_FAMILY, size=50, weight="bold"),
             text_color="white",
         ).pack(side="left")
@@ -411,7 +411,7 @@ class GencoSearchApp(ctk.CTk):
         dot.pack_propagate(False)
         ctk.CTkLabel(
             pill_inner,
-            text="Server File Finder  v1.0.3",
+            text="Server File Finder  v1.0.4",
             font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
             text_color="#065F46",
         ).pack(side="left")
@@ -735,7 +735,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             footer,
-            text="Genco Import & Export  •  Server File Finder  •  v1.0.3",
+            text="Genco Import & Export  •  Server File Finder  •  v1.0.4",
             font=ctk.CTkFont(family=FONT_FAMILY, size=9),
             text_color=TEXT_LIGHT,
         ).pack()
