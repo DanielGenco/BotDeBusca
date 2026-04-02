@@ -100,7 +100,7 @@ class GencoSearchApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("Genco Busca")
+        self.title("Genco Search")
         self.geometry("1360x860")
         self.minsize(1180, 720)
         self.configure(fg_color=BG_MAIN)
@@ -298,7 +298,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             inner,
-            text="Welcome to Genco Busca",
+            text="Welcome to Genco Search",
             font=ctk.CTkFont(family=FONT_FAMILY, size=24, weight="bold"),
             text_color=TEXT_DARK,
         ).pack(pady=(0, 8))
@@ -395,7 +395,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             header_inner,
-            text="Genco Busca",
+            text="Genco Search",
             font=ctk.CTkFont(family=FONT_FAMILY, size=12),
             text_color=TEXT_MUTED,
         ).pack(side="left")
@@ -411,7 +411,7 @@ class GencoSearchApp(ctk.CTk):
         dot.pack_propagate(False)
         ctk.CTkLabel(
             pill_inner,
-            text="Server File Finder  v1.0.1",
+            text="Server File Finder  v1.0.2",
             font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
             text_color="#065F46",
         ).pack(side="left")
@@ -735,7 +735,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             footer,
-            text="Genco Import & Export  •  Server File Finder  •  v1.0.1",
+            text="Genco Import & Export  •  Server File Finder  •  v1.0.2",
             font=ctk.CTkFont(family=FONT_FAMILY, size=9),
             text_color=TEXT_LIGHT,
         ).pack()
