@@ -14,7 +14,7 @@ import fitz
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 GITHUB_REPO = "DanielGenco/BotDeBusca"
 
 # ── Palette ───────────────────────────────────────────────────────
@@ -50,7 +50,7 @@ SHADOW_COLOR    = "#E2E4E9"
 BASE_PATH = r"C:\GencoServer"
 
 AVAILABLE_FOLDERS = [
-    "After-Sales-Ticket - AST", "Clients", "Cotação - CTC", "Finance Genco", "Genco IT", "Genco Various", "Inspections - QC",
+    "After-Sales-Ticket - AST", "Audit", "Clients", "Cotação - CTC", "Finance Genco", "Genco IT", "Genco Various", "Inspections - QC",
     "Invoices PO - GNC", "Marketing", "Office BR", "Office CH", "Quotation - QT", "Samples - SMP",
     "Shipments - GNC", "Suppliers",
 ]
