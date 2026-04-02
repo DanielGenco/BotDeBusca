@@ -1,6 +1,10 @@
 import os
 import sys
+import json
+import subprocess
+import tempfile
 import threading
+import urllib.request
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
@@ -9,6 +13,9 @@ from docx import Document
 import fitz
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+VERSION = "1.0.1"
+GITHUB_REPO = "DanielGenco/BotDeBusca"
 
 # ── Palette ───────────────────────────────────────────────────────
 ACCENT          = "#7B2320"
@@ -122,6 +129,7 @@ class GencoSearchApp(ctk.CTk):
         self._center_window(820, 520)
         self._load_spinner()
         self._show_login()
+        threading.Thread(target=self._check_for_updates, daemon=True).start()
 
     # ── Utilities ────────────────────────────────────────────────
 
@@ -318,7 +326,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             inner,
-            text="v1.0.1 •  Internal access",
+            text=f"v{VERSION} •  Internal access",
             font=ctk.CTkFont(family=FONT_FAMILY, size=11),
             text_color=TEXT_LIGHT,
         ).pack(pady=(60, 0))
@@ -1061,6 +1069,160 @@ class GencoSearchApp(ctk.CTk):
             self.toast_id = self.after(1800, lambda: notice.destroy() if notice.winfo_exists() else None)
         except Exception:
             pass
+
+    # ── Auto-update ──────────────────────────────────────────────
+
+    def _check_for_updates(self):
+        try:
+            url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
+            req = urllib.request.Request(url, headers={"User-Agent": "GencoBusca-Updater"})
+            with urllib.request.urlopen(req, timeout=6) as resp:
+                data = json.loads(resp.read().decode())
+
+            latest_tag = data.get("tag_name", "").lstrip("v")
+            if not latest_tag:
+                return
+
+            current = tuple(int(x) for x in VERSION.split("."))
+            latest  = tuple(int(x) for x in latest_tag.split("."))
+            if latest <= current:
+                return
+
+            download_url = None
+            for asset in data.get("assets", []):
+                if asset["name"].lower().endswith(".exe"):
+                    download_url = asset["browser_download_url"]
+                    break
+
+            if download_url:
+                self.after(0, lambda: self._show_update_dialog(latest_tag, download_url))
+        except Exception:
+            pass  # sem internet ou repositório privado — ignora silenciosamente
+
+    def _show_update_dialog(self, new_version, download_url):
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("Update Available")
+        dialog.geometry("440x230")
+        dialog.resizable(False, False)
+        dialog.configure(fg_color=BG_WHITE)
+        dialog.grab_set()
+        dialog.lift()
+        dialog.focus_force()
+
+        self.update_idletasks()
+        x = self.winfo_x() + (self.winfo_width()  // 2) - 220
+        y = self.winfo_y() + (self.winfo_height() // 2) - 115
+        dialog.geometry(f"+{x}+{y}")
+
+        ctk.CTkLabel(
+            dialog,
+            text="New update available!",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=17, weight="bold"),
+            text_color=TEXT_DARK,
+        ).pack(pady=(32, 6))
+
+        ctk.CTkLabel(
+            dialog,
+            text=f"Version {new_version} is ready to download.\nDo you want to install it now?",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=13),
+            text_color=TEXT_MUTED,
+            justify="center",
+        ).pack(pady=(0, 28))
+
+        btn_row = ctk.CTkFrame(dialog, fg_color="transparent")
+        btn_row.pack()
+
+        ctk.CTkButton(
+            btn_row,
+            text="Update Now",
+            command=lambda: self._download_and_install(download_url, dialog),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
+            fg_color=ACCENT,
+            hover_color=ACCENT_HOVER,
+            text_color="white",
+            corner_radius=8,
+            width=160,
+            height=40,
+            cursor="hand2",
+        ).pack(side="left", padx=(0, 12))
+
+        ctk.CTkButton(
+            btn_row,
+            text="Later",
+            command=dialog.destroy,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=13),
+            fg_color=BTN_SECONDARY,
+            hover_color=BTN_SEC_HOVER,
+            text_color=BTN_SEC_TEXT,
+            corner_radius=8,
+            width=100,
+            height=40,
+            cursor="hand2",
+        ).pack(side="left")
+
+    def _download_and_install(self, url, dialog):
+        dialog.destroy()
+
+        prog = ctk.CTkToplevel(self)
+        prog.title("Downloading update...")
+        prog.geometry("400x150")
+        prog.resizable(False, False)
+        prog.configure(fg_color=BG_WHITE)
+        prog.grab_set()
+        prog.lift()
+
+        self.update_idletasks()
+        x = self.winfo_x() + (self.winfo_width()  // 2) - 200
+        y = self.winfo_y() + (self.winfo_height() // 2) - 75
+        prog.geometry(f"+{x}+{y}")
+
+        ctk.CTkLabel(
+            prog,
+            text="Downloading update...",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
+            text_color=TEXT_DARK,
+        ).pack(pady=(28, 10))
+
+        bar = ctk.CTkProgressBar(prog, width=340, progress_color=ACCENT)
+        bar.pack()
+        bar.set(0)
+
+        pct_label = ctk.CTkLabel(
+            prog,
+            text="0%",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            text_color=TEXT_MUTED,
+        )
+        pct_label.pack(pady=(6, 0))
+
+        def do_download():
+            try:
+                fd, tmp = tempfile.mkstemp(suffix=".exe")
+                os.close(fd)
+
+                def reporthook(block_num, block_size, total_size):
+                    if total_size > 0 and not self.closing:
+                        pct = min(block_num * block_size / total_size, 1.0)
+                        self.after(0, lambda p=pct: bar.set(p))
+                        self.after(0, lambda p=pct: pct_label.configure(text=f"{int(p * 100)}%"))
+
+                urllib.request.urlretrieve(url, tmp, reporthook)
+
+                if not self.closing:
+                    self.after(0, lambda: self._launch_installer(tmp, prog))
+            except Exception as e:
+                if not self.closing:
+                    self.after(0, prog.destroy)
+                    self.after(0, lambda: messagebox.showerror(
+                        "Update Error", f"Failed to download update:\n{e}"
+                    ))
+
+        threading.Thread(target=do_download, daemon=True).start()
+
+    def _launch_installer(self, installer_path, prog_dialog):
+        prog_dialog.destroy()
+        subprocess.Popen([installer_path], shell=True)
+        self._close()
 
 
 if __name__ == "__main__":
