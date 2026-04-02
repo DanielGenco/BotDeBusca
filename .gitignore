@@ -1,0 +1,11 @@
+# Instaladores gerados
+Output/
+dist/
+
+# Build do PyInstaller
+build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
