@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Genco Busca"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.0.3"
 #define MyAppPublisher "Genco Import & Export"
 #define MyAppExeName "bot_grafico.exe"
 
