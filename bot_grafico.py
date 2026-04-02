@@ -11,7 +11,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 from docx import Document
 import fitz
-
+#
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 VERSION = "1.0.2"
