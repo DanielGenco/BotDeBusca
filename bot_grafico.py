@@ -100,8 +100,8 @@ class GencoSearchApp(ctk.CTk):
     def __init__(self):
         super().__init__()
 
+        self.withdraw()
         self.title("Genco Search")
-        self.geometry("1360x860")
         self.minsize(1180, 720)
         self.configure(fg_color=BG_MAIN)
         self.protocol("WM_DELETE_WINDOW", self._close)
@@ -126,7 +126,6 @@ class GencoSearchApp(ctk.CTk):
         self._search_frame = None
         self._empty_state_frame = None
 
-        self._center_window(820, 520)
         self._load_spinner()
         self._show_login()
         threading.Thread(target=self._check_for_updates, daemon=True).start()
@@ -134,10 +133,22 @@ class GencoSearchApp(ctk.CTk):
     # ── Utilities ────────────────────────────────────────────────
 
     def _center_window(self, w, h):
+        self.geometry(f"{w}x{h}")
         self.update_idletasks()
-        x = (self.winfo_screenwidth() // 2) - (w // 2)
-        y = (self.winfo_screenheight() // 2) - (h // 2)
-        self.geometry(f"{w}x{h}+{x}+{y}")
+        # After update, winfo_width/height reflect the actual rendered size
+        # while winfo_screenwidth/height reflect the full screen.
+        # Use the actual rendered size for offset calculation so DPI scaling
+        # doesn't cause mismatch.
+        actual_w = self.winfo_width()
+        actual_h = self.winfo_height()
+        sw = self.winfo_screenwidth()
+        sh = self.winfo_screenheight()
+        x = max(0, (sw - actual_w) // 2)
+        y = max(0, (sh - actual_h) // 2)
+        self.geometry(f"+{x}+{y}")
+        self.update_idletasks()
+        self.deiconify()
+        self.lift()
 
     def _close(self):
         self.closing = True
@@ -211,7 +222,6 @@ class GencoSearchApp(ctk.CTk):
 
     def _show_login(self):
         self._clear_screen()
-        self._center_window(820, 520)
         self.resizable(False, False)
 
         container = ctk.CTkFrame(self, fg_color=BG_MAIN, corner_radius=0)
@@ -330,6 +340,8 @@ class GencoSearchApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=11),
             text_color=TEXT_LIGHT,
         ).pack(pady=(60, 0))
+
+        self.after(100, lambda: self._center_window(820, 520))
 
     # ── Search Screen (Redesigned) ───────────────────────────────
 
