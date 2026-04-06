@@ -14,7 +14,7 @@ import fitz
 #
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-VERSION = "1.0.4"
+VERSION = "1.0.5"
 GITHUB_REPO = "DanielGenco/BotDeBusca"
 
 # ── Palette ───────────────────────────────────────────────────────
@@ -47,7 +47,7 @@ SIDEBAR_BG      = "#7B2320"
 SIDEBAR_LINE    = "#9B3330"
 SHADOW_COLOR    = "#E2E4E9"
 
-BASE_PATH = r"C:\GencoServer"
+BASE_PATHS = [r"C:\GencoServer", r"C:\Genco Server"]
 
 AVAILABLE_FOLDERS = [
     "After-Sales-Ticket - AST", "Audit", "Clients", "Cotação - CTC", "Finance Genco", "Genco IT", "Genco Various", "Inspections - QC",
@@ -423,7 +423,7 @@ class GencoSearchApp(ctk.CTk):
         dot.pack_propagate(False)
         ctk.CTkLabel(
             pill_inner,
-            text="Server File Finder  v1.0.4",
+            text="Server File Finder  v1.0.5",
             font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
             text_color="#065F46",
         ).pack(side="left")
@@ -747,7 +747,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             footer,
-            text="Genco Import & Export  •  Server File Finder  •  v1.0.4",
+            text="Genco Import & Export  •  Server File Finder  •  v1.0.5",
             font=ctk.CTkFont(family=FONT_FAMILY, size=9),
             text_color=TEXT_LIGHT,
         ).pack()
@@ -1012,13 +1012,16 @@ class GencoSearchApp(ctk.CTk):
         return exact_matches + related_matches
 
     def _folder_thread(self, term, folder):
-        results = self._search_in(os.path.join(BASE_PATH, folder), term)
+        results = []
+        for bp in BASE_PATHS:
+            results += self._search_in(os.path.join(bp, folder), term)
         self.after(0, lambda: self._show_results(results))
 
     def _all_folders_thread(self, term):
         results = []
-        for f in AVAILABLE_FOLDERS:
-            results += self._search_in(os.path.join(BASE_PATH, f), term)
+        for bp in BASE_PATHS:
+            for f in AVAILABLE_FOLDERS:
+                results += self._search_in(os.path.join(bp, f), term)
         self.after(0, lambda: self._show_results(results))
 
     def _start_search(self):
