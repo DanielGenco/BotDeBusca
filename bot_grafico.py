@@ -11,13 +11,103 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 from docx import Document
 import fitz
+import time
+import logging
+from datetime import datetime
 #
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
+LOG_FILE = os.path.join(BASE_DIR, "genco_search.log")
 
 VERSION = "1.0.5"
 GITHUB_REPO = "DanielGenco/BotDeBusca"
 
-# ── Palette ───────────────────────────────────────────────────────
+# ── Logging Setup ──────────────────────────────────────────────
+def _setup_logging():
+    """Configure logging profissional com arquivo e console"""
+    try:
+        log_format = '%(asctime)s - %(levelname)s - %(funcName)s - %(message)s'
+        logging.basicConfig(
+            level=logging.INFO,
+            format=log_format,
+            handlers=[
+                logging.FileHandler(LOG_FILE, encoding='utf-8'),
+                logging.StreamHandler()
+            ]
+        )
+        logging.info("=" * 60)
+        logging.info(f"Genco Search v{VERSION} iniciado")
+        logging.info("=" * 60)
+    except Exception as e:
+        print(f"Erro ao configurar logging: {e}")
+
+_setup_logging()
+
+# ── Palette - Light Theme ──────────────────────────────────────
+PALETTE_LIGHT = {
+    "ACCENT":          "#7B2320",
+    "ACCENT_HOVER":    "#601A18",
+    "ACCENT_LIGHT":    "#FEF2F2",
+    "ACCENT_MEDIUM":   "#F5C6C5",
+    "BG_MAIN":         "#F0F2F5",
+    "BG_WHITE":        "#FFFFFF",
+    "CARD_BG":         "#FFFFFF",
+    "TEXT_DARK":       "#111827",
+    "TEXT_SECONDARY":  "#374151",
+    "TEXT_MUTED":      "#6B7280",
+    "TEXT_LIGHT":      "#9CA3AF",
+    "BORDER_COLOR":    "#E5E7EB",
+    "BORDER_LIGHT":    "#F3F4F6",
+    "HEADER_BG":       "#FFFFFF",
+    "ROW_HOVER":       "#FAFBFF",
+    "ROW_ALT":         "#FCFCFD",
+    "BTN_SECONDARY":   "#F3F4F6",
+    "BTN_SEC_HOVER":   "#E5E7EB",
+    "BTN_SEC_TEXT":    "#374151",
+    "SUCCESS_BG":      "#ECFDF5",
+    "SUCCESS_TEXT":    "#065F46",
+    "INPUT_BG":        "#FFFFFF",
+    "INPUT_BORDER":    "#D1D5DB",
+    "INPUT_FOCUS":     "#7B2320",
+    "COL_HEADER_BG":   "#F8F9FB",
+    "SIDEBAR_BG":      "#7B2320",
+    "SIDEBAR_LINE":    "#9B3330",
+    "SHADOW_COLOR":    "#E2E4E9",
+}
+
+# ── Palette - Dark Theme ──────────────────────────────────────
+PALETTE_DARK = {
+    "ACCENT":          "#EF4444",
+    "ACCENT_HOVER":    "#F87171",
+    "ACCENT_LIGHT":    "#7F1D1D",
+    "ACCENT_MEDIUM":   "#991B1B",
+    "BG_MAIN":         "#0F172A",
+    "BG_WHITE":        "#1E293B",
+    "CARD_BG":         "#1E293B",
+    "TEXT_DARK":       "#F1F5F9",
+    "TEXT_SECONDARY":  "#CBD5E1",
+    "TEXT_MUTED":      "#94A3B8",
+    "TEXT_LIGHT":      "#64748B",
+    "BORDER_COLOR":    "#334155",
+    "BORDER_LIGHT":    "#475569",
+    "HEADER_BG":       "#1E293B",
+    "ROW_HOVER":       "#334155",
+    "ROW_ALT":         "#1E293B",
+    "BTN_SECONDARY":   "#334155",
+    "BTN_SEC_HOVER":   "#475569",
+    "BTN_SEC_TEXT":    "#E2E8F0",
+    "SUCCESS_BG":      "#064E3B",
+    "SUCCESS_TEXT":    "#86EFAC",
+    "INPUT_BG":        "#0F172A",
+    "INPUT_BORDER":    "#334155",
+    "INPUT_FOCUS":     "#EF4444",
+    "COL_HEADER_BG":   "#1E293B",
+    "SIDEBAR_BG":      "#7B2320",
+    "SIDEBAR_LINE":    "#9B3330",
+    "SHADOW_COLOR":    "#0F172A",
+}
+
+# ── Default colors (ajustadas dinamicamente) ────────────────────
 ACCENT          = "#7B2320"
 ACCENT_HOVER    = "#601A18"
 ACCENT_LIGHT    = "#FEF2F2"
@@ -46,6 +136,20 @@ COL_HEADER_BG   = "#F8F9FB"
 SIDEBAR_BG      = "#7B2320"
 SIDEBAR_LINE    = "#9B3330"
 SHADOW_COLOR    = "#E2E4E9"
+
+# ── Spacing System ─────────────────────────────────────────────
+SPACING_XS = 4
+SPACING_SM = 8
+SPACING_MD = 12
+SPACING_LG = 16
+SPACING_XL = 24
+SPACING_2XL = 32
+SPACING_3XL = 48
+
+CORNER_RADIUS_SM = 8
+CORNER_RADIUS_MD = 10
+CORNER_RADIUS_LG = 12
+CORNER_RADIUS_XL = 16
 
 BASE_PATHS = [
     r"C:\GencoServer", r"C:\Genco Server",
@@ -84,14 +188,14 @@ BADGE_MAP = {
 }
 
 ICON_MAP = {
-    ".pdf":   ("📄", "#FEF2F2", "#DC2626"),
-    ".docx":  ("📝", "#EFF6FF", "#2563EB"),
+    ".pdf":   ("�", "#FEF2F2", "#DC2626"),
+    ".docx":  ("📄", "#EFF6FF", "#2563EB"),
     ".xlsx":  ("📊", "#ECFDF5", "#059669"),
     ".xls":   ("📊", "#ECFDF5", "#059669"),
-    ".txt":   ("📃", "#F3F4F6", "#6B7280"),
+    ".txt":   ("📝", "#F3F4F6", "#6B7280"),
     ".jpg":   ("🖼", "#F5F3FF", "#7C3AED"),
     ".png":   ("🖼", "#F5F3FF", "#7C3AED"),
-    "folder": ("📂", "#FEF3C7", "#B45309"),
+    "folder": ("📁", "#FEF3C7", "#B45309"),
 }
 
 FONT_FAMILY = "Segoe UI"
@@ -103,39 +207,201 @@ ctk.set_default_color_theme("blue")
 class GencoSearchApp(ctk.CTk):
     def __init__(self):
         super().__init__()
+        
+        try:
+            self.withdraw()
+            self.title("Genco Search")
+            self.minsize(1180, 720)
+            self.protocol("WM_DELETE_WINDOW", self._close)
+            
+            # ── Theme system
+            self.current_theme = "light"  # "light" ou "dark"
+            self._load_config()
+            self._apply_theme(self.current_theme)
 
-        self.withdraw()
-        self.title("Genco Search")
-        self.minsize(1180, 720)
-        self.configure(fg_color=BG_MAIN)
-        self.protocol("WM_DELETE_WINDOW", self._close)
+            self.configure(fg_color=BG_MAIN)
 
-        self.spinner_frames = []
-        self.spinner_gif = None
-        self.spinner_running = False
-        self.spinner_anim_id = None
-        self._spinner_frame = None
-        self._spinner_label = None
-        self.toast_id = None
-        self.closing = False
+            self.spinner_frames = []
+            self.spinner_gif = None
+            self.spinner_running = False
+            self.spinner_anim_id = None
+            self._spinner_frame = None
+            self._spinner_label = None
+            self.toast_id = None
+            self.closing = False
+            self._fade_anim_id = None
+            self._theme_toggle = None
 
-        self.folder_var = ctk.StringVar(value="All folders")
-        self.extension_var = ctk.StringVar(value="All")
-        self.search_content_var = ctk.BooleanVar(value=False)
+            self.folder_var = ctk.StringVar(value="All folders")
+            self.extension_var = ctk.StringVar(value="All")
+            self.search_content_var = ctk.BooleanVar(value=False)
 
-        self.search_entry = None
-        self.count_label = None
-        self.count_number_label = None
-        self.result_scroll = None
-        self.result_rows = []
-        self._search_frame = None
-        self._empty_state_frame = None
+            self.search_entry = None
+            self.count_label = None
+            self.count_number_label = None
+            self.result_scroll = None
+            self.result_rows = []
+            self._search_frame = None
+            self._empty_state_frame = None
 
-        self._load_spinner()
-        self._show_login()
-        threading.Thread(target=self._check_for_updates, daemon=True).start()
+            self._load_spinner()
+            self._show_login()
+            threading.Thread(target=self._check_for_updates, daemon=True).start()
+            
+            logging.info("Aplicação inicializada com sucesso")
+        except Exception as e:
+            logging.error(f"Erro ao inicializar aplicação: {e}", exc_info=True)
+            self._show_error("Initialization Error", f"Failed to initialize application:\n{e}")
+            self.destroy()
+
+    # ── Configuration Management ───────────────────────────────
+
+    def _load_config(self):
+        """Carrega configurações do arquivo config.json"""
+        try:
+            if os.path.exists(CONFIG_FILE):
+                with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                    self.current_theme = config.get("theme", "light")
+                    logging.info(f"Configurações carregadas: tema {self.current_theme}")
+            else:
+                self._save_config()
+        except Exception as e:
+            logging.warning(f"Erro ao carregar config: {e}, usando padrão")
+            self.current_theme = "light"
+
+    def _save_config(self):
+        """Salva configurações no arquivo config.json"""
+        try:
+            config = {"theme": self.current_theme}
+            with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2, ensure_ascii=False)
+            logging.info(f"Configurações salvas: tema {self.current_theme}")
+        except Exception as e:
+            logging.error(f"Erro ao salvar config: {e}")
+
+    def _apply_theme(self, theme_name):
+        """Aplica tema (light/dark) atualizando variáveis globais"""
+        global ACCENT, ACCENT_HOVER, ACCENT_LIGHT, ACCENT_MEDIUM, BG_MAIN, BG_WHITE
+        global CARD_BG, TEXT_DARK, TEXT_SECONDARY, TEXT_MUTED, TEXT_LIGHT, BORDER_COLOR
+        global BORDER_LIGHT, HEADER_BG, ROW_HOVER, ROW_ALT, BTN_SECONDARY, BTN_SEC_HOVER
+        global BTN_SEC_TEXT, SUCCESS_BG, SUCCESS_TEXT, INPUT_BG, INPUT_BORDER, INPUT_FOCUS
+        global COL_HEADER_BG, SIDEBAR_BG, SIDEBAR_LINE, SHADOW_COLOR
+        
+        try:
+            palette = PALETTE_DARK if theme_name == "dark" else PALETTE_LIGHT
+            
+            ACCENT = palette["ACCENT"]
+            ACCENT_HOVER = palette["ACCENT_HOVER"]
+            ACCENT_LIGHT = palette["ACCENT_LIGHT"]
+            ACCENT_MEDIUM = palette["ACCENT_MEDIUM"]
+            BG_MAIN = palette["BG_MAIN"]
+            BG_WHITE = palette["BG_WHITE"]
+            CARD_BG = palette["CARD_BG"]
+            TEXT_DARK = palette["TEXT_DARK"]
+            TEXT_SECONDARY = palette["TEXT_SECONDARY"]
+            TEXT_MUTED = palette["TEXT_MUTED"]
+            TEXT_LIGHT = palette["TEXT_LIGHT"]
+            BORDER_COLOR = palette["BORDER_COLOR"]
+            BORDER_LIGHT = palette["BORDER_LIGHT"]
+            HEADER_BG = palette["HEADER_BG"]
+            ROW_HOVER = palette["ROW_HOVER"]
+            ROW_ALT = palette["ROW_ALT"]
+            BTN_SECONDARY = palette["BTN_SECONDARY"]
+            BTN_SEC_HOVER = palette["BTN_SEC_HOVER"]
+            BTN_SEC_TEXT = palette["BTN_SEC_TEXT"]
+            SUCCESS_BG = palette["SUCCESS_BG"]
+            SUCCESS_TEXT = palette["SUCCESS_TEXT"]
+            INPUT_BG = palette["INPUT_BG"]
+            INPUT_BORDER = palette["INPUT_BORDER"]
+            INPUT_FOCUS = palette["INPUT_FOCUS"]
+            COL_HEADER_BG = palette["COL_HEADER_BG"]
+            SIDEBAR_BG = palette["SIDEBAR_BG"]
+            SIDEBAR_LINE = palette["SIDEBAR_LINE"]
+            SHADOW_COLOR = palette["SHADOW_COLOR"]
+            
+            self.current_theme = theme_name
+            mode = "dark" if theme_name == "dark" else "light"
+            ctk.set_appearance_mode(mode)
+            logging.info(f"Tema '{theme_name}' aplicado com sucesso")
+        except Exception as e:
+            logging.error(f"Erro ao aplicar tema: {e}", exc_info=True)
+
+    def _toggle_theme(self):
+        """Alterna entre light e dark mode"""
+        try:
+            new_theme = "dark" if self.current_theme == "light" else "light"
+            self._apply_theme(new_theme)
+            self._save_config()
+            
+            # Refaz a tela de busca para atualizar cores
+            if hasattr(self, '_search_frame') and self._search_frame:
+                self._show_search()
+            
+            logging.info(f"Tema alterado para: {new_theme}")
+        except Exception as e:
+            logging.error(f"Erro ao alternar tema: {e}", exc_info=True)
+            self._show_error("Theme Error", f"Failed to change theme:\n{e}")
+
+    # ── Error Handling ─────────────────────────────────────────
+
+    def _show_error(self, title, message):
+        """Mostra erro em messagebox com log automático"""
+        logging.error(f"{title}: {message}")
+        try:
+            messagebox.showerror(title, message)
+        except Exception as e:
+            logging.error(f"Erro ao exibir messagebox: {e}")
+
+    def _show_warning(self, title, message):
+        """Mostra aviso em messagebox com log automático"""
+        logging.warning(f"{title}: {message}")
+        try:
+            messagebox.showwarning(title, message)
+        except Exception as e:
+            logging.error(f"Erro ao exibir messagebox: {e}")
 
     # ── Utilities ────────────────────────────────────────────────
+
+    def _fade_in(self, widget, duration_ms=300, steps=20):
+        """Fade-in animation for widgets"""
+        if self.closing:
+            return
+                
+        widget.configure(fg_color=BG_MAIN)
+        widget.pack(fill="both", expand=True)
+        self.update_idletasks()
+        
+        start_alpha = 0
+        step_delay = max(10, duration_ms // steps)
+        
+        def animate(step=0):
+            if self.closing or not widget.winfo_exists():
+                return
+            alpha = min(step / steps, 1.0)
+            step += 1
+            if step <= steps:
+                self._fade_anim_id = self.after(step_delay, lambda: animate(step))
+
+        animate()
+
+    def _fade_out(self, widget, duration_ms=200, callback=None):
+        """Fade-out animation for widgets (optional callback after completion)"""
+        if self.closing:
+            return
+        
+        step_delay = max(10, duration_ms // 15)
+        
+        def complete():
+            try:
+                if widget.winfo_exists():
+                    widget.pack_forget()
+            except Exception:
+                pass
+            if callback:
+                callback()
+        
+        self.after(duration_ms, complete)
 
     def _center_window(self, w, h):
         self.geometry(f"{w}x{h}")
@@ -158,6 +424,12 @@ class GencoSearchApp(ctk.CTk):
     def _close(self):
         self.closing = True
         self._stop_spinner()
+        if self._fade_anim_id:
+            try:
+                self.after_cancel(self._fade_anim_id)
+            except Exception:
+                pass
+            self._fade_anim_id = None
         if self.toast_id:
             try:
                 self.after_cancel(self.toast_id)
@@ -175,6 +447,7 @@ class GencoSearchApp(ctk.CTk):
     def _load_spinner(self):
         path = os.path.join(BASE_DIR, "lupapesquisa.gif")
         if not os.path.exists(path):
+            logging.warning(f"Spinner GIF não encontrado: {path}")
             return
         try:
             self.spinner_gif = Image.open(path)
@@ -183,8 +456,9 @@ class GencoSearchApp(ctk.CTk):
                 self.spinner_frames.append(ImageTk.PhotoImage(frame))
                 self.spinner_gif.seek(self.spinner_gif.tell() + 1)
         except EOFError:
-            pass
-        except Exception:
+            logging.info("Spinner GIF carregado com sucesso")
+        except Exception as e:
+            logging.error(f"Erro ao carregar spinner: {e}", exc_info=True)
             self.spinner_frames = []
 
     def _animate_spinner(self, ind=0):
@@ -247,9 +521,9 @@ class GencoSearchApp(ctk.CTk):
         sidebar.pack_propagate(False)
 
         sb_body = ctk.CTkFrame(sidebar, fg_color="transparent")
-        sb_body.pack(fill="both", expand=True, padx=36)
+        sb_body.pack(fill="both", expand=True, padx=SPACING_2XL)
 
-        ctk.CTkFrame(sb_body, fg_color=SIDEBAR_LINE, height=1, width=220).pack(pady=(28, 22))
+        ctk.CTkFrame(sb_body, fg_color=SIDEBAR_LINE, height=1, width=220).pack(pady=(SPACING_2XL, SPACING_LG))
 
         title_block = ctk.CTkFrame(sb_body, fg_color="transparent")
         title_block.pack(pady=(0, 0))
@@ -275,7 +549,7 @@ class GencoSearchApp(ctk.CTk):
             lupa_img = Image.open(os.path.join(BASE_DIR, "lupa_tela_inicial.png"))
             lupa_ctk = ctk.CTkImage(light_image=lupa_img, dark_image=lupa_img, size=(38, 38))
             lupa_label = ctk.CTkLabel(busca_row, image=lupa_ctk, text="", fg_color="transparent")
-            lupa_label.pack(side="left", padx=(10, 0), pady=(8, 0))
+            lupa_label.pack(side="left", padx=(SPACING_MD, 0), pady=(SPACING_SM, 0))
             lupa_label.image = lupa_ctk
         except Exception as e:
             print("Erro ao carregar lupa:", e)
@@ -293,14 +567,14 @@ class GencoSearchApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=13),
             text_color="#BABFCE",
             justify="center",
-        ).pack(pady=(20, 0))
+        ).pack(pady=(SPACING_LG, 0))
 
         ctk.CTkLabel(
             sidebar,
             text="© 2026 Genco Import & Export",
             font=ctk.CTkFont(family=FONT_FAMILY, size=11),
             text_color="#BABFCE",
-        ).pack(side="bottom", pady=20)
+        ).pack(side="bottom", pady=SPACING_LG)
             
         # Right area
         right = ctk.CTkFrame(container, fg_color=CARD_BG, corner_radius=0)
@@ -315,7 +589,7 @@ class GencoSearchApp(ctk.CTk):
             logo_img = Image.open(os.path.join(BASE_DIR, "icon.png"))
             logo_ctk = ctk.CTkImage(light_image=logo_img, dark_image=logo_img, size=(290, 290))
             logo_label = ctk.CTkLabel(inner, image=logo_ctk, text="", fg_color="transparent")
-            logo_label.pack(pady=(0, 32))
+            logo_label.pack(pady=(0, SPACING_2XL))
             logo_label.image = logo_ctk
         except Exception as e:
             print("Login logo error:", e)
@@ -325,14 +599,14 @@ class GencoSearchApp(ctk.CTk):
             text="Welcome to Genco Search",
             font=ctk.CTkFont(family=FONT_FAMILY, size=24, weight="bold"),
             text_color=TEXT_DARK,
-        ).pack(pady=(0, 8))
+        ).pack(pady=(0, SPACING_SM))
 
         ctk.CTkLabel(
             inner,
             text="Internal document search tool",
             font=ctk.CTkFont(family=FONT_FAMILY, size=13),
             text_color=TEXT_MUTED,
-        ).pack(pady=(0, 40))
+        ).pack(pady=(0, SPACING_2XL))
 
         ctk.CTkButton(
             inner,
@@ -342,18 +616,18 @@ class GencoSearchApp(ctk.CTk):
             fg_color=ACCENT,
             hover_color=ACCENT_HOVER,
             text_color="white",
-            corner_radius=10,
+            corner_radius=CORNER_RADIUS_LG,
             width=300,
             height=48,
             cursor="hand2",
-        ).pack(pady=(25, 0))
+        ).pack(pady=(SPACING_LG, 0))
 
         ctk.CTkLabel(
             inner,
             text=f"v{VERSION} •  Internal access",
             font=ctk.CTkFont(family=FONT_FAMILY, size=11),
             text_color=TEXT_LIGHT,
-        ).pack(pady=(60, 0))
+        ).pack(pady=(SPACING_3XL, 0))
 
         self.after(100, lambda: self._center_window(820, 520))
 
@@ -378,7 +652,7 @@ class GencoSearchApp(ctk.CTk):
         header_shadow.pack(fill="x")
 
         header_inner = ctk.CTkFrame(header, fg_color="transparent")
-        header_inner.pack(fill="both", expand=True, padx=32)
+        header_inner.pack(fill="both", expand=True, padx=SPACING_2XL)
 
         # Logo area
         logo_area = ctk.CTkFrame(header_inner, fg_color="transparent")
@@ -388,11 +662,11 @@ class GencoSearchApp(ctk.CTk):
             logo_img = Image.open(os.path.join(BASE_DIR, "icon.png"))
             logo_ctk = ctk.CTkImage(light_image=logo_img, dark_image=logo_img, size=(50, 50))
             logo_label = ctk.CTkLabel(logo_area, image=logo_ctk, text="")
-            logo_label.pack(side="left", pady=16)
+            logo_label.pack(side="left", pady=SPACING_LG)
             logo_label.image = logo_ctk
         except Exception:
-            icon_box = ctk.CTkFrame(logo_area, fg_color=ACCENT, corner_radius=10, width=36, height=36)
-            icon_box.pack(side="left", pady=15)
+            icon_box = ctk.CTkFrame(logo_area, fg_color=ACCENT, corner_radius=CORNER_RADIUS_MD, width=36, height=36)
+            icon_box.pack(side="left", pady=SPACING_LG)
             icon_box.pack_propagate(False)
             ctk.CTkLabel(
                 icon_box, text="G",
@@ -401,7 +675,7 @@ class GencoSearchApp(ctk.CTk):
             ).place(relx=0.5, rely=0.5, anchor="center")
 
             txt_frame = ctk.CTkFrame(logo_area, fg_color="transparent")
-            txt_frame.pack(side="left", padx=(10, 0), pady=15)
+            txt_frame.pack(side="left", padx=(SPACING_MD, 0), pady=SPACING_LG)
             ctk.CTkLabel(
                 txt_frame, text="GENCO",
                 font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
@@ -417,7 +691,7 @@ class GencoSearchApp(ctk.CTk):
         ctk.CTkFrame(
             header_inner, fg_color=BORDER_COLOR,
             width=1, height=28,
-        ).pack(side="left", padx=20, pady=19)
+        ).pack(side="left", padx=SPACING_LG, pady=SPACING_LG)
 
         ctk.CTkLabel(
             header_inner,
@@ -426,14 +700,35 @@ class GencoSearchApp(ctk.CTk):
             text_color=TEXT_MUTED,
         ).pack(side="left")
 
+        # Theme toggle + Version pill on the right
+        right_area = ctk.CTkFrame(header_inner, fg_color="transparent")
+        right_area.pack(side="right", fill="y")
+
+        # Theme toggle button
+        theme_icon = "☀" if self.current_theme == "light" else "🌙"
+        self._theme_toggle = ctk.CTkButton(
+            right_area,
+            text=theme_icon,
+            command=self._toggle_theme,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=14),
+            fg_color="transparent",
+            hover_color=ACCENT_LIGHT,
+            text_color=ACCENT,
+            width=32,
+            height=32,
+            corner_radius=CORNER_RADIUS_MD,
+            cursor="hand2",
+        )
+        self._theme_toggle.pack(side="right", padx=(SPACING_SM, SPACING_MD), pady=SPACING_LG)
+
         # Version pill on the right
-        pill = ctk.CTkFrame(header_inner, fg_color="#F0FDF4", corner_radius=20, border_width=1, border_color="#BBF7D0")
-        pill.pack(side="right", pady=22)
+        pill = ctk.CTkFrame(right_area, fg_color="#F0FDF4", corner_radius=20, border_width=1, border_color="#BBF7D0")
+        pill.pack(side="right", pady=SPACING_LG, padx=(0, SPACING_SM))
         pill_inner = ctk.CTkFrame(pill, fg_color="transparent")
-        pill_inner.pack(padx=12, pady=5)
+        pill_inner.pack(padx=SPACING_SM, pady=SPACING_XS)
 
         dot = ctk.CTkFrame(pill_inner, fg_color="#10B981", corner_radius=4, width=7, height=7)
-        dot.pack(side="left", padx=(0, 7))
+        dot.pack(side="left", padx=(0, SPACING_SM))
         dot.pack_propagate(False)
         ctk.CTkLabel(
             pill_inner,
@@ -444,16 +739,16 @@ class GencoSearchApp(ctk.CTk):
 
         # ── Main area ─────────────────────────────────────────────
         main = ctk.CTkFrame(search_frame, fg_color="transparent", corner_radius=0)
-        main.pack(fill="both", expand=True, padx=36, pady=(28, 16))
+        main.pack(fill="both", expand=True, padx=SPACING_2XL, pady=(SPACING_LG, SPACING_SM))
         main.grid_columnconfigure(0, weight=1)
         main.grid_rowconfigure(2, weight=1)
 
         # ── Page title ────────────────────────────────────────────
         title_row = ctk.CTkFrame(main, fg_color="transparent")
-        title_row.grid(row=0, column=0, sticky="ew", pady=(0, 20))
+        title_row.grid(row=0, column=0, sticky="ew", pady=(0, SPACING_LG))
 
         accent_bar = ctk.CTkFrame(title_row, fg_color=ACCENT, width=4, height=36, corner_radius=2)
-        accent_bar.pack(side="left", padx=(0, 14))
+        accent_bar.pack(side="left", padx=(0, SPACING_MD))
         accent_bar.pack_propagate(False)
 
         title_text = ctk.CTkFrame(title_row, fg_color="transparent")
@@ -473,31 +768,31 @@ class GencoSearchApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=15),
             text_color=TEXT_MUTED,
             anchor="w",
-        ).pack(anchor="w", pady=(2, 0))
+        ).pack(anchor="w", pady=(SPACING_XS, 0))
 
         # ── Search card ───────────────────────────────────────────
         search_card = ctk.CTkFrame(
             main,
             fg_color=BG_WHITE,
-            corner_radius=16,
+            corner_radius=CORNER_RADIUS_XL,
             border_width=1,
             border_color=BORDER_COLOR,
         )
-        search_card.grid(row=1, column=0, sticky="ew", pady=(0, 8))
+        search_card.grid(row=1, column=0, sticky="ew", pady=(0, SPACING_SM))
 
         card_inner = ctk.CTkFrame(search_card, fg_color="transparent")
-        card_inner.pack(fill="x", padx=24, pady=22)
+        card_inner.pack(fill="x", padx=SPACING_XL, pady=SPACING_LG)
 
         # ─ Main search bar (hero) ─
         search_hero = ctk.CTkFrame(
             card_inner,
             fg_color=INPUT_BG,
-            corner_radius=12,
+            corner_radius=CORNER_RADIUS_LG,
             border_width=2,
             border_color=INPUT_BORDER,
             height=52,
         )
-        search_hero.pack(fill="x", pady=(0, 16))
+        search_hero.pack(fill="x", pady=(0, SPACING_LG))
         search_hero.pack_propagate(False)
 
         # Frame interno para preservar a borda completa
@@ -512,11 +807,11 @@ class GencoSearchApp(ctk.CTk):
         search_icon_frame = ctk.CTkFrame(
             search_inner,
             fg_color=ACCENT_LIGHT,
-            corner_radius=8,
+            corner_radius=CORNER_RADIUS_SM,
             width=34,
             height=34,
         )
-        search_icon_frame.pack(side="left", padx=(7, 0), pady=7)
+        search_icon_frame.pack(side="left", padx=(SPACING_SM, 0), pady=SPACING_SM)
         search_icon_frame.pack_propagate(False)
         ctk.CTkLabel(
             search_icon_frame,
@@ -528,7 +823,7 @@ class GencoSearchApp(ctk.CTk):
         self.search_entry = ctk.CTkEntry(
             search_inner,
             height=46,
-            corner_radius=10,
+            corner_radius=CORNER_RADIUS_MD,
             border_width=0,
             fg_color="transparent",
             text_color=TEXT_DARK,
@@ -536,7 +831,7 @@ class GencoSearchApp(ctk.CTk):
             placeholder_text_color=TEXT_LIGHT,
             font=ctk.CTkFont(family=FONT_FAMILY, size=13),
         )
-        self.search_entry.pack(side="left", fill="both", expand=True, padx=(10, 6), pady=2)
+        self.search_entry.pack(side="left", fill="both", expand=True, padx=(SPACING_MD, SPACING_SM), pady=2)
         self.search_entry.bind("<Return>", lambda e: self._start_search())
 
         # Internal vertical divider
@@ -545,7 +840,7 @@ class GencoSearchApp(ctk.CTk):
             fg_color=BORDER_COLOR,
             width=1,
             height=28,
-        ).pack(side="left", pady=11)
+        ).pack(side="left", pady=SPACING_LG)
 
         # Inline buttons in the search bar
         ctk.CTkButton(
@@ -556,11 +851,11 @@ class GencoSearchApp(ctk.CTk):
             fg_color="transparent",
             hover_color=BTN_SEC_HOVER,
             text_color=TEXT_MUTED,
-            corner_radius=8,
+            corner_radius=CORNER_RADIUS_SM,
             width=72,
             height=34,
             cursor="hand2",
-        ).pack(side="left", padx=(6, 4), pady=7)
+        ).pack(side="left", padx=(SPACING_SM, SPACING_XS), pady=SPACING_SM)
 
         ctk.CTkButton(
             search_inner,
@@ -570,11 +865,11 @@ class GencoSearchApp(ctk.CTk):
             fg_color=ACCENT,
             hover_color=ACCENT_HOVER,
             text_color="white",
-            corner_radius=10,
+            corner_radius=CORNER_RADIUS_MD,
             width=120,
             height=36,
             cursor="hand2",
-        ).pack(side="left", padx=(2, 7), pady=6)
+        ).pack(side="left", padx=(SPACING_XS, SPACING_SM), pady=SPACING_SM)
 
         # ─ Filter row ─
         filters_row = ctk.CTkFrame(card_inner, fg_color="transparent")
@@ -586,18 +881,18 @@ class GencoSearchApp(ctk.CTk):
             text="Filters:",
             font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
             text_color="#000000",
-        ).pack(side="left", padx=(2, 14))
+        ).pack(side="left", padx=(SPACING_XS, SPACING_MD))
 
         # Folder
         folder_wrap = ctk.CTkFrame(filters_row, fg_color="transparent")
-        folder_wrap.pack(side="left", padx=(0, 10))
+        folder_wrap.pack(side="left", padx=(0, SPACING_MD))
 
         ctk.CTkLabel(
             folder_wrap,
             text="Folder",
             font=ctk.CTkFont(family=FONT_FAMILY, size=12),
             text_color="#000000",
-        ).pack(anchor="w", pady=(0, 3))
+        ).pack(anchor="w", pady=(0, SPACING_XS))
 
         ctk.CTkComboBox(
             folder_wrap,
@@ -605,7 +900,7 @@ class GencoSearchApp(ctk.CTk):
             variable=self.folder_var,
             width=200,
             height=36,
-            corner_radius=9,
+            corner_radius=CORNER_RADIUS_SM,
             border_width=1,
             border_color=INPUT_BORDER,
             fg_color=INPUT_BG,
@@ -620,14 +915,14 @@ class GencoSearchApp(ctk.CTk):
 
         # Type
         type_wrap = ctk.CTkFrame(filters_row, fg_color="transparent")
-        type_wrap.pack(side="left", padx=(0, 16))
+        type_wrap.pack(side="left", padx=(0, SPACING_LG))
 
         ctk.CTkLabel(
             type_wrap,
             text="Type",
             font=ctk.CTkFont(family=FONT_FAMILY, size=12),
             text_color="#000000",
-        ).pack(anchor="w", pady=(0, 3))
+        ).pack(anchor="w", pady=(0, SPACING_XS))
 
         ctk.CTkComboBox(
             type_wrap,
@@ -635,7 +930,7 @@ class GencoSearchApp(ctk.CTk):
             variable=self.extension_var,
             width=140,
             height=36,
-            corner_radius=9,
+            corner_radius=CORNER_RADIUS_SM,
             border_width=1,
             border_color=INPUT_BORDER,
             fg_color=INPUT_BG,
@@ -649,7 +944,7 @@ class GencoSearchApp(ctk.CTk):
         ).pack()
 
         # Vertical separator
-        ctk.CTkFrame(filters_row, fg_color=BORDER_COLOR, width=1, height=36).pack(side="left", padx=14)
+        ctk.CTkFrame(filters_row, fg_color=BORDER_COLOR, width=1, height=36).pack(side="left", padx=SPACING_LG)
 
         # Checkbox
         ctk.CTkCheckBox(
@@ -671,7 +966,7 @@ class GencoSearchApp(ctk.CTk):
         result_card = ctk.CTkFrame(
             main,
             fg_color=BG_WHITE,
-            corner_radius=16,
+            corner_radius=CORNER_RADIUS_XL,
             border_width=1,
             border_color=BORDER_COLOR,
         )
@@ -683,7 +978,7 @@ class GencoSearchApp(ctk.CTk):
         result_header.pack_propagate(False)
 
         rh_left = ctk.CTkFrame(result_header, fg_color="transparent")
-        rh_left.pack(side="left", padx=22, pady=14, fill="y")
+        rh_left.pack(side="left", padx=SPACING_XL, pady=SPACING_LG, fill="y")
 
         ctk.CTkLabel(
             rh_left,
@@ -701,7 +996,7 @@ class GencoSearchApp(ctk.CTk):
         col_header.pack_propagate(False)
 
         col_h_inner = ctk.CTkFrame(col_header, fg_color="transparent")
-        col_h_inner.pack(fill="both", expand=True, padx=22)
+        col_h_inner.pack(fill="both", expand=True, padx=SPACING_XL)
 
         ctk.CTkLabel(
             col_h_inner,
@@ -709,7 +1004,7 @@ class GencoSearchApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=11, weight="bold"),
             text_color=TEXT_LIGHT,
             anchor="w",
-        ).pack(side="left", pady=8)
+        ).pack(side="left", pady=SPACING_SM)
 
         ctk.CTkLabel(
             col_h_inner,
@@ -718,7 +1013,7 @@ class GencoSearchApp(ctk.CTk):
             text_color=TEXT_LIGHT,
             anchor="e",
             width=60,
-        ).pack(side="right", pady=8)
+        ).pack(side="right", pady=SPACING_SM)
 
         # Thin divider
         ctk.CTkFrame(result_card, fg_color=BORDER_LIGHT, height=1, corner_radius=0).pack(fill="x")
@@ -741,7 +1036,7 @@ class GencoSearchApp(ctk.CTk):
 
         # Footer
         footer = ctk.CTkFrame(search_frame, fg_color="transparent")
-        footer.pack(fill="x", side="bottom", pady=(2, 10))
+        footer.pack(fill="x", side="bottom", pady=(SPACING_XS, SPACING_MD))
 
         ctk.CTkLabel(
             footer,
@@ -754,7 +1049,7 @@ class GencoSearchApp(ctk.CTk):
 
     def _show_empty_state(self):
         self._empty_state_frame = ctk.CTkFrame(self.result_scroll, fg_color="transparent")
-        self._empty_state_frame.pack(expand=True, pady=48)
+        self._empty_state_frame.pack(expand=True, pady=SPACING_3XL)
 
         ctk.CTkLabel(
             self._empty_state_frame,
@@ -767,7 +1062,7 @@ class GencoSearchApp(ctk.CTk):
             text="No search performed",
             font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
             text_color=TEXT_SECONDARY,
-        ).pack(pady=(12, 4))
+        ).pack(pady=(SPACING_MD, SPACING_XS))
 
         ctk.CTkLabel(
             self._empty_state_frame,
@@ -812,14 +1107,14 @@ class GencoSearchApp(ctk.CTk):
         row.pack_propagate(False)
 
         inner = ctk.CTkFrame(row, fg_color="transparent")
-        inner.pack(fill="both", expand=True, padx=22, pady=11)
+        inner.pack(fill="both", expand=True, padx=SPACING_XL, pady=SPACING_MD)
 
         left = ctk.CTkFrame(inner, fg_color="transparent")
         left.pack(side="left", fill="both", expand=True)
 
         # Colored icon by type
-        icon_box = ctk.CTkFrame(left, fg_color=icon_bg, corner_radius=11, width=40, height=40)
-        icon_box.pack(side="left", padx=(0, 16))
+        icon_box = ctk.CTkFrame(left, fg_color=icon_bg, corner_radius=CORNER_RADIUS_MD, width=40, height=40)
+        icon_box.pack(side="left", padx=(0, SPACING_LG))
         icon_box.pack_propagate(False)
         ctk.CTkLabel(
             icon_box,
@@ -838,7 +1133,7 @@ class GencoSearchApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
             text_color=TEXT_DARK,
             anchor="w",
-        ).pack(anchor="w", pady=(2, 1))
+        ).pack(anchor="w", pady=(SPACING_XS, SPACING_XS))
 
         ctk.CTkLabel(
             text_frame,
@@ -859,10 +1154,10 @@ class GencoSearchApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
             text_color=badge_color,
             fg_color=badge_bg,
-            corner_radius=7,
+            corner_radius=CORNER_RADIUS_SM,
             width=54,
             height=26,
-        ).pack(anchor="e", pady=7)
+        ).pack(anchor="e", pady=SPACING_SM)
 
         # Hover effect
         def on_enter(e, r=row, ri=inner, l=left, tf=text_frame, ib=icon_box, rc=right_col):
@@ -902,7 +1197,7 @@ class GencoSearchApp(ctk.CTk):
         if not results:
             # Empty state "no results"
             empty = ctk.CTkFrame(self.result_scroll, fg_color="transparent")
-            empty.pack(expand=True, pady=48)
+            empty.pack(expand=True, pady=SPACING_3XL)
             self._empty_state_frame = empty
 
             ctk.CTkLabel(
@@ -916,7 +1211,7 @@ class GencoSearchApp(ctk.CTk):
                 text="No files found",
                 font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
                 text_color=TEXT_SECONDARY,
-            ).pack(pady=(12, 4))
+            ).pack(pady=(SPACING_MD, SPACING_XS))
 
             ctk.CTkLabel(
                 empty,
@@ -943,131 +1238,203 @@ class GencoSearchApp(ctk.CTk):
     # ── Search ───────────────────────────────────────────────────
 
     def _read_docx(self, path):
+        """Lê conteúdo de arquivo DOCX com tratamento de erro"""
         try:
             doc = Document(path)
-            return "\n".join(p.text for p in doc.paragraphs if p.text.strip())
-        except Exception:
+            content = "\n".join(p.text for p in doc.paragraphs if p.text.strip())
+            logging.debug(f"DOCX lido com sucesso: {path}")
+            return content
+        except PermissionError:
+            logging.warning(f"Permissão negada ao ler DOCX: {path}")
+            return ""
+        except Exception as e:
+            logging.warning(f"Erro ao ler DOCX {path}: {type(e).__name__}: {e}")
             return ""
 
     def _read_pdf(self, path):
+        """Lê conteúdo de arquivo PDF com tratamento de erro"""
         try:
             with fitz.open(path) as doc:
-                return "\n".join(page.get_text() for page in doc)
-        except Exception:
+                content = "\n".join(page.get_text() for page in doc)
+            logging.debug(f"PDF lido com sucesso: {path}")
+            return content
+        except PermissionError:
+            logging.warning(f"Permissão negada ao ler PDF: {path}")
+            return ""
+        except Exception as e:
+            logging.warning(f"Erro ao ler PDF {path}: {type(e).__name__}: {e}")
             return ""
 
     @staticmethod
     def _normalize(text):
+        """Normaliza texto removendo espaços"""
         return text.replace(" ", "")
 
     def _search_in(self, root_directory, term):
-        search_content = self.search_content_var.get()
-        extension_ui = self.extension_var.get()
-        selected_extension = EXTENSIONS_MAP.get(extension_ui, "All")
+        """Realiza busca com tratamento robusto de erros"""
+        try:
+            search_content = self.search_content_var.get()
+            extension_ui = self.extension_var.get()
+            selected_extension = EXTENSIONS_MAP.get(extension_ui, "All")
 
-        exact_matches, related_matches = [], []
-        valid_extensions = [".pdf", ".docx", ".xlsx", ".xls", ".txt", ".jpg", ".png"]
-        limit = 100
+            exact_matches, related_matches = [], []
+            valid_extensions = [".pdf", ".docx", ".xlsx", ".xls", ".txt", ".jpg", ".png"]
+            limit = 100
 
-        if not os.path.exists(root_directory):
+            if not os.path.exists(root_directory):
+                logging.debug(f"Diretório não encontrado: {root_directory}")
+                return []
+
+            norm_term = self._normalize(term)
+
+            for root, folders, files in os.walk(root_directory):
+                try:
+                    for folder in folders:
+                        name = folder.lower()
+                        norm_name = self._normalize(name)
+                        path = os.path.join(root, folder)
+                        if name == term or norm_name == norm_term:
+                            exact_matches.append(path)
+                        elif term in name or norm_term in norm_name:
+                            related_matches.append(path)
+
+                    for file in files:
+                        if len(exact_matches) + len(related_matches) >= limit:
+                            break
+
+                        file_name, ext = os.path.splitext(file)
+                        ext = ext.lower()
+
+                        if ext not in valid_extensions:
+                            continue
+
+                        if selected_extension != "All" and ext != selected_extension:
+                            continue
+
+                        path = os.path.join(root, file)
+                        has_content = False
+
+                        if search_content:
+                            try:
+                                if ext == ".pdf":
+                                    has_content = norm_term in self._normalize(self._read_pdf(path).lower())
+                                elif ext == ".docx":
+                                    has_content = norm_term in self._normalize(self._read_docx(path).lower())
+                            except Exception as e:
+                                logging.debug(f"Erro ao buscar conteúdo em {path}: {e}")
+
+                        norm_file = self._normalize(file_name.lower())
+                        if file_name.lower() == term or norm_file == norm_term or has_content:
+                            exact_matches.append(path)
+                        elif term in file_name.lower() or norm_term in norm_file:
+                            related_matches.append(path)
+                except (PermissionError, OSError) as e:
+                    logging.debug(f"Erro ao acessar {root}: {type(e).__name__}")
+                    continue
+                except Exception as e:
+                    logging.error(f"Erro inesperado em _search_in: {e}", exc_info=True)
+                    continue
+
+            logging.info(f"Busca concluída: {len(exact_matches)} exatos, {len(related_matches)} relacionados")
+            return exact_matches + related_matches
+        except Exception as e:
+            logging.error(f"Erro crítico em _search_in: {e}", exc_info=True)
             return []
 
-        norm_term = self._normalize(term)
-
-        for root, folders, files in os.walk(root_directory):
-            try:
-                for folder in folders:
-                    name = folder.lower()
-                    norm_name = self._normalize(name)
-                    path = os.path.join(root, folder)
-                    if name == term or norm_name == norm_term:
-                        exact_matches.append(path)
-                    elif term in name or norm_term in norm_name:
-                        related_matches.append(path)
-
-                for file in files:
-                    if len(exact_matches) + len(related_matches) >= limit:
-                        break
-
-                    file_name, ext = os.path.splitext(file)
-                    ext = ext.lower()
-
-                    if ext not in valid_extensions:
-                        continue
-
-                    if selected_extension != "All" and ext != selected_extension:
-                        continue
-
-                    path = os.path.join(root, file)
-                    has_content = False
-
-                    if search_content:
-                        if ext == ".pdf":
-                            has_content = norm_term in self._normalize(self._read_pdf(path).lower())
-                        elif ext == ".docx":
-                            has_content = norm_term in self._normalize(self._read_docx(path).lower())
-
-                    norm_file = self._normalize(file_name.lower())
-                    if file_name.lower() == term or norm_file == norm_term or has_content:
-                        exact_matches.append(path)
-                    elif term in file_name.lower() or norm_term in norm_file:
-                        related_matches.append(path)
-            except (PermissionError, Exception):
-                pass
-
-        return exact_matches + related_matches
-
     def _folder_thread(self, term, folder):
-        results = []
-        for bp in BASE_PATHS:
-            results += self._search_in(os.path.join(bp, folder), term)
-        self.after(0, lambda: self._show_results(results))
+        """Thread para busca em pasta específica"""
+        try:
+            results = []
+            for bp in BASE_PATHS:
+                results += self._search_in(os.path.join(bp, folder), term)
+            self.after(0, lambda: self._show_results(results))
+            logging.info(f"Busca em pasta '{folder}' concluída com {len(results)} resultados")
+        except Exception as e:
+            logging.error(f"Erro na thread de busca: {e}", exc_info=True)
+            self.after(0, lambda: self._show_error("Search Error", f"Failed to search:\n{e}"))
 
     def _all_folders_thread(self, term):
-        results = []
-        for bp in BASE_PATHS:
-            for f in AVAILABLE_FOLDERS:
-                results += self._search_in(os.path.join(bp, f), term)
-        self.after(0, lambda: self._show_results(results))
+        """Thread para busca em todas as pastas"""
+        try:
+            results = []
+            for bp in BASE_PATHS:
+                for f in AVAILABLE_FOLDERS:
+                    results += self._search_in(os.path.join(bp, f), term)
+            self.after(0, lambda: self._show_results(results))
+            logging.info(f"Busca em todas as pastas concluída com {len(results)} resultados")
+        except Exception as e:
+            logging.error(f"Erro na thread de busca: {e}", exc_info=True)
+            self.after(0, lambda: self._show_error("Search Error", f"Failed to search:\n{e}"))
 
     def _start_search(self):
-        term = self.search_entry.get().strip().lower()
-        if not term:
-            messagebox.showwarning("Warning", "Enter the file or folder name.")
-            return
+        """Inicia busca com validação e tratamento de erros"""
+        try:
+            term = self.search_entry.get().strip().lower()
+            if not term:
+                self._show_warning("Input Required", "Please enter a file or folder name.")
+                logging.warning("Tentativa de busca com termo vazio")
+                return
 
-        folder = self.folder_var.get().strip()
-        self._remove_empty_state()
-        self._clear_results()
-        self._start_spinner()
+            folder = self.folder_var.get().strip()
+            self._remove_empty_state()
+            self._clear_results()
+            self._start_spinner()
 
-        if not folder or folder == "All folders":
-            threading.Thread(target=self._all_folders_thread, args=(term,), daemon=True).start()
-        else:
-            threading.Thread(target=self._folder_thread, args=(term, folder), daemon=True).start()
+            logging.info(f"Iniciando busca: termo='{term}', pasta='{folder}'")
+            
+            if not folder or folder == "All folders":
+                threading.Thread(target=self._all_folders_thread, args=(term,), daemon=True).start()
+            else:
+                threading.Thread(target=self._folder_thread, args=(term, folder), daemon=True).start()
+        except Exception as e:
+            logging.error(f"Erro ao iniciar busca: {e}", exc_info=True)
+            self._show_error("Search Error", f"Failed to start search:\n{e}")
+            self._stop_spinner()
 
     def _clear(self):
-        self._stop_spinner()
-        if self.search_entry:
-            self.search_entry.delete(0, "end")
-        if self.count_number_label:
-            self.count_number_label.configure(text="")
-        if self.count_label:
-            self.count_label.configure(text="")
-        self.folder_var.set("All folders")
-        self.extension_var.set("All")
-        self.search_content_var.set(False)
-        self._clear_results()
-        self._show_empty_state()
+        """Limpa busca e contexto com tratamento de erro"""
+        try:
+            self._stop_spinner()
+            if self.search_entry:
+                self.search_entry.delete(0, "end")
+            if self.count_number_label:
+                self.count_number_label.configure(text="")
+            if self.count_label:
+                self.count_label.configure(text="")
+            self.folder_var.set("All folders")
+            self.extension_var.set("All")
+            self.search_content_var.set(False)
+            self._clear_results()
+            self._show_empty_state()
+            logging.info("Busca limpa e contexto resetado")
+        except Exception as e:
+            logging.error(f"Erro ao limpar: {e}", exc_info=True)
 
     def _open(self, path):
+        """Abre arquivo/pasta com tratamento robusto"""
         try:
+            if not os.path.exists(path):
+                self._show_error("File Not Found", f"The file or folder could not be found:\n{path}")
+                logging.warning(f"Tentativa de abrir caminho inexistente: {path}")
+                return
+                
             os.startfile(path)
-        except Exception:
-            pass
+            logging.info(f"Arquivo/pasta aberto: {path}")
+        except PermissionError:
+            self._show_error("Permission Denied", f"You don't have permission to open:\n{path}")
+            logging.warning(f"Permissão negada: {path}")
+        except Exception as e:
+            self._show_error("Cannot Open", f"Failed to open file:\n{type(e).__name__}: {e}")
+            logging.error(f"Erro ao abrir arquivo {path}: {e}", exc_info=True)
 
     def _copy(self, path):
+        """Copia caminho para área de transferência com feedback"""
         try:
+            if not os.path.exists(path):
+                self._show_warning("File Not Found", f"Cannot copy path - file not found:\n{path}")
+                logging.warning(f"Tentativa de copiar caminho inexistente: {path}")
+                return
+                
             self.clipboard_clear()
             self.clipboard_append(path)
 
@@ -1076,10 +1443,10 @@ class GencoSearchApp(ctk.CTk):
                 text="  ✓  Path copied  ",
                 fg_color=SUCCESS_BG,
                 text_color=SUCCESS_TEXT,
-                corner_radius=10,
+                corner_radius=CORNER_RADIUS_MD,
                 font=ctk.CTkFont(family=FONT_FAMILY, size=11, weight="bold"),
             )
-            notice.place(relx=1.0, rely=1.0, anchor="se", x=-24, y=-20)
+            notice.place(relx=1.0, rely=1.0, anchor="se", x=-SPACING_XL, y=-SPACING_LG)
 
             if self.toast_id:
                 try:
@@ -1088,25 +1455,43 @@ class GencoSearchApp(ctk.CTk):
                     pass
 
             self.toast_id = self.after(1800, lambda: notice.destroy() if notice.winfo_exists() else None)
-        except Exception:
-            pass
+            logging.info(f"Caminho copiado: {path}")
+        except Exception as e:
+            logging.error(f"Erro ao copiar caminho: {e}", exc_info=True)
+            self._show_error("Copy Error", f"Failed to copy path:\n{e}")
 
     # ── Auto-update ──────────────────────────────────────────────
 
     def _check_for_updates(self):
+        """Verifica atualizações no GitHub com tratamento de erro"""
         try:
             url = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
             req = urllib.request.Request(url, headers={"User-Agent": "GencoBusca-Updater"})
-            with urllib.request.urlopen(req, timeout=6) as resp:
-                data = json.loads(resp.read().decode())
+            
+            try:
+                with urllib.request.urlopen(req, timeout=6) as resp:
+                    data = json.loads(resp.read().decode('utf-8'))
+            except urllib.error.URLError as e:
+                logging.info(f"Não foi possível verificar atualizações (sem internet): {e}")
+                return
+            except json.JSONDecodeError as e:
+                logging.warning(f"Resposta JSON inválida de GitHub: {e}")
+                return
 
             latest_tag = data.get("tag_name", "").lstrip("v")
             if not latest_tag:
+                logging.info("Tag de versão não encontrada no GitHub")
                 return
 
-            current = tuple(int(x) for x in VERSION.split("."))
-            latest  = tuple(int(x) for x in latest_tag.split("."))
+            try:
+                current = tuple(int(x) for x in VERSION.split("."))
+                latest  = tuple(int(x) for x in latest_tag.split("."))
+            except ValueError as e:
+                logging.warning(f"Erro ao comparar versões: {e}")
+                return
+
             if latest <= current:
+                logging.info(f"Versão atual ({VERSION}) é a mais recente")
                 return
 
             download_url = None
@@ -1116,134 +1501,177 @@ class GencoSearchApp(ctk.CTk):
                     break
 
             if download_url:
+                logging.info(f"Nova versão encontrada: {latest_tag}")
                 self.after(0, lambda: self._show_update_dialog(latest_tag, download_url))
-        except Exception:
-            pass  # sem internet ou repositório privado — ignora silenciosamente
+        except Exception as e:
+            logging.debug(f"Erro ao verificar updates: {type(e).__name__}: {e}")
+            # Falha silenciosa para não atrapalhar a aplicação
 
     def _show_update_dialog(self, new_version, download_url):
-        dialog = ctk.CTkToplevel(self)
-        dialog.title("Update Available")
-        dialog.geometry("440x230")
-        dialog.resizable(False, False)
-        dialog.configure(fg_color=BG_WHITE)
-        dialog.grab_set()
-        dialog.lift()
-        dialog.focus_force()
+        """Mostra diálogo de atualização disponível"""
+        try:
+            dialog = ctk.CTkToplevel(self)
+            dialog.title("Update Available")
+            dialog.geometry("440x230")
+            dialog.resizable(False, False)
+            dialog.configure(fg_color=BG_WHITE)
+            dialog.grab_set()
+            dialog.lift()
+            dialog.focus_force()
 
-        self.update_idletasks()
-        x = self.winfo_x() + (self.winfo_width()  // 2) - 220
-        y = self.winfo_y() + (self.winfo_height() // 2) - 115
-        dialog.geometry(f"+{x}+{y}")
+            self.update_idletasks()
+            x = self.winfo_x() + (self.winfo_width()  // 2) - 220
+            y = self.winfo_y() + (self.winfo_height() // 2) - 115
+            dialog.geometry(f"+{x}+{y}")
 
-        ctk.CTkLabel(
-            dialog,
-            text="New update available!",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=17, weight="bold"),
-            text_color=TEXT_DARK,
-        ).pack(pady=(32, 6))
+            ctk.CTkLabel(
+                dialog,
+                text="New update available!",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=17, weight="bold"),
+                text_color=TEXT_DARK,
+            ).pack(pady=(SPACING_2XL, SPACING_SM))
 
-        ctk.CTkLabel(
-            dialog,
-            text=f"Version {new_version} is ready to download.\nDo you want to install it now?",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=13),
-            text_color=TEXT_MUTED,
-            justify="center",
-        ).pack(pady=(0, 28))
+            ctk.CTkLabel(
+                dialog,
+                text=f"Version {new_version} is ready to download.\nDo you want to install it now?",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=13),
+                text_color=TEXT_MUTED,
+                justify="center",
+            ).pack(pady=(0, SPACING_LG))
 
-        btn_row = ctk.CTkFrame(dialog, fg_color="transparent")
-        btn_row.pack()
+            btn_row = ctk.CTkFrame(dialog, fg_color="transparent")
+            btn_row.pack()
 
-        ctk.CTkButton(
-            btn_row,
-            text="Update Now",
-            command=lambda: self._download_and_install(download_url, dialog),
-            font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
-            fg_color=ACCENT,
-            hover_color=ACCENT_HOVER,
-            text_color="white",
-            corner_radius=8,
-            width=160,
-            height=40,
-            cursor="hand2",
-        ).pack(side="left", padx=(0, 12))
+            ctk.CTkButton(
+                btn_row,
+                text="Update Now",
+                command=lambda: self._download_and_install(download_url, dialog),
+                font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
+                fg_color=ACCENT,
+                hover_color=ACCENT_HOVER,
+                text_color="white",
+                corner_radius=CORNER_RADIUS_MD,
+                width=160,
+                height=40,
+                cursor="hand2",
+            ).pack(side="left", padx=(0, SPACING_MD))
 
-        ctk.CTkButton(
-            btn_row,
-            text="Later",
-            command=dialog.destroy,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=13),
-            fg_color=BTN_SECONDARY,
-            hover_color=BTN_SEC_HOVER,
-            text_color=BTN_SEC_TEXT,
-            corner_radius=8,
-            width=100,
-            height=40,
-            cursor="hand2",
-        ).pack(side="left")
+            ctk.CTkButton(
+                btn_row,
+                text="Later",
+                command=dialog.destroy,
+                font=ctk.CTkFont(family=FONT_FAMILY, size=13),
+                fg_color=BTN_SECONDARY,
+                hover_color=BTN_SEC_HOVER,
+                text_color=BTN_SEC_TEXT,
+                corner_radius=CORNER_RADIUS_MD,
+                width=100,
+                height=40,
+                cursor="hand2",
+            ).pack(side="left")
+            
+            logging.info("Diálogo de atualização exibido")
+        except Exception as e:
+            logging.error(f"Erro ao exibir diálogo de atualização: {e}", exc_info=True)
 
     def _download_and_install(self, url, dialog):
+        """Baixa e instala atualização com progresso"""
         dialog.destroy()
 
-        prog = ctk.CTkToplevel(self)
-        prog.title("Downloading update...")
-        prog.geometry("400x150")
-        prog.resizable(False, False)
-        prog.configure(fg_color=BG_WHITE)
-        prog.grab_set()
-        prog.lift()
+        try:
+            prog = ctk.CTkToplevel(self)
+            prog.title("Downloading update...")
+            prog.geometry("400x150")
+            prog.resizable(False, False)
+            prog.configure(fg_color=BG_WHITE)
+            prog.grab_set()
+            prog.lift()
 
-        self.update_idletasks()
-        x = self.winfo_x() + (self.winfo_width()  // 2) - 200
-        y = self.winfo_y() + (self.winfo_height() // 2) - 75
-        prog.geometry(f"+{x}+{y}")
+            self.update_idletasks()
+            x = self.winfo_x() + (self.winfo_width()  // 2) - 200
+            y = self.winfo_y() + (self.winfo_height() // 2) - 75
+            prog.geometry(f"+{x}+{y}")
 
-        ctk.CTkLabel(
-            prog,
-            text="Downloading update...",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
-            text_color=TEXT_DARK,
-        ).pack(pady=(28, 10))
+            ctk.CTkLabel(
+                prog,
+                text="Downloading update...",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
+                text_color=TEXT_DARK,
+            ).pack(pady=(SPACING_LG, SPACING_MD))
 
-        bar = ctk.CTkProgressBar(prog, width=340, progress_color=ACCENT)
-        bar.pack()
-        bar.set(0)
+            bar = ctk.CTkProgressBar(prog, width=340, progress_color=ACCENT)
+            bar.pack()
+            bar.set(0)
 
-        pct_label = ctk.CTkLabel(
-            prog,
-            text="0%",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            text_color=TEXT_MUTED,
-        )
-        pct_label.pack(pady=(6, 0))
+            pct_label = ctk.CTkLabel(
+                prog,
+                text="0%",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+                text_color=TEXT_MUTED,
+            )
+            pct_label.pack(pady=(SPACING_SM, 0))
 
-        def do_download():
-            try:
-                fd, tmp = tempfile.mkstemp(suffix=".exe")
-                os.close(fd)
+            def do_download():
+                try:
+                    fd, tmp = tempfile.mkstemp(suffix=".exe")
+                    os.close(fd)
+                    
+                    logging.info(f"Iniciando download: {url}")
 
-                def reporthook(block_num, block_size, total_size):
-                    if total_size > 0 and not self.closing:
-                        pct = min(block_num * block_size / total_size, 1.0)
-                        self.after(0, lambda p=pct: bar.set(p))
-                        self.after(0, lambda p=pct: pct_label.configure(text=f"{int(p * 100)}%"))
+                    def reporthook(block_num, block_size, total_size):
+                        if total_size > 0 and not self.closing:
+                            pct = min(block_num * block_size / total_size, 1.0)
+                            self.after(0, lambda p=pct: bar.set(p))
+                            self.after(0, lambda p=pct: pct_label.configure(text=f"{int(p * 100)}%"))
 
-                urllib.request.urlretrieve(url, tmp, reporthook)
+                    urllib.request.urlretrieve(url, tmp, reporthook)
+                    logging.info(f"Download concluído: {tmp}")
 
-                if not self.closing:
-                    self.after(0, lambda: self._launch_installer(tmp, prog))
-            except Exception as e:
-                if not self.closing:
-                    self.after(0, prog.destroy)
-                    self.after(0, lambda: messagebox.showerror(
-                        "Update Error", f"Failed to download update:\n{e}"
-                    ))
+                    if not self.closing:
+                        self.after(0, lambda: self._launch_installer(tmp, prog))
+                except urllib.error.URLError as e:
+                    logging.error(f"Erro de conexão ao baixar: {e}")
+                    if not self.closing:
+                        self.after(0, prog.destroy)
+                        self.after(0, lambda: self._show_error(
+                            "Download Error", f"Failed to download update:\nConnection error: {e}"
+                        ))
+                except OSError as e:
+                    logging.error(f"Erro de sistema ao baixar/salvar: {e}")
+                    if not self.closing:
+                        self.after(0, prog.destroy)
+                        self.after(0, lambda: self._show_error(
+                            "Download Error", f"Failed to download update:\nDisk or permission error: {e}"
+                        ))
+                except Exception as e:
+                    logging.error(f"Erro inesperado no download: {e}", exc_info=True)
+                    if not self.closing:
+                        self.after(0, prog.destroy)
+                        self.after(0, lambda: self._show_error(
+                            "Download Error", f"Failed to download update:\n{type(e).__name__}: {e}"
+                        ))
 
-        threading.Thread(target=do_download, daemon=True).start()
+            threading.Thread(target=do_download, daemon=True).start()
+        except Exception as e:
+            logging.error(f"Erro ao criar dialog de download: {e}", exc_info=True)
+            self._show_error("Update Error", f"Failed to start download:\n{e}")
 
     def _launch_installer(self, installer_path, prog_dialog):
-        prog_dialog.destroy()
-        subprocess.Popen([installer_path], shell=True)
-        self._close()
+        """Lança instalador com tratamento de erro"""
+        try:
+            prog_dialog.destroy()
+            logging.info(f"Lançando instalador: {installer_path}")
+            subprocess.Popen([installer_path], shell=True)
+            self._close()
+        except FileNotFoundError:
+            logging.error(f"Arquivo instalador não encontrado: {installer_path}")
+            self._show_error("Installation Error", f"Installer file not found.")
+        except PermissionError:
+            logging.error(f"Permissão negada para executar instalador: {installer_path}")
+            self._show_error("Installation Error", "Permission denied to execute installer.")
+        except Exception as e:
+            logging.error(f"Erro ao lançar instalador: {e}", exc_info=True)
+            self._show_error("Installation Error", f"Failed to launch installer:\n{e}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,27 @@
+2026-04-10 15:09:35,517 - INFO - _setup_logging - ============================================================
+2026-04-10 15:09:35,517 - INFO - _setup_logging - Genco Search v1.0.5 iniciado
+2026-04-10 15:09:35,518 - INFO - _setup_logging - ============================================================
+2026-04-10 15:09:35,838 - INFO - _save_config - Configurações salvas: tema light
+2026-04-10 15:09:35,840 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-10 15:09:35,990 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-10 15:09:36,205 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-10 15:09:36,631 - INFO - _check_for_updates - Versão atual (1.0.5) é a mais recente
+2026-04-10 15:09:44,373 - INFO - _apply_theme - Tema 'dark' aplicado com sucesso
+2026-04-10 15:09:44,375 - INFO - _save_config - Configurações salvas: tema dark
+2026-04-10 15:09:45,479 - INFO - _toggle_theme - Tema alterado para: dark
+2026-04-10 15:09:51,635 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-10 15:09:51,637 - INFO - _save_config - Configurações salvas: tema light
+2026-04-10 15:09:52,440 - INFO - _toggle_theme - Tema alterado para: light
+2026-04-10 15:10:03,346 - INFO - _start_search - Iniciando busca: termo='gnc3403', pasta='All folders'
+2026-04-10 15:10:03,787 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-10 15:10:04,556 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-10 15:10:04,701 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-10 15:10:05,752 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-10 15:10:08,683 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-10 15:10:11,154 - INFO - _search_in - Busca concluída: 1 exatos, 1 relacionados
+2026-04-10 15:10:12,136 - INFO - _search_in - Busca concluída: 1 exatos, 7 relacionados
+2026-04-10 15:10:14,207 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-10 15:10:14,358 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-10 15:10:20,561 - INFO - _search_in - Busca concluída: 1 exatos, 17 relacionados
+2026-04-10 15:10:20,953 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-10 15:10:20,957 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 28 resultados
