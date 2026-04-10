@@ -114,6 +114,8 @@ class GencoSearchApp(ctk.CTk):
         self.spinner_gif = None
         self.spinner_running = False
         self.spinner_anim_id = None
+        self._spinner_frame = None
+        self._spinner_label = None
         self.toast_id = None
         self.closing = False
 
@@ -121,7 +123,6 @@ class GencoSearchApp(ctk.CTk):
         self.extension_var = ctk.StringVar(value="All")
         self.search_content_var = ctk.BooleanVar(value=False)
 
-        self.progress_label = None
         self.search_entry = None
         self.count_label = None
         self.count_number_label = None
@@ -172,13 +173,13 @@ class GencoSearchApp(ctk.CTk):
             w.destroy()
 
     def _load_spinner(self):
-        path = os.path.join(BASE_DIR, "spinner.gif")
+        path = os.path.join(BASE_DIR, "lupapesquisa.gif")
         if not os.path.exists(path):
             return
         try:
             self.spinner_gif = Image.open(path)
             while True:
-                frame = self.spinner_gif.copy().convert("RGBA").resize((14, 14), Image.Resampling.LANCZOS)
+                frame = self.spinner_gif.copy().convert("RGBA").resize((40, 40), Image.Resampling.LANCZOS)
                 self.spinner_frames.append(ImageTk.PhotoImage(frame))
                 self.spinner_gif.seek(self.spinner_gif.tell() + 1)
         except EOFError:
@@ -189,21 +190,33 @@ class GencoSearchApp(ctk.CTk):
     def _animate_spinner(self, ind=0):
         if self.closing:
             return
-        lbl = self.progress_label
-        if self.spinner_running and self.spinner_frames and lbl and lbl.winfo_exists():
+        if self.spinner_running and self.spinner_frames and self._spinner_label and self._spinner_label.winfo_exists():
             frame = self.spinner_frames[ind]
-            lbl.configure(image=frame, text="  Searching...", fg=ACCENT)
-            lbl.image = frame
+            self._spinner_label.configure(image=frame)
+            self._spinner_label.image = frame
             self.spinner_anim_id = self.after(90, self._animate_spinner, (ind + 1) % len(self.spinner_frames))
-        else:
-            if lbl and lbl.winfo_exists():
-                lbl.configure(image="", text="")
-                lbl.image = None
 
     def _start_spinner(self):
         if self.spinner_running:
             return
         self.spinner_running = True
+        self._clear_results()
+        self._spinner_frame = ctk.CTkFrame(self.result_scroll, fg_color="transparent")
+        self._spinner_frame.pack(expand=True, pady=48)
+
+        row = ctk.CTkFrame(self._spinner_frame, fg_color="transparent")
+        row.pack()
+
+        ctk.CTkLabel(
+            row,
+            text="Searching...",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
+            text_color=TEXT_SECONDARY,
+        ).pack(side="left", padx=(0, 8))
+
+        self._spinner_label = tk.Label(row, bg=BG_WHITE, bd=0)
+        self._spinner_label.pack(side="left")
+
         self._animate_spinner()
 
     def _stop_spinner(self):
@@ -214,13 +227,10 @@ class GencoSearchApp(ctk.CTk):
             except Exception:
                 pass
             self.spinner_anim_id = None
-        lbl = self.progress_label
-        if lbl and lbl.winfo_exists():
-            try:
-                lbl.configure(image="", text="")
-                lbl.image = None
-            except Exception:
-                pass
+        if self._spinner_frame and self._spinner_frame.winfo_exists():
+            self._spinner_frame.destroy()
+        self._spinner_frame = None
+        self._spinner_label = None
 
     # ── Login Screen ─────────────────────────────────────────────
 
@@ -436,7 +446,7 @@ class GencoSearchApp(ctk.CTk):
         main = ctk.CTkFrame(search_frame, fg_color="transparent", corner_radius=0)
         main.pack(fill="both", expand=True, padx=36, pady=(28, 16))
         main.grid_columnconfigure(0, weight=1)
-        main.grid_rowconfigure(3, weight=1)
+        main.grid_rowconfigure(2, weight=1)
 
         # ── Page title ────────────────────────────────────────────
         title_row = ctk.CTkFrame(main, fg_color="transparent")
@@ -657,22 +667,6 @@ class GencoSearchApp(ctk.CTk):
             state="disabled",
         ).pack(side="left")
 
-        # ── Status/spinner bar ────────────────────────────────────
-        status_bar = ctk.CTkFrame(main, fg_color="transparent", height=20)
-        status_bar.grid(row=2, column=0, sticky="ew", pady=(0, 6))
-        status_bar.grid_propagate(False)
-
-        self.progress_label = tk.Label(
-            status_bar,
-            text="",
-            bg=BG_MAIN,
-            fg=ACCENT,
-            font=(FONT_FAMILY, 10),
-            anchor="w",
-            compound="left",
-        )
-        self.progress_label.pack(side="left", padx=2)
-
         # ── Results card ──────────────────────────────────────────
         result_card = ctk.CTkFrame(
             main,
@@ -681,7 +675,7 @@ class GencoSearchApp(ctk.CTk):
             border_width=1,
             border_color=BORDER_COLOR,
         )
-        result_card.grid(row=3, column=0, sticky="nsew")
+        result_card.grid(row=2, column=0, sticky="nsew")
 
         # Results header
         result_header = ctk.CTkFrame(result_card, fg_color=BG_WHITE, corner_radius=0, height=52)
