@@ -47,7 +47,11 @@ SIDEBAR_BG      = "#7B2320"
 SIDEBAR_LINE    = "#9B3330"
 SHADOW_COLOR    = "#E2E4E9"
 
-BASE_PATHS = [r"C:\GencoServer", r"C:\Genco Server"]
+BASE_PATHS = [
+    r"C:\GencoServer", r"C:\Genco Server",
+    r"D:\GencoServer", r"D:\Genco Server",
+    r"Z:\GencoServer", r"Z:\Genco Server",
+]
 
 AVAILABLE_FOLDERS = [
     "After-Sales-Ticket - AST", "Audit", "Clients", "Cotação - CTC", "Finance Genco", "Genco IT", "Genco Various", "Inspections - QC",

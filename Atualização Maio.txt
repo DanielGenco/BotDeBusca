@@ -1,0 +1,5 @@
+Atualização Maio Genco Search:
+
+- O contém da pesquisa precisa não fazer diferenciação de informações juntas, separadas e suas devidas ordens. Contendo uma palavra ele precisa trazer todos os resultados;
+- O ícone de "Searching" precisa estar mais ao centro da tela e em maior tamanho para uma visualização mais fácil do usuário. O ícone precisa ser dinâmico;
+- Incluir pesquisa no servidor antigo;

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"C:\\\\\\\\\" \"/c/Users/Daniel/Desktop/Daniel/Meus Projetos/BotDeBusca\" --include=\"*.py\" --include=\"*.iss\" --include=\"*.txt\" --include=\"*.md\" --include=\"*.spec\")",
+      "Bash(xargs ls:*)"
+    ]
+  }
+}
