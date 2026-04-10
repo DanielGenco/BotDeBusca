@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ; Non-commercial use only
 
-#define MyAppName "Genco Busca"
+#define MyAppName "Genco Search"
 #define MyAppVersion "1.0.3"
 #define MyAppPublisher "Genco Import & Export"
 #define MyAppExeName "bot_grafico.exe"
@@ -28,7 +28,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
-OutputBaseFilename=GencoBuscaSetup
+OutputBaseFilename=GencoSearchSetup
 SetupIconFile=C:\Users\Daniel\Desktop\Daniel\Meus Projetos\BotDeBusca\icon.ico
 SolidCompression=yes
 WizardStyle=modern dynamic
