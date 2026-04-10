@@ -962,6 +962,10 @@ class GencoSearchApp(ctk.CTk):
         except Exception:
             return ""
 
+    @staticmethod
+    def _normalize(text):
+        return text.replace(" ", "")
+
     def _search_in(self, root_directory, term):
         search_content = self.search_content_var.get()
         extension_ui = self.extension_var.get()
@@ -974,14 +978,17 @@ class GencoSearchApp(ctk.CTk):
         if not os.path.exists(root_directory):
             return []
 
+        norm_term = self._normalize(term)
+
         for root, folders, files in os.walk(root_directory):
             try:
                 for folder in folders:
                     name = folder.lower()
+                    norm_name = self._normalize(name)
                     path = os.path.join(root, folder)
-                    if name == term:
+                    if name == term or norm_name == norm_term:
                         exact_matches.append(path)
-                    elif term in name:
+                    elif term in name or norm_term in norm_name:
                         related_matches.append(path)
 
                 for file in files:
@@ -1002,13 +1009,14 @@ class GencoSearchApp(ctk.CTk):
 
                     if search_content:
                         if ext == ".pdf":
-                            has_content = term in self._read_pdf(path).lower()
+                            has_content = norm_term in self._normalize(self._read_pdf(path).lower())
                         elif ext == ".docx":
-                            has_content = term in self._read_docx(path).lower()
+                            has_content = norm_term in self._normalize(self._read_docx(path).lower())
 
-                    if file_name.lower() == term or has_content:
+                    norm_file = self._normalize(file_name.lower())
+                    if file_name.lower() == term or norm_file == norm_term or has_content:
                         exact_matches.append(path)
-                    elif term in file_name.lower():
+                    elif term in file_name.lower() or norm_term in norm_file:
                         related_matches.append(path)
             except (PermissionError, Exception):
                 pass
