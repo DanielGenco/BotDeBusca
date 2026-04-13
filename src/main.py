@@ -26,7 +26,7 @@ else:
 CONFIG_FILE = os.path.join(APP_DIR, "config", "config.json")
 LOG_FILE = os.path.join(APP_DIR, "genco_search.log")
 
-VERSION = "1.0.5"
+VERSION = "1.0.6"
 GITHUB_REPO = "DanielGenco/BotDeBusca"
 
 # ── Logging Setup ──────────────────────────────────────────────
@@ -740,7 +740,7 @@ class GencoSearchApp(ctk.CTk):
         dot.pack_propagate(False)
         ctk.CTkLabel(
             pill_inner,
-            text="Server File Finder  v1.0.5",
+            text="Server File Finder  v1.0.6",
             font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
             text_color="#065F46",
         ).pack(side="left")
@@ -1048,7 +1048,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             footer,
-            text="Genco Import & Export  •  Server File Finder  •  v1.0.5",
+            text="Genco Import & Export  •  Server File Finder  •  v1.0.6",
             font=ctk.CTkFont(family=FONT_FAMILY, size=9),
             text_color=TEXT_LIGHT,
         ).pack()
