@@ -14,9 +14,10 @@ import fitz
 import time
 import logging
 from datetime import datetime
-#
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CONFIG_FILE = os.path.join(BASE_DIR, "config.json")
+
+# ── CORREÇÃO: BASE_DIR agora aponta para a raiz do projeto (um nível acima de src/)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG_FILE = os.path.join(BASE_DIR, "config", "config.json")
 LOG_FILE = os.path.join(BASE_DIR, "genco_search.log")
 
 VERSION = "1.0.5"
@@ -188,7 +189,7 @@ BADGE_MAP = {
 }
 
 ICON_MAP = {
-    ".pdf":   ("�", "#FEF2F2", "#DC2626"),
+    ".pdf":   ("📕", "#FEF2F2", "#DC2626"),
     ".docx":  ("📄", "#EFF6FF", "#2563EB"),
     ".xlsx":  ("📊", "#ECFDF5", "#059669"),
     ".xls":   ("📊", "#ECFDF5", "#059669"),
@@ -273,6 +274,11 @@ class GencoSearchApp(ctk.CTk):
     def _save_config(self):
         """Salva configurações no arquivo config.json"""
         try:
+            # Cria a pasta config se não existir
+            config_dir = os.path.dirname(CONFIG_FILE)
+            if not os.path.exists(config_dir):
+                os.makedirs(config_dir)
+            
             config = {"theme": self.current_theme}
             with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
                 json.dump(config, f, indent=2, ensure_ascii=False)
@@ -406,10 +412,6 @@ class GencoSearchApp(ctk.CTk):
     def _center_window(self, w, h):
         self.geometry(f"{w}x{h}")
         self.update_idletasks()
-        # After update, winfo_width/height reflect the actual rendered size
-        # while winfo_screenwidth/height reflect the full screen.
-        # Use the actual rendered size for offset calculation so DPI scaling
-        # doesn't cause mismatch.
         actual_w = self.winfo_width()
         actual_h = self.winfo_height()
         sw = self.winfo_screenwidth()
@@ -445,7 +447,7 @@ class GencoSearchApp(ctk.CTk):
             w.destroy()
 
     def _load_spinner(self):
-        path = os.path.join(BASE_DIR, "lupapesquisa.gif")
+        path = os.path.join(BASE_DIR, "assets", "lupapesquisa.gif")
         if not os.path.exists(path):
             logging.warning(f"Spinner GIF não encontrado: {path}")
             return
@@ -546,7 +548,7 @@ class GencoSearchApp(ctk.CTk):
         ).pack(side="left")
 
         try:
-            lupa_img = Image.open(os.path.join(BASE_DIR, "lupa_tela_inicial.png"))
+            lupa_img = Image.open(os.path.join(BASE_DIR, "assets", "lupa_tela_inicial.png"))
             lupa_ctk = ctk.CTkImage(light_image=lupa_img, dark_image=lupa_img, size=(38, 38))
             lupa_label = ctk.CTkLabel(busca_row, image=lupa_ctk, text="", fg_color="transparent")
             lupa_label.pack(side="left", padx=(SPACING_MD, 0), pady=(SPACING_SM, 0))
@@ -586,7 +588,7 @@ class GencoSearchApp(ctk.CTk):
         inner.grid(row=0, column=0)
 
         try:
-            logo_img = Image.open(os.path.join(BASE_DIR, "icon.png"))
+            logo_img = Image.open(os.path.join(BASE_DIR, "assets", "icon.png"))
             logo_ctk = ctk.CTkImage(light_image=logo_img, dark_image=logo_img, size=(290, 290))
             logo_label = ctk.CTkLabel(inner, image=logo_ctk, text="", fg_color="transparent")
             logo_label.pack(pady=(0, SPACING_2XL))
@@ -659,7 +661,7 @@ class GencoSearchApp(ctk.CTk):
         logo_area.pack(side="left")
 
         try:
-            logo_img = Image.open(os.path.join(BASE_DIR, "icon.png"))
+            logo_img = Image.open(os.path.join(BASE_DIR, "assets", "icon.png"))
             logo_ctk = ctk.CTkImage(light_image=logo_img, dark_image=logo_img, size=(50, 50))
             logo_label = ctk.CTkLabel(logo_area, image=logo_ctk, text="")
             logo_label.pack(side="left", pady=SPACING_LG)
@@ -1505,7 +1507,6 @@ class GencoSearchApp(ctk.CTk):
                 self.after(0, lambda: self._show_update_dialog(latest_tag, download_url))
         except Exception as e:
             logging.debug(f"Erro ao verificar updates: {type(e).__name__}: {e}")
-            # Falha silenciosa para não atrapalhar a aplicação
 
     def _show_update_dialog(self, new_version, download_url):
         """Mostra diálogo de atualização disponível"""
