@@ -1509,17 +1509,19 @@ class GencoSearchApp(ctk.CTk):
                     break
 
             if download_url:
+                release_notes = data.get("body", "").strip()
                 logging.info(f"Nova versão encontrada: {latest_tag}")
-                self.after(0, lambda: self._show_update_dialog(latest_tag, download_url))
+                self.after(0, lambda: self._show_update_dialog(latest_tag, download_url, release_notes))
         except Exception as e:
             logging.debug(f"Erro ao verificar updates: {type(e).__name__}: {e}")
 
-    def _show_update_dialog(self, new_version, download_url):
+    def _show_update_dialog(self, new_version, download_url, release_notes=""):
         """Mostra diálogo de atualização disponível"""
         try:
+            dialog_height = 330 if release_notes else 230
             dialog = ctk.CTkToplevel(self)
             dialog.title("Update Available")
-            dialog.geometry("440x230")
+            dialog.geometry(f"440x{dialog_height}")
             dialog.resizable(False, False)
             dialog.configure(fg_color=BG_WHITE)
             dialog.grab_set()
@@ -1528,7 +1530,7 @@ class GencoSearchApp(ctk.CTk):
 
             self.update_idletasks()
             x = self.winfo_x() + (self.winfo_width()  // 2) - 220
-            y = self.winfo_y() + (self.winfo_height() // 2) - 115
+            y = self.winfo_y() + (self.winfo_height() // 2) - (dialog_height // 2)
             dialog.geometry(f"+{x}+{y}")
 
             ctk.CTkLabel(
@@ -1540,11 +1542,33 @@ class GencoSearchApp(ctk.CTk):
 
             ctk.CTkLabel(
                 dialog,
-                text=f"Version {new_version} is ready to download.\nDo you want to install it now?",
+                text=f"Version {new_version} is ready to download.",
                 font=ctk.CTkFont(family=FONT_FAMILY, size=13),
                 text_color=TEXT_MUTED,
                 justify="center",
-            ).pack(pady=(0, SPACING_LG))
+            ).pack(pady=(0, SPACING_SM))
+
+            if release_notes:
+                notes_frame = ctk.CTkFrame(dialog, fg_color="#F3F4F6", corner_radius=CORNER_RADIUS_MD)
+                notes_frame.pack(padx=SPACING_2XL, pady=(0, SPACING_LG), fill="x")
+
+                ctk.CTkLabel(
+                    notes_frame,
+                    text="What's new:",
+                    font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+                    text_color=TEXT_DARK,
+                    anchor="w",
+                ).pack(padx=SPACING_MD, pady=(SPACING_SM, 0), anchor="w")
+
+                ctk.CTkLabel(
+                    notes_frame,
+                    text=release_notes,
+                    font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+                    text_color=TEXT_MUTED,
+                    anchor="w",
+                    justify="left",
+                    wraplength=380,
+                ).pack(padx=SPACING_MD, pady=(2, SPACING_SM), anchor="w")
 
             btn_row = ctk.CTkFrame(dialog, fg_color="transparent")
             btn_row.pack()
