@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Genco Search"
-#define MyAppVersion "1.0.3"
+#define MyAppVersion "1.0.5"
 #define MyAppPublisher "Genco Import & Export"
 #define MyAppExeName "bot_grafico.exe"
 
@@ -29,7 +29,7 @@ DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 OutputBaseFilename=GencoSearchSetup
-SetupIconFile=C:\Users\Daniel\Desktop\Daniel\Meus Projetos\BotDeBusca\icon.ico
+SetupIconFile=C:\Users\Daniel\Desktop\Daniel\Meus Projetos\BotDeBusca\assets\icon.ico
 SolidCompression=yes
 WizardStyle=modern dynamic
 

@@ -15,10 +15,16 @@ import time
 import logging
 from datetime import datetime
 
-# ── CORREÇÃO: BASE_DIR agora aponta para a raiz do projeto (um nível acima de src/)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_FILE = os.path.join(BASE_DIR, "config", "config.json")
-LOG_FILE = os.path.join(BASE_DIR, "genco_search.log")
+# ── BASE_DIR: _MEIPASS quando empacotado (PyInstaller), raiz do projeto em dev
+if getattr(sys, 'frozen', False):
+    BASE_DIR = sys._MEIPASS
+    APP_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    APP_DIR = BASE_DIR
+
+CONFIG_FILE = os.path.join(APP_DIR, "config", "config.json")
+LOG_FILE = os.path.join(APP_DIR, "genco_search.log")
 
 VERSION = "1.0.5"
 GITHUB_REPO = "DanielGenco/BotDeBusca"
