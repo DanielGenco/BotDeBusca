@@ -181,3 +181,47 @@
 2026-04-15 12:24:52,768 - INFO - _search_in - Busca concluída: 0 exatos, 4 relacionados
 2026-04-15 12:24:53,764 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
 2026-04-15 12:24:53,772 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 54 resultados
+2026-04-15 14:06:44,690 - INFO - _setup_logging - ============================================================
+2026-04-15 14:06:44,693 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 14:06:44,695 - INFO - _setup_logging - ============================================================
+2026-04-15 14:06:45,017 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 14:06:45,033 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 14:06:45,180 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 14:06:45,351 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 14:06:45,678 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 14:07:27,429 - INFO - _setup_logging - ============================================================
+2026-04-15 14:07:27,430 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 14:07:27,430 - INFO - _setup_logging - ============================================================
+2026-04-15 14:07:27,557 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 14:07:27,558 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 14:07:27,654 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 14:07:27,780 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 14:07:28,086 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 14:13:10,291 - INFO - _setup_logging - ============================================================
+2026-04-15 14:13:10,291 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 14:13:10,291 - INFO - _setup_logging - ============================================================
+2026-04-15 14:13:10,446 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 14:13:10,447 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 14:13:10,548 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 14:13:10,670 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 14:13:10,991 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 14:13:34,400 - INFO - _setup_logging - ============================================================
+2026-04-15 14:13:34,400 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 14:13:34,401 - INFO - _setup_logging - ============================================================
+2026-04-15 14:13:34,527 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 14:13:34,528 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 14:13:34,630 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 14:13:34,747 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 14:13:34,901 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 14:14:03,676 - INFO - _apply_theme - Tema 'dark' aplicado com sucesso
+2026-04-15 14:14:03,683 - INFO - _save_config - Configurações salvas: tema dark
+2026-04-15 14:14:03,683 - INFO - _toggle_theme - Tema alterado para: dark
+2026-04-15 14:14:06,554 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 14:14:06,555 - INFO - _save_config - Configurações salvas: tema light
+2026-04-15 14:14:06,555 - INFO - _toggle_theme - Tema alterado para: light
+2026-04-15 14:14:07,997 - INFO - _apply_theme - Tema 'dark' aplicado com sucesso
+2026-04-15 14:14:07,998 - INFO - _save_config - Configurações salvas: tema dark
+2026-04-15 14:14:07,999 - INFO - _toggle_theme - Tema alterado para: dark
+2026-04-15 14:14:29,091 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 14:14:29,093 - INFO - _save_config - Configurações salvas: tema light
+2026-04-15 14:14:29,505 - INFO - _toggle_theme - Tema alterado para: light

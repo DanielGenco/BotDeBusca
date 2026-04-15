@@ -361,11 +361,13 @@ class GencoSearchApp(ctk.CTk):
             new_theme = "dark" if self.current_theme == "light" else "light"
             self._apply_theme(new_theme)
             self._save_config()
-            
-            # Refaz a tela de busca para atualizar cores
-            if hasattr(self, '_search_frame') and self._search_frame:
+
+            # Refaz a tela atual para atualizar cores
+            if hasattr(self, '_comp_on_screen') and self._comp_on_screen:
+                self._show_compressor()
+            elif hasattr(self, '_search_frame') and self._search_frame:
                 self._show_search()
-            
+
             logging.info(f"Tema alterado para: {new_theme}")
         except Exception as e:
             logging.error(f"Erro ao alternar tema: {e}", exc_info=True)
@@ -555,7 +557,7 @@ class GencoSearchApp(ctk.CTk):
         ctk.CTkLabel(
             title_block,
             text="GENCO",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=50, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=40, weight="bold"),
             text_color="white",
         ).pack()
 
@@ -565,7 +567,7 @@ class GencoSearchApp(ctk.CTk):
         ctk.CTkLabel(
             busca_row,
             text="SEARCH",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=50, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=40, weight="bold"),
             text_color="white",
         ).pack(side="left")
 
@@ -677,6 +679,7 @@ class GencoSearchApp(ctk.CTk):
 
     def _show_search(self):
         self._clear_screen()
+        self._comp_on_screen = False
         self.resizable(True, True)
         self._center_window(1360, 860)
         self.minsize(1180, 720)
@@ -1764,6 +1767,8 @@ class GencoSearchApp(ctk.CTk):
 
     def _show_compressor(self):
         self._clear_screen()
+        self._search_frame = None
+        self._comp_on_screen = True
         self.resizable(True, True)
         self._center_window(1360, 860)
         self.minsize(1180, 720)
@@ -1965,6 +1970,87 @@ class GencoSearchApp(ctk.CTk):
         result_area = ctk.CTkFrame(main, fg_color="transparent")
         result_area.grid(row=2, column=0, sticky="nsew")
         self._comp_result_frame = result_area
+
+        # ── How it works (initial state) ──────────────────────────
+        self._comp_show_how_it_works()
+
+    # ── Compressor: How it Works ─────────────────────────────────
+
+    def _comp_show_how_it_works(self):
+        """Mostra os 3 passos ilustrativos na área de resultado."""
+        for w in self._comp_result_frame.winfo_children():
+            w.destroy()
+
+        how_card = ctk.CTkFrame(
+            self._comp_result_frame, fg_color=BG_WHITE,
+            corner_radius=CORNER_RADIUS_XL,
+            border_width=1, border_color=BORDER_COLOR,
+        )
+        how_card.pack(fill="x", pady=(0, SPACING_SM))
+
+        inner = ctk.CTkFrame(how_card, fg_color="transparent")
+        inner.pack(fill="x", padx=SPACING_XL, pady=SPACING_LG)
+
+        # Title
+        ctk.CTkLabel(
+            inner, text="How it works",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=15, weight="bold"),
+            text_color=TEXT_DARK,
+        ).pack(anchor="w", pady=(0, SPACING_LG))
+
+        # Three steps in a row
+        steps_row = ctk.CTkFrame(inner, fg_color="transparent")
+        steps_row.pack(fill="x")
+        steps_row.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
+
+        steps = [
+            ("1", "Select a file", "Click the area above or drag\nan image or video file"),
+            ("2", "Adjust settings", "Choose compression level,\nquality and output format"),
+            ("3", "Download result", "Get your compressed file\nwith reduced size"),
+        ]
+
+        for i, (number, title, desc) in enumerate(steps):
+            col = i * 2  # 0, 2, 4
+
+            step_frame = ctk.CTkFrame(steps_row, fg_color="transparent")
+            step_frame.grid(row=0, column=col, sticky="nsew", padx=SPACING_SM)
+
+            # Number circle
+            circle = ctk.CTkFrame(
+                step_frame, fg_color=ACCENT, corner_radius=20,
+                width=40, height=40,
+            )
+            circle.pack(pady=(0, SPACING_MD))
+            circle.pack_propagate(False)
+
+            ctk.CTkLabel(
+                circle, text=number,
+                font=ctk.CTkFont(family=FONT_FAMILY, size=16, weight="bold"),
+                text_color="white",
+            ).place(relx=0.5, rely=0.5, anchor="center")
+
+            # Step title
+            ctk.CTkLabel(
+                step_frame, text=title,
+                font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
+                text_color=TEXT_DARK,
+            ).pack(pady=(0, SPACING_XS))
+
+            # Step description
+            ctk.CTkLabel(
+                step_frame, text=desc,
+                font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+                text_color=TEXT_MUTED, justify="center",
+            ).pack()
+
+            # Arrow between steps (not after the last one)
+            if i < 2:
+                arrow_label = ctk.CTkLabel(
+                    steps_row, text="->",
+                    font=ctk.CTkFont(family=FONT_FAMILY, size=20),
+                    text_color=TEXT_LIGHT,
+                )
+                arrow_label.grid(row=0, column=col + 1, padx=SPACING_XS)
 
     # ── Compressor: File Selection ────────────────────────────────
 
