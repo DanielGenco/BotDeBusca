@@ -1,8 +1,0 @@
-2026-04-13 10:28:57,971 - INFO - _setup_logging - ============================================================
-2026-04-13 10:28:57,973 - INFO - _setup_logging - Genco Search v1.0.5 iniciado
-2026-04-13 10:28:57,974 - INFO - _setup_logging - ============================================================
-2026-04-13 10:28:58,805 - INFO - _save_config - Configurações salvas: tema light
-2026-04-13 10:28:58,846 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
-2026-04-13 10:28:58,848 - WARNING - _load_spinner - Spinner GIF não encontrado: c:\Users\Daniel\Desktop\Daniel\Meus Projetos\BotDeBusca\src\lupapesquisa.gif
-2026-04-13 10:28:59,097 - INFO - __init__ - Aplicação inicializada com sucesso
-2026-04-13 10:28:59,483 - INFO - _check_for_updates - Versão atual (1.0.5) é a mais recente
