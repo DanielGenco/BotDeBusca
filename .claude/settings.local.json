@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "Bash(grep -r \"C:\\\\\\\\\" \"/c/Users/Daniel/Desktop/Daniel/Meus Projetos/BotDeBusca\" --include=\"*.py\" --include=\"*.iss\" --include=\"*.txt\" --include=\"*.md\" --include=\"*.spec\")",
-      "Bash(xargs ls:*)"
+      "Bash(xargs ls:*)",
+      "Bash(pip install *)",
+      "Bash(python -c \"import imageio_ffmpeg; print\\(imageio_ffmpeg.get_ffmpeg_exe\\(\\)\\)\")",
+      "Bash(timeout 8 python -c ' *)",
+      "Bash(python -c ' *)"
     ]
   }
 }

@@ -67,3 +67,117 @@
 2026-04-13 10:40:05,127 - INFO - _search_in - Busca concluída: 0 exatos, 4 relacionados
 2026-04-13 10:40:05,427 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
 2026-04-13 10:40:05,432 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 54 resultados
+2026-04-15 11:11:05,654 - INFO - _setup_logging - ============================================================
+2026-04-15 11:11:05,655 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:11:05,656 - INFO - _setup_logging - ============================================================
+2026-04-15 11:11:06,096 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:11:06,119 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:11:06,368 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:11:06,560 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:11:06,951 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 11:32:25,669 - INFO - _setup_logging - ============================================================
+2026-04-15 11:32:25,670 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:32:25,670 - INFO - _setup_logging - ============================================================
+2026-04-15 11:32:25,881 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:32:25,881 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:32:26,009 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:32:26,135 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:32:26,530 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 11:34:35,674 - INFO - _setup_logging - ============================================================
+2026-04-15 11:34:35,675 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:34:35,675 - INFO - _setup_logging - ============================================================
+2026-04-15 11:34:35,825 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:34:35,827 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:34:35,959 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:34:36,074 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:34:36,396 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 11:38:53,457 - INFO - _setup_logging - ============================================================
+2026-04-15 11:38:53,458 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:38:53,458 - INFO - _setup_logging - ============================================================
+2026-04-15 11:38:53,770 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:38:53,776 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:38:53,929 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:38:54,137 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:38:54,497 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 11:40:46,315 - INFO - _setup_logging - ============================================================
+2026-04-15 11:40:46,316 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:40:46,316 - INFO - _setup_logging - ============================================================
+2026-04-15 11:40:46,494 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:40:46,495 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:40:46,630 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:40:46,813 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:40:47,233 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 11:42:13,601 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:/Users/Daniel/Downloads/IMG_2834.MOV -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads/IMG_2834_compressed.MOV
+2026-04-15 11:42:59,849 - INFO - _setup_logging - ============================================================
+2026-04-15 11:42:59,850 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:42:59,850 - INFO - _setup_logging - ============================================================
+2026-04-15 11:43:00,254 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:43:00,281 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:43:00,485 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:43:00,742 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:43:01,090 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 11:50:04,917 - INFO - _setup_logging - ============================================================
+2026-04-15 11:50:04,918 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:50:04,918 - INFO - _setup_logging - ============================================================
+2026-04-15 11:50:05,088 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:50:05,088 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:50:05,229 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:50:05,375 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:50:05,706 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 11:50:40,125 - INFO - _setup_logging - ============================================================
+2026-04-15 11:50:40,125 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:50:40,125 - INFO - _setup_logging - ============================================================
+2026-04-15 11:50:40,278 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:50:40,281 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:50:40,445 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:50:40,644 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:50:40,924 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 11:51:00,974 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\IMG_2834.MOV -y -c:v libx264 -crf 26 -preset medium -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads/IMG_2834_compressed.MOV
+2026-04-15 11:57:28,269 - INFO - _setup_logging - ============================================================
+2026-04-15 11:57:28,270 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 11:57:28,270 - INFO - _setup_logging - ============================================================
+2026-04-15 11:57:28,964 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 11:57:28,983 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 11:57:29,173 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 11:57:29,437 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 11:57:29,860 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 12:01:00,289 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\IMG_2834.MOV -y -c:v libx264 -crf 18 -preset slow -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads/IMG_2834_compressed.MOV
+2026-04-15 12:08:28,938 - INFO - _setup_logging - ============================================================
+2026-04-15 12:08:28,940 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 12:08:28,940 - INFO - _setup_logging - ============================================================
+2026-04-15 12:08:29,268 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 12:08:29,270 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 12:08:29,439 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 12:08:29,663 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 12:08:30,024 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 12:08:42,470 - INFO - _get_video_duration - Duração do vídeo detectada: 32.4s
+2026-04-15 12:08:42,471 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\IMG_2834.MOV -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads/IMG_2834_compressed.MOV
+2026-04-15 12:10:26,122 - INFO - _get_video_duration - Duração do vídeo detectada: 32.4s
+2026-04-15 12:10:26,123 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\IMG_2834.MOV -y -c:v libx264 -crf 32 -preset fast -vf scale=-2:'480' -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads/IMG_2834_compressed.MOV
+2026-04-15 12:19:24,110 - INFO - _get_video_duration - Duração do vídeo detectada: 5.0s
+2026-04-15 12:19:24,111 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Genkinho investigando video.mp4 -y -c:v libx264 -crf 18 -preset slow -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads/Genkinho investigando video_compressed.mp4
+2026-04-15 12:22:19,407 - INFO - _setup_logging - ============================================================
+2026-04-15 12:22:19,408 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-15 12:22:19,409 - INFO - _setup_logging - ============================================================
+2026-04-15 12:22:19,687 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-15 12:22:19,691 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-15 12:22:19,815 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-15 12:22:19,946 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-15 12:22:20,276 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-15 12:22:42,690 - INFO - _get_video_duration - Duração do vídeo detectada: 5.0s
+2026-04-15 12:22:42,690 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:/Users/Daniel/Downloads/Genkinho investigando video.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads/Genkinho investigando video_compressed.mp4
+2026-04-15 12:23:06,057 - INFO - _get_video_duration - Duração do vídeo detectada: 32.4s
+2026-04-15 12:23:06,057 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:/Users/Daniel/Downloads/IMG_2834.MOV -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads/IMG_2834_compressed.MOV
+2026-04-15 12:24:30,215 - INFO - _start_search - Iniciando busca: termo='ctc 1407', pasta='All folders'
+2026-04-15 12:24:30,858 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:32,082 - INFO - _search_in - Busca concluída: 0 exatos, 50 relacionados
+2026-04-15 12:24:32,211 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:32,392 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:36,375 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:38,780 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:40,355 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:42,477 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:42,617 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:52,768 - INFO - _search_in - Busca concluída: 0 exatos, 4 relacionados
+2026-04-15 12:24:53,764 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-15 12:24:53,772 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 54 resultados
