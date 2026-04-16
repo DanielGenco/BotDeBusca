@@ -3,6 +3,7 @@ Módulo de compressão de imagens e vídeos.
 Usa Pillow para imagens e FFmpeg (via imageio-ffmpeg) para vídeos.
 """
 
+import io
 import os
 import subprocess
 import threading
@@ -48,6 +49,93 @@ def get_file_size_str(size_bytes):
         return f"{size_bytes / (1024 * 1024):.1f} MB"
     else:
         return f"{size_bytes / (1024 * 1024 * 1024):.2f} GB"
+
+
+def estimate_image_size(input_path, quality=75, output_format=None):
+    """
+    Estima o tamanho comprimido de uma imagem fazendo compressão em memória.
+    Rápido e preciso.
+    """
+    try:
+        img = Image.open(input_path)
+        original_size = os.path.getsize(input_path)
+
+        if output_format == "JPEG" or (output_format is None and input_path.lower().endswith((".jpg", ".jpeg"))):
+            if img.mode in ("RGBA", "P"):
+                img = img.convert("RGB")
+
+        save_kwargs = {}
+        if output_format:
+            fmt = output_format.upper()
+        else:
+            ext = os.path.splitext(input_path)[1].lower()
+            fmt_map = {".jpg": "JPEG", ".jpeg": "JPEG", ".png": "PNG", ".webp": "WEBP",
+                       ".bmp": "BMP", ".tiff": "TIFF", ".tif": "TIFF"}
+            fmt = fmt_map.get(ext, "JPEG")
+
+        if fmt in ("JPEG", "WEBP"):
+            save_kwargs["quality"] = quality
+            save_kwargs["optimize"] = True
+        elif fmt == "PNG":
+            save_kwargs["optimize"] = True
+
+        buffer = io.BytesIO()
+        img.save(buffer, format=fmt, **save_kwargs)
+        estimated_size = buffer.tell()
+
+        return {"original_size": original_size, "estimated_size": estimated_size}
+    except Exception:
+        original_size = os.path.getsize(input_path) if os.path.exists(input_path) else 0
+        return {"original_size": original_size, "estimated_size": original_size}
+
+
+def estimate_video_size(input_path, quality_preset="medium", max_resolution=None):
+    """
+    Estima o tamanho comprimido de um vídeo baseado no CRF e resolução.
+    Estimativa aproximada.
+    """
+    original_size = os.path.getsize(input_path) if os.path.exists(input_path) else 0
+    # Reduction factors baseados em testes empíricos com CRF
+    reduction_map = {
+        "low":    0.85,   # CRF 18 — ~15% reduction
+        "medium": 0.50,   # CRF 26 — ~50% reduction
+        "high":   0.30,   # CRF 32 — ~70% reduction
+    }
+    factor = reduction_map.get(quality_preset, 0.50)
+
+    # Fator adicional de redução por resolução
+    if max_resolution:
+        # Reduzir resolução reduz o tamanho proporcionalmente à área de pixels
+        # Assumindo vídeo original ~1080p como referência
+        res_factor_map = {
+            1080: 1.0,    # Sem redução adicional
+            720:  0.45,   # 720/1080 ≈ 0.67, ao quadrado ≈ 0.44
+            480:  0.20,   # 480/1080 ≈ 0.44, ao quadrado ≈ 0.20
+        }
+        res_factor = res_factor_map.get(max_resolution, 1.0)
+        factor = factor * res_factor
+
+    estimated_size = int(original_size * factor)
+    return {"original_size": original_size, "estimated_size": estimated_size}
+
+
+def estimate_batch_size(files, image_quality=75, video_preset="medium"):
+    """
+    Estima o tamanho total comprimido de uma lista de arquivos.
+    Faz estimativa real para imagens, aproximada para vídeos.
+    """
+    total_original = 0
+    total_estimated = 0
+
+    for finfo in files:
+        if finfo["type"] == "image":
+            est = estimate_image_size(finfo["path"], quality=image_quality)
+        else:
+            est = estimate_video_size(finfo["path"], quality_preset=video_preset)
+        total_original += est["original_size"]
+        total_estimated += est["estimated_size"]
+
+    return {"original_size": total_original, "estimated_size": total_estimated}
 
 
 def compress_image(input_path, output_path, quality=75, max_width=None, max_height=None,
@@ -250,6 +338,167 @@ def compress_video(input_path, output_path, quality_preset="medium",
 
         if on_complete:
             on_complete(result)
+
+    thread = threading.Thread(target=_run, daemon=True)
+    thread.start()
+    return thread
+
+
+def scan_folder(folder_path):
+    """
+    Escaneia uma pasta recursivamente e retorna lista de arquivos suportados.
+
+    Returns:
+        list of dict: [{"path": str, "type": "image"|"video", "size": int, "relative": str}]
+    """
+    files = []
+    for root, _dirs, filenames in os.walk(folder_path):
+        for fname in filenames:
+            full_path = os.path.join(root, fname)
+            ftype = get_file_type(full_path)
+            if ftype:
+                rel_path = os.path.relpath(full_path, folder_path)
+                files.append({
+                    "path": full_path,
+                    "type": ftype,
+                    "size": os.path.getsize(full_path),
+                    "relative": rel_path,
+                })
+    return files
+
+
+def compress_batch(folder_path, output_folder, image_quality=75,
+                   video_preset="medium", video_max_resolution=None,
+                   on_file_start=None, on_file_progress=None,
+                   on_file_complete=None, on_batch_complete=None,
+                   cancel_event=None):
+    """
+    Comprime todos os arquivos de imagem/vídeo de uma pasta em thread separada.
+    Mantém a estrutura de subpastas no destino.
+
+    Args:
+        folder_path: Pasta de origem
+        output_folder: Pasta de destino
+        image_quality: Qualidade para imagens (1-100)
+        video_preset: 'low', 'medium' ou 'high'
+        video_max_resolution: Resolução máxima para vídeos (None = original)
+        on_file_start: Callback(index, total, filename, filetype)
+        on_file_progress: Callback(percent) — progresso do arquivo atual (vídeos)
+        on_file_complete: Callback(index, total, result)
+        on_batch_complete: Callback(summary) — relatório final
+        cancel_event: threading.Event — cancela o lote
+
+    Returns:
+        Thread que está processando
+    """
+    files = scan_folder(folder_path)
+
+    if not files:
+        if on_batch_complete:
+            on_batch_complete({
+                "success": True,
+                "total_files": 0,
+                "message": "No supported files found in this folder.",
+            })
+        return None
+
+    def _run():
+        total = len(files)
+        total_original = 0
+        total_compressed = 0
+        completed = 0
+        failed = 0
+
+        for i, finfo in enumerate(files):
+            if cancel_event and cancel_event.is_set():
+                if on_batch_complete:
+                    on_batch_complete({
+                        "success": False, "error": "cancelled",
+                        "total_files": total, "completed": completed, "failed": failed,
+                        "total_original": total_original,
+                        "total_compressed": total_compressed,
+                    })
+                return
+
+            # Criar subpasta no destino mantendo a estrutura
+            rel_dir = os.path.dirname(finfo["relative"])
+            dest_dir = os.path.join(output_folder, rel_dir) if rel_dir else output_folder
+            os.makedirs(dest_dir, exist_ok=True)
+
+            out_path = os.path.join(dest_dir, os.path.basename(finfo["path"]))
+
+            if on_file_start:
+                on_file_start(i, total, os.path.basename(finfo["path"]), finfo["type"])
+
+            if finfo["type"] == "image":
+                result = compress_image(finfo["path"], out_path, quality=image_quality)
+                if result.get("success"):
+                    total_original += result["original_size"]
+                    total_compressed += result["compressed_size"]
+                    completed += 1
+                else:
+                    failed += 1
+                if on_file_complete:
+                    on_file_complete(i, total, result)
+
+            elif finfo["type"] == "video":
+                # Compressão síncrona (já estamos em thread)
+                video_done = threading.Event()
+                video_result = [None]
+
+                def _on_vid_progress(pct):
+                    if on_file_progress:
+                        on_file_progress(pct)
+
+                def _on_vid_complete(res):
+                    video_result[0] = res
+                    video_done.set()
+
+                compress_video(
+                    finfo["path"], out_path,
+                    quality_preset=video_preset,
+                    max_resolution=video_max_resolution,
+                    on_progress=_on_vid_progress,
+                    on_complete=_on_vid_complete,
+                    cancel_event=cancel_event,
+                )
+                video_done.wait()
+
+                result = video_result[0]
+                if result and result.get("success"):
+                    total_original += result["original_size"]
+                    total_compressed += result["compressed_size"]
+                    completed += 1
+                elif result and result.get("error") == "cancelled":
+                    if on_batch_complete:
+                        on_batch_complete({
+                            "success": False, "error": "cancelled",
+                            "total_files": total, "completed": completed, "failed": failed,
+                            "total_original": total_original,
+                            "total_compressed": total_compressed,
+                        })
+                    return
+                else:
+                    failed += 1
+
+                if on_file_complete:
+                    on_file_complete(i, total, result)
+
+        # Relatório final
+        reduction = 0
+        if total_original > 0:
+            reduction = ((total_original - total_compressed) / total_original) * 100
+
+        if on_batch_complete:
+            on_batch_complete({
+                "success": True,
+                "total_files": total,
+                "completed": completed,
+                "failed": failed,
+                "total_original": total_original,
+                "total_compressed": total_compressed,
+                "reduction_percent": max(0, reduction),
+            })
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
