@@ -1,0 +1,183 @@
+2026-04-22 15:16:14,505 - INFO - _setup_logging - ============================================================
+2026-04-22 15:16:14,506 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-22 15:16:14,506 - INFO - _setup_logging - ============================================================
+2026-04-22 15:16:14,847 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-22 15:16:14,854 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-22 15:16:15,024 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-22 15:16:15,241 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-22 15:16:15,747 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-22 16:17:40,568 - INFO - _get_video_duration - Duração do vídeo detectada: 58.8s
+2026-04-22 16:17:40,576 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4
+2026-04-22 16:17:42,255 - INFO - _get_video_duration - Duração do vídeo detectada: 62.5s
+2026-04-22 16:17:42,255 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4
+2026-04-22 16:24:16,493 - INFO - _get_video_duration - Duração do vídeo detectada: 1.0s
+2026-04-22 16:24:16,494 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4
+2026-04-22 16:24:16,773 - INFO - _get_video_duration - Duração do vídeo detectada: 1.0s
+2026-04-22 16:24:16,773 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4
+2026-04-22 16:24:46,940 - INFO - _get_video_duration - Duração do vídeo detectada: 0.2s
+2026-04-22 16:24:46,941 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4
+2026-04-22 16:24:47,378 - INFO - _get_video_duration - Duração do vídeo detectada: 0.1s
+2026-04-22 16:24:47,379 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4
+2026-04-22 16:24:48,013 - INFO - _get_video_duration - Duração do vídeo detectada: 0.2s
+2026-04-22 16:24:48,014 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4
+2026-04-22 16:24:48,463 - INFO - _get_video_duration - Duração do vídeo detectada: 0.1s
+2026-04-22 16:24:48,464 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4
+2026-04-22 16:29:47,935 - INFO - _setup_logging - ============================================================
+2026-04-22 16:29:47,936 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-22 16:29:47,936 - INFO - _setup_logging - ============================================================
+2026-04-22 16:29:48,144 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-22 16:29:48,145 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-22 16:29:48,273 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-22 16:29:48,440 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-22 16:29:48,837 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-22 16:30:09,102 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-22 16:30:09,103 - INFO - _comp_start_batch - Quality=22, preset=high
+2026-04-22 16:30:09,103 - WARNING - _show_warning - No Destination: Please choose a destination folder before compressing.
+2026-04-22 16:30:19,064 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-22 16:30:19,065 - INFO - _comp_start_batch - Quality=22, preset=high
+2026-04-22 16:30:19,066 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Desktop
+2026-04-22 16:30:19,066 - INFO - _comp_start_batch - Total files to compress: 33
+2026-04-22 16:30:19,101 - INFO - _run_queue - Starting batch thread for 33 files
+2026-04-22 16:30:19,103 - INFO - _run_queue - [1/33] Processing image: IMG_20260209_140630.jpg
+2026-04-22 16:30:19,425 - INFO - _run_queue - [2/33] Processing image: IMG_20260209_140722.jpg
+2026-04-22 16:30:19,603 - INFO - _run_queue - [3/33] Processing image: IMG_20260209_140727.jpg
+2026-04-22 16:30:19,765 - INFO - _run_queue - [4/33] Processing image: IMG_20260209_140809.jpg
+2026-04-22 16:30:19,921 - INFO - _run_queue - [5/33] Processing image: IMG_20260209_140918.jpg
+2026-04-22 16:30:20,125 - INFO - _run_queue - [6/33] Processing image: IMG_20260209_140954.jpg
+2026-04-22 16:30:20,310 - INFO - _run_queue - [7/33] Processing image: IMG_20260209_141038.jpg
+2026-04-22 16:30:20,481 - INFO - _run_queue - [8/33] Processing image: IMG_20260209_141102.jpg
+2026-04-22 16:30:20,655 - INFO - _run_queue - [9/33] Processing image: IMG_20260209_141240.jpg
+2026-04-22 16:30:20,927 - INFO - _run_queue - [10/33] Processing image: IMG_20260209_141246.jpg
+2026-04-22 16:30:21,127 - INFO - _run_queue - [11/33] Processing image: IMG_20260209_141252.jpg
+2026-04-22 16:30:21,320 - INFO - _run_queue - [12/33] Processing image: IMG_20260209_141257.jpg
+2026-04-22 16:30:21,526 - INFO - _run_queue - [13/33] Processing image: IMG_20260209_141307.jpg
+2026-04-22 16:30:21,757 - INFO - _run_queue - [14/33] Processing image: IMG_20260209_141311.jpg
+2026-04-22 16:30:21,985 - INFO - _run_queue - [15/33] Processing image: IMG_20260209_141454.jpg
+2026-04-22 16:30:22,170 - INFO - _run_queue - [16/33] Processing image: IMG_20260209_141504.jpg
+2026-04-22 16:30:22,409 - INFO - _run_queue - [17/33] Processing image: IMG_20260209_141545.jpg
+2026-04-22 16:30:22,587 - INFO - _run_queue - [18/33] Processing image: IMG_20260209_141549.jpg
+2026-04-22 16:30:22,775 - INFO - _run_queue - [19/33] Processing image: IMG_20260209_141642.jpg
+2026-04-22 16:30:22,977 - INFO - _run_queue - [20/33] Processing image: IMG_20260209_141825.jpg
+2026-04-22 16:30:23,190 - INFO - _run_queue - [21/33] Processing image: IMG_20260209_141842.jpg
+2026-04-22 16:30:23,386 - INFO - _run_queue - [22/33] Processing image: IMG_20260209_141908.jpg
+2026-04-22 16:30:23,621 - INFO - _run_queue - [23/33] Processing image: IMG_20260209_141911.jpg
+2026-04-22 16:30:23,811 - INFO - _run_queue - [24/33] Processing image: IMG_20260209_141930.jpg
+2026-04-22 16:30:24,033 - INFO - _run_queue - [25/33] Processing image: IMG_20260209_141934.jpg
+2026-04-22 16:30:24,260 - INFO - _run_queue - [26/33] Processing image: IMG_20260209_142615.jpg
+2026-04-22 16:30:24,544 - INFO - _run_queue - [27/33] Processing image: IMG_20260209_142621.jpg
+2026-04-22 16:30:24,743 - INFO - _run_queue - [28/33] Processing image: IMG_20260209_143950.jpg
+2026-04-22 16:30:24,933 - INFO - _run_queue - [29/33] Processing image: IMG_20260209_144004.jpg
+2026-04-22 16:30:25,112 - INFO - _run_queue - [30/33] Processing image: IMG_20260209_145915.jpg
+2026-04-22 16:30:25,368 - INFO - _run_queue - [31/33] Processing image: IMG_20260209_150140.jpg
+2026-04-22 16:30:25,605 - INFO - _run_queue - [32/33] Processing video: VID_20260209_140414.mp4
+2026-04-22 16:30:25,797 - INFO - _get_video_duration - Duração do vídeo detectada: 0.2s
+2026-04-22 16:30:25,798 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\GNC 3407 - QC 1402\VID_20260209_140414.mp4
+2026-04-22 16:30:26,163 - INFO - _run_queue - [33/33] Processing video: VID_20260209_141227.mp4
+2026-04-22 16:30:26,245 - INFO - _get_video_duration - Duração do vídeo detectada: 0.1s
+2026-04-22 16:30:26,246 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\GNC 3407 - QC 1402\VID_20260209_141227.mp4
+2026-04-22 16:37:13,942 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-22 16:37:13,946 - INFO - _comp_start_batch - Quality=10, preset=high
+2026-04-22 16:37:13,946 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Desktop
+2026-04-22 16:37:13,947 - INFO - _comp_start_batch - Total files to compress: 33
+2026-04-22 16:37:14,077 - INFO - _run_queue - Starting batch thread for 33 files
+2026-04-22 16:37:14,078 - INFO - _run_queue - [1/33] Processing image: IMG_20260209_140630.jpg
+2026-04-22 16:37:14,492 - INFO - _run_queue - [2/33] Processing image: IMG_20260209_140722.jpg
+2026-04-22 16:37:14,791 - INFO - _run_queue - [3/33] Processing image: IMG_20260209_140727.jpg
+2026-04-22 16:37:15,068 - INFO - _run_queue - [4/33] Processing image: IMG_20260209_140809.jpg
+2026-04-22 16:37:15,348 - INFO - _run_queue - [5/33] Processing image: IMG_20260209_140918.jpg
+2026-04-22 16:37:15,760 - INFO - _run_queue - [6/33] Processing image: IMG_20260209_140954.jpg
+2026-04-22 16:37:16,045 - INFO - _run_queue - [7/33] Processing image: IMG_20260209_141038.jpg
+2026-04-22 16:37:16,389 - INFO - _run_queue - [8/33] Processing image: IMG_20260209_141102.jpg
+2026-04-22 16:37:16,627 - INFO - _run_queue - [9/33] Processing image: IMG_20260209_141240.jpg
+2026-04-22 16:37:17,036 - INFO - _run_queue - [10/33] Processing image: IMG_20260209_141246.jpg
+2026-04-22 16:37:17,660 - INFO - _run_queue - [11/33] Processing image: IMG_20260209_141252.jpg
+2026-04-22 16:37:18,244 - INFO - _run_queue - [12/33] Processing image: IMG_20260209_141257.jpg
+2026-04-22 16:37:18,619 - INFO - _run_queue - [13/33] Processing image: IMG_20260209_141307.jpg
+2026-04-22 16:37:19,008 - INFO - _run_queue - [14/33] Processing image: IMG_20260209_141311.jpg
+2026-04-22 16:37:19,409 - INFO - _run_queue - [15/33] Processing image: IMG_20260209_141454.jpg
+2026-04-22 16:37:19,777 - INFO - _run_queue - [16/33] Processing image: IMG_20260209_141504.jpg
+2026-04-22 16:37:20,124 - INFO - _run_queue - [17/33] Processing image: IMG_20260209_141545.jpg
+2026-04-22 16:37:20,448 - INFO - _run_queue - [18/33] Processing image: IMG_20260209_141549.jpg
+2026-04-22 16:37:20,788 - INFO - _run_queue - [19/33] Processing image: IMG_20260209_141642.jpg
+2026-04-22 16:37:21,146 - INFO - _run_queue - [20/33] Processing image: IMG_20260209_141825.jpg
+2026-04-22 16:37:21,524 - INFO - _run_queue - [21/33] Processing image: IMG_20260209_141842.jpg
+2026-04-22 16:37:21,865 - INFO - _run_queue - [22/33] Processing image: IMG_20260209_141908.jpg
+2026-04-22 16:37:22,246 - INFO - _run_queue - [23/33] Processing image: IMG_20260209_141911.jpg
+2026-04-22 16:37:22,582 - INFO - _run_queue - [24/33] Processing image: IMG_20260209_141930.jpg
+2026-04-22 16:37:22,936 - INFO - _run_queue - [25/33] Processing image: IMG_20260209_141934.jpg
+2026-04-22 16:37:23,277 - INFO - _run_queue - [26/33] Processing image: IMG_20260209_142615.jpg
+2026-04-22 16:37:23,682 - INFO - _run_queue - [27/33] Processing image: IMG_20260209_142621.jpg
+2026-04-22 16:37:23,988 - INFO - _run_queue - [28/33] Processing image: IMG_20260209_143950.jpg
+2026-04-22 16:37:24,279 - INFO - _run_queue - [29/33] Processing image: IMG_20260209_144004.jpg
+2026-04-22 16:37:24,561 - INFO - _run_queue - [30/33] Processing image: IMG_20260209_145915.jpg
+2026-04-22 16:37:24,870 - INFO - _run_queue - [31/33] Processing image: IMG_20260209_150140.jpg
+2026-04-22 16:37:25,204 - INFO - _run_queue - [32/33] Processing video: VID_20260209_140414.mp4
+2026-04-22 16:37:25,334 - INFO - _get_video_duration - Duração do vídeo detectada: 0.2s
+2026-04-22 16:37:25,335 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\GNC 3407 - QC 1402\VID_20260209_140414.mp4
+2026-04-22 16:37:25,581 - INFO - _run_queue - [33/33] Processing video: VID_20260209_141227.mp4
+2026-04-22 16:37:25,664 - INFO - _get_video_duration - Duração do vídeo detectada: 0.1s
+2026-04-22 16:37:25,664 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\GNC 3407 - QC 1402\VID_20260209_141227.mp4
+2026-04-22 16:45:09,096 - INFO - _setup_logging - ============================================================
+2026-04-22 16:45:09,097 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-22 16:45:09,097 - INFO - _setup_logging - ============================================================
+2026-04-22 16:45:09,277 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-22 16:45:09,277 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-22 16:45:09,400 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-22 16:45:09,546 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-22 16:45:09,990 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-22 16:45:43,982 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-22 16:45:43,982 - INFO - _comp_start_batch - Quality=10, preset=high
+2026-04-22 16:45:43,982 - WARNING - _show_warning - No Destination: Please choose a destination folder before compressing.
+2026-04-22 16:45:52,349 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-22 16:45:52,350 - INFO - _comp_start_batch - Quality=10, preset=high
+2026-04-22 16:45:52,351 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Desktop
+2026-04-22 16:45:52,359 - INFO - _comp_start_batch - Total files to compress: 33
+2026-04-22 16:45:52,387 - INFO - _run_queue - Starting batch thread for 33 files
+2026-04-22 16:45:52,388 - INFO - _run_queue - [1/33] Processing image: IMG_20260209_140630.jpg
+2026-04-22 16:45:52,718 - INFO - _run_queue - [2/33] Processing image: IMG_20260209_140722.jpg
+2026-04-22 16:45:52,879 - INFO - _run_queue - [3/33] Processing image: IMG_20260209_140727.jpg
+2026-04-22 16:45:53,050 - INFO - _run_queue - [4/33] Processing image: IMG_20260209_140809.jpg
+2026-04-22 16:45:53,213 - INFO - _run_queue - [5/33] Processing image: IMG_20260209_140918.jpg
+2026-04-22 16:45:53,397 - INFO - _run_queue - [6/33] Processing image: IMG_20260209_140954.jpg
+2026-04-22 16:45:53,577 - INFO - _run_queue - [7/33] Processing image: IMG_20260209_141038.jpg
+2026-04-22 16:45:53,737 - INFO - _run_queue - [8/33] Processing image: IMG_20260209_141102.jpg
+2026-04-22 16:45:53,893 - INFO - _run_queue - [9/33] Processing image: IMG_20260209_141240.jpg
+2026-04-22 16:45:54,072 - INFO - _run_queue - [10/33] Processing image: IMG_20260209_141246.jpg
+2026-04-22 16:45:54,264 - INFO - _run_queue - [11/33] Processing image: IMG_20260209_141252.jpg
+2026-04-22 16:45:54,447 - INFO - _run_queue - [12/33] Processing image: IMG_20260209_141257.jpg
+2026-04-22 16:45:54,640 - INFO - _run_queue - [13/33] Processing image: IMG_20260209_141307.jpg
+2026-04-22 16:45:54,874 - INFO - _run_queue - [14/33] Processing image: IMG_20260209_141311.jpg
+2026-04-22 16:45:55,091 - INFO - _run_queue - [15/33] Processing image: IMG_20260209_141454.jpg
+2026-04-22 16:45:55,265 - INFO - _run_queue - [16/33] Processing image: IMG_20260209_141504.jpg
+2026-04-22 16:45:55,448 - INFO - _run_queue - [17/33] Processing image: IMG_20260209_141545.jpg
+2026-04-22 16:45:55,636 - INFO - _run_queue - [18/33] Processing image: IMG_20260209_141549.jpg
+2026-04-22 16:45:55,825 - INFO - _run_queue - [19/33] Processing image: IMG_20260209_141642.jpg
+2026-04-22 16:45:56,025 - INFO - _run_queue - [20/33] Processing image: IMG_20260209_141825.jpg
+2026-04-22 16:45:56,250 - INFO - _run_queue - [21/33] Processing image: IMG_20260209_141842.jpg
+2026-04-22 16:45:56,414 - INFO - _run_queue - [22/33] Processing image: IMG_20260209_141908.jpg
+2026-04-22 16:45:56,606 - INFO - _run_queue - [23/33] Processing image: IMG_20260209_141911.jpg
+2026-04-22 16:45:56,794 - INFO - _run_queue - [24/33] Processing image: IMG_20260209_141930.jpg
+2026-04-22 16:45:57,022 - INFO - _run_queue - [25/33] Processing image: IMG_20260209_141934.jpg
+2026-04-22 16:45:57,244 - INFO - _run_queue - [26/33] Processing image: IMG_20260209_142615.jpg
+2026-04-22 16:45:57,486 - INFO - _run_queue - [27/33] Processing image: IMG_20260209_142621.jpg
+2026-04-22 16:45:57,708 - INFO - _run_queue - [28/33] Processing image: IMG_20260209_143950.jpg
+2026-04-22 16:45:57,935 - INFO - _run_queue - [29/33] Processing image: IMG_20260209_144004.jpg
+2026-04-22 16:45:58,191 - INFO - _run_queue - [30/33] Processing image: IMG_20260209_145915.jpg
+2026-04-22 16:45:58,396 - INFO - _run_queue - [31/33] Processing image: IMG_20260209_150140.jpg
+2026-04-22 16:45:58,619 - INFO - _run_queue - [32/33] Processing video: VID_20260209_140414.mp4
+2026-04-22 16:45:58,730 - INFO - _get_video_duration - Duração do vídeo detectada: 0.2s
+2026-04-22 16:45:58,730 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\GNC 3407 - QC 1402\VID_20260209_140414.mp4
+2026-04-22 16:45:59,023 - INFO - _run_queue - [33/33] Processing video: VID_20260209_141227.mp4
+2026-04-22 16:45:59,096 - INFO - _get_video_duration - Duração do vídeo detectada: 0.1s
+2026-04-22 16:45:59,096 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\GNC 3407 - QC 1402\VID_20260209_141227.mp4
+2026-04-22 16:58:36,499 - INFO - _setup_logging - ============================================================
+2026-04-22 16:58:36,499 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-22 16:58:36,500 - INFO - _setup_logging - ============================================================
+2026-04-22 16:58:36,651 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-22 16:58:36,653 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-22 16:58:36,781 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-22 16:58:36,907 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-22 16:58:37,314 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-22 16:59:09,002 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-22 16:59:09,003 - INFO - _comp_start_batch - Quality=15, preset=high
+2026-04-22 16:59:09,003 - WARNING - _show_warning - No Destination: Please choose a destination folder before compressing.

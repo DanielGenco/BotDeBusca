@@ -221,6 +221,9 @@ ctk.set_default_color_theme("blue")
 
 
 class GencoSearchApp(ctk.CTk):
+    MAX_QUEUE_IMAGES = 50
+    MAX_QUEUE_VIDEOS = 10
+
     def __init__(self):
         super().__init__()
         
@@ -270,6 +273,15 @@ class GencoSearchApp(ctk.CTk):
             self._comp_result_frame = None
             self._comp_thread = None
             self._comp_cancel_event = None
+
+            # Queue state
+            self._comp_queue = []          # list of {"path", "type", "size", "name"}
+            self._comp_queue_images = 0
+            self._comp_queue_videos = 0
+            self._comp_queue_frame = None
+            self._comp_queue_list_frame = None
+            self._comp_queue_counter_label = None
+            self._comp_is_processing = False
 
             self._load_spinner()
             self._show_login()
@@ -1919,64 +1931,66 @@ class GencoSearchApp(ctk.CTk):
         card_inner = ctk.CTkFrame(upload_card, fg_color="transparent")
         card_inner.pack(fill="x", padx=SPACING_XL, pady=SPACING_LG)
 
-        # ── Drop zone ─────────────────────────────────────────────
-        self._comp_drop_zone = ctk.CTkFrame(
+        # ── Drop zone (compact) ───────────────────────────────────
+        drop_zone = ctk.CTkFrame(
             card_inner, fg_color=ACCENT_LIGHT,
             corner_radius=CORNER_RADIUS_LG,
             border_width=2, border_color=ACCENT_MEDIUM,
-            height=140,
+            height=80,
         )
-        self._comp_drop_zone.pack(fill="x", pady=(0, SPACING_LG))
-        self._comp_drop_zone.pack_propagate(False)
+        drop_zone.pack(fill="x", pady=(0, SPACING_LG))
+        drop_zone.pack_propagate(False)
 
-        drop_inner = ctk.CTkFrame(self._comp_drop_zone, fg_color="transparent")
+        drop_inner = ctk.CTkFrame(drop_zone, fg_color="transparent")
         drop_inner.place(relx=0.5, rely=0.5, anchor="center")
 
-        self._comp_drop_icon = ctk.CTkLabel(
-            drop_inner, text="",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=32),
+        drop_row = ctk.CTkFrame(drop_inner, fg_color="transparent")
+        drop_row.pack()
+
+        ctk.CTkLabel(
+            drop_row, text="",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=20),
             text_color=ACCENT,
-        )
-        self._comp_drop_icon.pack()
+        ).pack(side="left", padx=(0, SPACING_SM))
 
-        self._comp_drop_text = ctk.CTkLabel(
-            drop_inner, text="Click or drag a file or folder here",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=14),
+        ctk.CTkLabel(
+            drop_row, text="Click or drag files / folders here to add to the queue",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=13),
             text_color=TEXT_SECONDARY,
-        )
-        self._comp_drop_text.pack(pady=(SPACING_XS, 0))
+        ).pack(side="left")
 
-        self._comp_drop_sub = ctk.CTkLabel(
-            drop_inner, text="JPG, PNG, WebP, MP4, MOV, AVI, MKV",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+        ctk.CTkLabel(
+            drop_inner,
+            text=f"JPG, PNG, WebP, MP4, MOV, AVI, MKV  •  Max {self.MAX_QUEUE_IMAGES} images, {self.MAX_QUEUE_VIDEOS} videos",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=10),
             text_color=TEXT_MUTED,
-        )
-        self._comp_drop_sub.pack()
+        ).pack(pady=(SPACING_XS, 0))
 
         # Make the whole zone clickable
-        for widget in [self._comp_drop_zone, drop_inner, self._comp_drop_icon,
-                       self._comp_drop_text, self._comp_drop_sub]:
+        for widget in [drop_zone, drop_inner, drop_row]:
             widget.bind("<Button-1>", lambda e: self._comp_select_file())
             widget.configure(cursor="hand2")
 
         # Enable drag and drop on the entire window
         windnd.hook_dropfiles(self, func=self._comp_on_drop)
 
+        # ── Queue list ────────────────────────────────────────────
+        self._comp_queue_frame = ctk.CTkFrame(card_inner, fg_color="transparent")
+        # Shows when queue has items
+
         # ── Options row ───────────────────────────────────────────
         self._comp_options_frame = ctk.CTkFrame(card_inner, fg_color="transparent")
-        # Hidden until file is selected
-
-        # ── Progress area ─────────────────────────────────────────
-        self._comp_progress_frame = ctk.CTkFrame(card_inner, fg_color="transparent")
-        # Hidden until compression starts
 
         # ── Results area ──────────────────────────────────────────
         result_area = ctk.CTkFrame(main, fg_color="transparent")
         result_area.grid(row=2, column=0, sticky="nsew")
         self._comp_result_frame = result_area
 
-        # ── How it works (initial state) ──────────────────────────
-        self._comp_show_how_it_works()
+        # ── Show queue or how it works ────────────────────────────
+        if self._comp_queue:
+            self._comp_render_queue()
+        else:
+            self._comp_show_how_it_works()
 
     # ── Compressor: How it Works ─────────────────────────────────
 
@@ -2056,7 +2070,7 @@ class GencoSearchApp(ctk.CTk):
                 )
                 arrow_label.grid(row=0, column=col + 1, padx=SPACING_XS)
 
-    # ── Compressor: File Selection ────────────────────────────────
+    # ── Compressor: File Selection & Queue ───────────────────────
 
     def _comp_select_file(self):
         filetypes = [
@@ -2065,100 +2079,208 @@ class GencoSearchApp(ctk.CTk):
             ("Videos", "*.mp4 *.mov *.avi *.mkv *.webm *.wmv *.flv"),
             ("All files", "*.*"),
         ]
-        path = filedialog.askopenfilename(
-            title="Select file to compress",
+        paths = filedialog.askopenfilenames(
+            title="Select files to compress",
             filetypes=filetypes,
         )
-        if not path:
+        if not paths:
             return
-        self._comp_load_path(path)
-
-    def _comp_select_folder(self):
-        path = filedialog.askdirectory(title="Select folder to compress")
-        if not path:
-            return
-        self._comp_load_path(path)
+        for path in paths:
+            self._comp_add_to_queue(path)
+        self._comp_render_queue()
 
     def _comp_on_drop(self, files):
-        """Callback do windnd quando arquivos/pastas são arrastados para a janela."""
+        """Callback do windnd quando arquivos/pastas são arrastados."""
         if not files:
             return
-        path = files[0].decode("utf-8") if isinstance(files[0], bytes) else files[0]
-        self._comp_load_path(path)
+        for f in files:
+            path = f.decode("utf-8") if isinstance(f, bytes) else f
+            self._comp_add_to_queue(path)
+        self._comp_render_queue()
 
-    def _comp_load_path(self, path):
-        """Carrega um arquivo ou pasta no compressor."""
+    def _comp_add_to_queue(self, path):
+        """Adiciona um arquivo ou pasta à fila, respeitando os limites."""
         if os.path.isdir(path):
-            self._comp_load_folder(path)
-        else:
-            self._comp_load_file(path)
+            files = scan_folder(path)
+            if not files:
+                return
+            new_images = sum(1 for f in files if f["type"] == "image")
+            new_videos = sum(1 for f in files if f["type"] == "video")
 
-    def _comp_load_file(self, path):
-        """Carrega um arquivo selecionado ou arrastado no compressor."""
-        file_type = get_file_type(path)
-        if not file_type:
-            self._show_warning("Unsupported File", "Please select an image or video file.")
+            if self._comp_queue_images + new_images > self.MAX_QUEUE_IMAGES:
+                remaining = self.MAX_QUEUE_IMAGES - self._comp_queue_images
+                self._show_warning("Limit Reached",
+                    f"Image limit is {self.MAX_QUEUE_IMAGES}. You can add {remaining} more images.")
+                return
+            if self._comp_queue_videos + new_videos > self.MAX_QUEUE_VIDEOS:
+                remaining = self.MAX_QUEUE_VIDEOS - self._comp_queue_videos
+                self._show_warning("Limit Reached",
+                    f"Video limit is {self.MAX_QUEUE_VIDEOS}. You can add {remaining} more videos.")
+                return
+
+            total_size = sum(f["size"] for f in files)
+            self._comp_queue.append({
+                "path": path,
+                "type": "folder",
+                "name": os.path.basename(path),
+                "size": total_size,
+                "files": files,
+                "images": new_images,
+                "videos": new_videos,
+            })
+            self._comp_queue_images += new_images
+            self._comp_queue_videos += new_videos
+
+        else:
+            file_type = get_file_type(path)
+            if not file_type:
+                return
+
+            # Check limits
+            if file_type == "image" and self._comp_queue_images >= self.MAX_QUEUE_IMAGES:
+                self._show_warning("Limit Reached",
+                    f"Image limit is {self.MAX_QUEUE_IMAGES}. Remove an item to add more.")
+                return
+            if file_type == "video" and self._comp_queue_videos >= self.MAX_QUEUE_VIDEOS:
+                self._show_warning("Limit Reached",
+                    f"Video limit is {self.MAX_QUEUE_VIDEOS}. Remove an item to add more.")
+                return
+
+            # Avoid duplicates
+            if any(item["path"] == path for item in self._comp_queue):
+                return
+
+            self._comp_queue.append({
+                "path": path,
+                "type": file_type,
+                "name": os.path.basename(path),
+                "size": os.path.getsize(path),
+            })
+            if file_type == "image":
+                self._comp_queue_images += 1
+            else:
+                self._comp_queue_videos += 1
+
+    def _comp_remove_from_queue(self, index):
+        """Remove um item da fila pelo índice."""
+        if index < 0 or index >= len(self._comp_queue):
+            return
+        item = self._comp_queue.pop(index)
+        if item["type"] == "folder":
+            self._comp_queue_images -= item.get("images", 0)
+            self._comp_queue_videos -= item.get("videos", 0)
+        elif item["type"] == "image":
+            self._comp_queue_images -= 1
+        elif item["type"] == "video":
+            self._comp_queue_videos -= 1
+        self._comp_render_queue()
+
+    def _comp_clear_queue(self):
+        """Limpa toda a fila."""
+        self._comp_queue.clear()
+        self._comp_queue_images = 0
+        self._comp_queue_videos = 0
+        self._comp_render_queue()
+
+    def _comp_render_queue(self):
+        """Renderiza a lista de fila e opções."""
+        # Clear queue frame
+        for w in self._comp_queue_frame.winfo_children():
+            w.destroy()
+        for w in self._comp_options_frame.winfo_children():
+            w.destroy()
+        for w in self._comp_result_frame.winfo_children():
+            w.destroy()
+
+        if not self._comp_queue:
+            self._comp_queue_frame.pack_forget()
+            self._comp_options_frame.pack_forget()
+            self._comp_show_how_it_works()
             return
 
-        self._comp_file_path = path
-        self._comp_file_type = file_type
-        self._comp_batch_folder = None
-        file_size = os.path.getsize(path)
-        file_name = os.path.basename(path)
+        self._comp_queue_frame.pack(fill="x", pady=(0, SPACING_LG))
 
-        # Update drop zone to show selected file
-        if file_type == "image":
-            self._comp_drop_icon.configure(text="")
-        else:
-            self._comp_drop_icon.configure(text="")
+        # Header: counter + clear button
+        header = ctk.CTkFrame(self._comp_queue_frame, fg_color="transparent")
+        header.pack(fill="x", pady=(0, SPACING_SM))
 
-        self._comp_drop_text.configure(
-            text=file_name,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
+        total_size = sum(item["size"] for item in self._comp_queue)
+        self._comp_queue_counter_label = ctk.CTkLabel(
+            header,
+            text=f"Queue: {self._comp_queue_images} images, {self._comp_queue_videos} videos  •  {get_file_size_str(total_size)}",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+            text_color=TEXT_DARK,
         )
-        self._comp_drop_sub.configure(
-            text=f"{file_type.upper()}  •  {get_file_size_str(file_size)}  •  Click or drag to change",
+        self._comp_queue_counter_label.pack(side="left")
+
+        ctk.CTkButton(
+            header, text="Clear all",
+            command=self._comp_clear_queue,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=10),
+            fg_color="transparent",
+            hover_color=ACCENT_LIGHT,
+            text_color=TEXT_MUTED,
+            corner_radius=CORNER_RADIUS_SM,
+            width=60, height=24, cursor="hand2",
+        ).pack(side="right")
+
+        # Scrollable list of items
+        list_frame = ctk.CTkScrollableFrame(
+            self._comp_queue_frame, fg_color="transparent",
+            height=min(len(self._comp_queue) * 36, 180),
+            corner_radius=CORNER_RADIUS_SM,
         )
+        list_frame.pack(fill="x")
+
+        for i, item in enumerate(self._comp_queue):
+            row = ctk.CTkFrame(list_frame, fg_color="transparent")
+            row.pack(fill="x", pady=1)
+
+            # Type badge
+            if item["type"] == "folder":
+                badge_text = "FOLDER"
+                badge_color = "#B45309"
+            elif item["type"] == "image":
+                badge_text = "IMG"
+                badge_color = "#7C3AED"
+            else:
+                badge_text = "VIDEO"
+                badge_color = "#DC2626"
+
+            badge = ctk.CTkFrame(row, fg_color=badge_color, corner_radius=4, width=50, height=20)
+            badge.pack(side="left", padx=(0, SPACING_SM))
+            badge.pack_propagate(False)
+            ctk.CTkLabel(badge, text=badge_text,
+                         font=ctk.CTkFont(family=FONT_FAMILY, size=9, weight="bold"),
+                         text_color="white").place(relx=0.5, rely=0.5, anchor="center")
+
+            # File name
+            name_text = item["name"]
+            if item["type"] == "folder":
+                name_text += f"  ({item.get('images', 0)} img, {item.get('videos', 0)} vid)"
+
+            ctk.CTkLabel(row, text=name_text,
+                         font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+                         text_color=TEXT_DARK).pack(side="left")
+
+            # Size
+            ctk.CTkLabel(row, text=get_file_size_str(item["size"]),
+                         font=ctk.CTkFont(family=FONT_FAMILY, size=10),
+                         text_color=TEXT_MUTED).pack(side="left", padx=(SPACING_SM, 0))
+
+            # Remove button
+            ctk.CTkButton(
+                row, text="x", width=20, height=20,
+                font=ctk.CTkFont(family=FONT_FAMILY, size=10),
+                fg_color="transparent",
+                hover_color=ACCENT_LIGHT,
+                text_color=TEXT_MUTED,
+                corner_radius=4, cursor="hand2",
+                command=lambda idx=i: self._comp_remove_from_queue(idx),
+            ).pack(side="right")
 
         # Show options
-        self._comp_show_options(file_type)
-
-    def _comp_load_folder(self, folder_path):
-        """Carrega uma pasta para compressão em lote."""
-        files = scan_folder(folder_path)
-        if not files:
-            self._show_warning("No Files Found", "No supported images or videos found in this folder.")
-            return
-
-        self._comp_file_path = None
-        self._comp_file_type = None
-        self._comp_batch_folder = folder_path
-        self._comp_batch_files = files
-
-        images = [f for f in files if f["type"] == "image"]
-        videos = [f for f in files if f["type"] == "video"]
-        total_size = sum(f["size"] for f in files)
-        folder_name = os.path.basename(folder_path)
-
-        self._comp_drop_icon.configure(text="")
-        self._comp_drop_text.configure(
-            text=folder_name,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
-        )
-
-        parts = []
-        if images:
-            parts.append(f"{len(images)} images")
-        if videos:
-            parts.append(f"{len(videos)} videos")
-        summary = ", ".join(parts)
-
-        self._comp_drop_sub.configure(
-            text=f"FOLDER  •  {summary}  •  {get_file_size_str(total_size)}  •  Click or drag to change",
-        )
-
-        # Show options
-        self._comp_show_options("folder")
+        self._comp_show_options("queue")
 
     # ── Compressor: Options Panel ─────────────────────────────────
 
@@ -2171,7 +2293,10 @@ class GencoSearchApp(ctk.CTk):
 
         self._comp_options_frame.pack(fill="x", pady=(0, SPACING_LG))
 
-        if file_type == "folder":
+        # Queue mode always uses batch options
+        if file_type == "queue":
+            self._comp_show_batch_options()
+        elif file_type == "folder":
             self._comp_show_batch_options()
         elif file_type == "image":
             self._comp_show_image_options()
@@ -2355,11 +2480,42 @@ class GencoSearchApp(ctk.CTk):
     def _comp_show_batch_options(self):
         frame = self._comp_options_frame
 
-        row = ctk.CTkFrame(frame, fg_color="transparent")
-        row.pack(fill="x")
+        # Row 1: Destination folder
+        dest_row = ctk.CTkFrame(frame, fg_color="transparent")
+        dest_row.pack(fill="x", pady=(0, SPACING_MD))
+
+        ctk.CTkLabel(
+            dest_row, text="Save to:",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+            text_color=TEXT_DARK,
+        ).pack(side="left")
+
+        self._comp_dest_folder = ctk.StringVar(value="")
+
+        self._comp_dest_label = ctk.CTkLabel(
+            dest_row, text="No folder selected",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            text_color=TEXT_MUTED,
+        )
+        self._comp_dest_label.pack(side="left", padx=(SPACING_SM, 0))
+
+        ctk.CTkButton(
+            dest_row, text="Choose folder",
+            command=self._comp_choose_dest_folder,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            fg_color=BTN_SECONDARY,
+            hover_color=BTN_SEC_HOVER,
+            text_color=BTN_SEC_TEXT,
+            corner_radius=CORNER_RADIUS_SM,
+            width=110, height=28, cursor="hand2",
+        ).pack(side="left", padx=(SPACING_SM, 0))
+
+        # Row 2: quality + preset + compress button
+        row2 = ctk.CTkFrame(frame, fg_color="transparent")
+        row2.pack(fill="x")
 
         # Image quality slider
-        qual_frame = ctk.CTkFrame(row, fg_color="transparent")
+        qual_frame = ctk.CTkFrame(row2, fg_color="transparent")
         qual_frame.pack(side="left", fill="x", expand=True)
 
         qual_label = ctk.CTkLabel(
@@ -2376,7 +2532,6 @@ class GencoSearchApp(ctk.CTk):
         def on_quality_change(val):
             self._comp_img_quality.set(int(val))
             qual_label.configure(text=f"Image Quality: {int(val)}%")
-            # Debounce: só atualiza a prévia 300ms após parar de mexer
             if self._comp_batch_debounce_id:
                 self.after_cancel(self._comp_batch_debounce_id)
             self._comp_batch_debounce_id = self.after(300, self._comp_update_preview)
@@ -2393,7 +2548,7 @@ class GencoSearchApp(ctk.CTk):
         ).pack(anchor="w", pady=(SPACING_SM, 0))
 
         # Video preset
-        preset_frame = ctk.CTkFrame(row, fg_color="transparent")
+        preset_frame = ctk.CTkFrame(row2, fg_color="transparent")
         preset_frame.pack(side="left", padx=(SPACING_2XL, SPACING_2XL))
 
         ctk.CTkLabel(
@@ -2423,7 +2578,7 @@ class GencoSearchApp(ctk.CTk):
 
         # Compress button
         ctk.CTkButton(
-            row, text="Compress All",
+            row2, text="Compress All",
             command=self._comp_start_batch,
             font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
             fg_color=ACCENT,
@@ -2436,6 +2591,19 @@ class GencoSearchApp(ctk.CTk):
         # Preview
         self._comp_create_preview(frame)
         self._comp_update_preview()
+
+    def _comp_choose_dest_folder(self):
+        path = filedialog.askdirectory(title="Select destination folder for compressed files")
+        if not path:
+            return
+        self._comp_dest_folder.set(path)
+        # Show truncated path
+        display = path if len(path) <= 50 else "..." + path[-47:]
+        self._comp_dest_label.configure(
+            text=display,
+            text_color=TEXT_DARK,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11, weight="bold"),
+        )
 
     def _comp_select_preset(self, key, btn, parent):
         self._comp_vid_preset.set(key)
@@ -2505,31 +2673,33 @@ class GencoSearchApp(ctk.CTk):
         self._comp_preview_reduction.pack()
 
     def _comp_update_preview(self):
-        """Recalcula e atualiza a prévia de tamanhos."""
+        """Recalcula e atualiza a prévia de tamanhos baseada na fila."""
         def _do_estimate():
-            if self._comp_batch_folder and self._comp_batch_files:
-                quality = self._comp_img_quality.get() if hasattr(self, '_comp_img_quality') else 75
-                preset = self._comp_vid_preset.get() if hasattr(self, '_comp_vid_preset') else "medium"
-                est = estimate_batch_size(self._comp_batch_files,
-                                          image_quality=quality, video_preset=preset)
-            elif self._comp_file_path and self._comp_file_type == "image":
-                quality = self._comp_img_quality.get() if hasattr(self, '_comp_img_quality') else 75
-                fmt = self._comp_img_format.get() if hasattr(self, '_comp_img_format') else "Same as original"
-                out_fmt = None if fmt == "Same as original" else fmt
-                est = estimate_image_size(self._comp_file_path, quality=quality, output_format=out_fmt)
-            elif self._comp_file_path and self._comp_file_type == "video":
-                preset = self._comp_vid_preset.get() if hasattr(self, '_comp_vid_preset') else "medium"
-                res_choice = self._comp_vid_resolution.get() if hasattr(self, '_comp_vid_resolution') else "Original"
-                max_res = {"1080p": 1080, "720p": 720, "480p": 480}.get(res_choice)
-                est = estimate_video_size(self._comp_file_path, quality_preset=preset, max_resolution=max_res)
-            else:
+            quality = self._comp_img_quality.get() if hasattr(self, '_comp_img_quality') else 75
+            preset = self._comp_vid_preset.get() if hasattr(self, '_comp_vid_preset') else "medium"
+
+            total_original = 0
+            total_estimated = 0
+
+            for item in self._comp_queue:
+                if item["type"] == "folder":
+                    est = estimate_batch_size(item.get("files", []),
+                                              image_quality=quality, video_preset=preset)
+                elif item["type"] == "image":
+                    est = estimate_image_size(item["path"], quality=quality)
+                elif item["type"] == "video":
+                    est = estimate_video_size(item["path"], quality_preset=preset)
+                else:
+                    continue
+                total_original += est["original_size"]
+                total_estimated += est["estimated_size"]
+
+            if total_original == 0:
                 return
 
-            original = est["original_size"]
-            estimated = est["estimated_size"]
-            reduction = ((original - estimated) / original * 100) if original > 0 else 0
+            reduction = ((total_original - total_estimated) / total_original * 100)
 
-            self.after(0, lambda: self._comp_set_preview_values(original, estimated, reduction))
+            self.after(0, lambda: self._comp_set_preview_values(total_original, total_estimated, reduction))
 
         threading.Thread(target=_do_estimate, daemon=True).start()
 
@@ -2625,52 +2795,188 @@ class GencoSearchApp(ctk.CTk):
         )
 
     def _comp_start_batch(self):
-        if not self._comp_batch_folder:
+        try:
+            logging.info("=== Compress All clicked ===")
+
+            if not self._comp_queue:
+                logging.warning("Queue is empty, aborting")
+                return
+
+            if not hasattr(self, '_comp_img_quality'):
+                logging.error("_comp_img_quality not set")
+                self._show_error("Error", "UI not initialized correctly. Try re-adding files.")
+                return
+
+            image_quality = self._comp_img_quality.get()
+            video_preset = self._comp_vid_preset.get()
+            logging.info(f"Quality={image_quality}, preset={video_preset}")
+
+            # Use pre-selected folder
+            output_folder = self._comp_dest_folder.get() if hasattr(self, '_comp_dest_folder') else ""
+            if not output_folder:
+                self._show_warning("No Destination", "Please choose a destination folder before compressing.")
+                return
+
+            if not os.path.isdir(output_folder):
+                self._show_error("Invalid Folder", f"Destination folder does not exist:\n{output_folder}")
+                return
+
+            logging.info(f"Destination: {output_folder}")
+
+            self._comp_cancel_event = threading.Event()
+            self._comp_is_processing = True
+            self._comp_batch_progress_created = False
+
+            # Hide queue list and options during compression
+            if self._comp_queue_frame:
+                self._comp_queue_frame.pack_forget()
+            if self._comp_options_frame:
+                self._comp_options_frame.pack_forget()
+
+            # Flatten queue into a single file list
+            all_files = []
+            for item in self._comp_queue:
+                if item["type"] == "folder":
+                    folder_name = item["name"]
+                    for f in item.get("files", []):
+                        rel = os.path.join(folder_name, f["relative"])
+                        all_files.append({**f, "dest_relative": rel})
+                else:
+                    all_files.append({
+                        "path": item["path"],
+                        "type": item["type"],
+                        "size": item["size"],
+                        "relative": item["name"],
+                        "dest_relative": item["name"],
+                    })
+
+            total = len(all_files)
+            logging.info(f"Total files to compress: {total}")
+
+            if total == 0:
+                self._show_warning("No Files", "No files to compress.")
+                return
+
+            self._comp_show_batch_progress(0, total, "Starting...")
+        except Exception as e:
+            logging.error(f"Error in _comp_start_batch setup: {e}", exc_info=True)
+            self._show_error("Error", f"Failed to start compression:\n{e}")
             return
 
-        image_quality = self._comp_img_quality.get()
-        video_preset = self._comp_vid_preset.get()
+        def _run_queue():
+            try:
+                total_original = 0
+                total_compressed = 0
+                completed = 0
+                failed = 0
 
-        # Ask where to save
-        folder_name = os.path.basename(self._comp_batch_folder)
-        output_folder = filedialog.askdirectory(
-            title=f"Select destination folder for compressed files",
-        )
-        if not output_folder:
-            return
+                logging.info(f"Starting batch thread for {total} files")
 
-        self._comp_cancel_event = threading.Event()
-        total = len(self._comp_batch_files)
-        self._comp_show_batch_progress(0, total, "Starting...")
+                for i, finfo in enumerate(all_files):
+                    if self._comp_cancel_event.is_set():
+                        logging.info("Cancelled by user")
+                        break
 
-        def on_file_start(index, total, filename, filetype):
-            self.after(0, lambda: self._comp_show_batch_progress(
-                index, total, f"Compressing {filename}  ({filetype})"
-            ))
+                    try:
+                        dest_rel = finfo["dest_relative"]
+                        dest_dir = os.path.join(output_folder, os.path.dirname(dest_rel))
+                        os.makedirs(dest_dir, exist_ok=True)
+                        out_path = os.path.join(output_folder, dest_rel)
 
-        def on_file_progress(percent):
-            self.after(0, lambda p=percent: self._comp_update_progress(p))
+                        fname = os.path.basename(finfo["path"])
+                        ftype = finfo["type"]
+                        logging.info(f"[{i+1}/{total}] Processing {ftype}: {fname}")
 
-        def on_file_complete(index, total, result):
-            self.after(0, lambda: self._comp_update_batch_file_count(index + 1, total))
+                        self.after(0, lambda idx=i, t=total, fn=fname, ft=ftype:
+                            self._comp_show_batch_progress(idx, t, f"Compressing {fn}  ({ft})"))
 
-        def on_batch_complete(summary):
+                        if i == 0:
+                            time.sleep(0.15)
+
+                        if ftype == "image":
+                            result = compress_image(finfo["path"], out_path, quality=image_quality)
+                            if result.get("success"):
+                                total_original += result["original_size"]
+                                total_compressed += result["compressed_size"]
+                                completed += 1
+                            else:
+                                logging.warning(f"Image failed: {result.get('error')}")
+                                failed += 1
+                            self.after(0, lambda: self._comp_update_progress(100.0))
+                            self.after(0, lambda idx=i, t=total: self._comp_update_batch_file_count(idx + 1, t))
+                            time.sleep(0.05)
+
+                        elif ftype == "video":
+                            video_done = threading.Event()
+                            video_result = [None]
+
+                            def _on_vid_progress(pct):
+                                self.after(0, lambda p=pct: self._comp_update_progress(p))
+
+                            def _on_vid_complete(res):
+                                video_result[0] = res
+                                video_done.set()
+
+                            compress_video(
+                                finfo["path"], out_path,
+                                quality_preset=video_preset,
+                                on_progress=_on_vid_progress,
+                                on_complete=_on_vid_complete,
+                                cancel_event=self._comp_cancel_event,
+                            )
+                            video_done.wait()
+
+                            result = video_result[0]
+                            if result and result.get("success"):
+                                total_original += result["original_size"]
+                                total_compressed += result["compressed_size"]
+                                completed += 1
+                            elif result and result.get("error") == "cancelled":
+                                break
+                            else:
+                                logging.warning(f"Video failed: {result}")
+                                failed += 1
+
+                            self.after(0, lambda idx=i, t=total: self._comp_update_batch_file_count(idx + 1, t))
+                    except Exception as e:
+                        logging.error(f"Error processing file {finfo.get('path')}: {e}", exc_info=True)
+                        failed += 1
+            except Exception as e:
+                logging.error(f"Error in batch thread: {e}", exc_info=True)
+                self.after(0, lambda err=e: self._show_error("Compression Error", f"Failed during compression:\n{err}"))
+                self._comp_is_processing = False
+                return
+
+            reduction = 0
+            if total_original > 0:
+                reduction = ((total_original - total_compressed) / total_original) * 100
+
+            summary = {
+                "success": not self._comp_cancel_event.is_set(),
+                "error": "cancelled" if self._comp_cancel_event.is_set() else None,
+                "total_files": total,
+                "completed": completed,
+                "failed": failed,
+                "total_original": total_original,
+                "total_compressed": total_compressed,
+                "reduction_percent": max(0, reduction),
+            }
+
+            self._comp_is_processing = False
             self.after(0, lambda: self._comp_show_batch_result(summary, output_folder))
 
-        self._comp_thread = compress_batch(
-            self._comp_batch_folder, output_folder,
-            image_quality=image_quality,
-            video_preset=video_preset,
-            on_file_start=on_file_start,
-            on_file_progress=on_file_progress,
-            on_file_complete=on_file_complete,
-            on_batch_complete=on_batch_complete,
-            cancel_event=self._comp_cancel_event,
-        )
+        self._comp_thread = threading.Thread(target=_run_queue, daemon=True)
+        self._comp_thread.start()
 
     # ── Compressor: Batch Progress UI ─────────────────────────────
 
     def _comp_show_batch_progress(self, current, total, message):
+        """Cria a UI de progresso uma única vez, ou atualiza se já existe."""
+        # Se já existe, só atualiza os valores
+        if hasattr(self, '_comp_batch_progress_created') and self._comp_batch_progress_created:
+            self._comp_update_batch_ui(current, total, message)
+            return
+
         for w in self._comp_result_frame.winfo_children():
             w.destroy()
 
@@ -2695,6 +3001,13 @@ class GencoSearchApp(ctk.CTk):
         )
         self._comp_batch_count_label.pack(side="left")
 
+        self._comp_batch_percent_label = ctk.CTkLabel(
+            header_row, text="0%",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12),
+            text_color=TEXT_MUTED,
+        )
+        self._comp_batch_percent_label.pack(side="left", padx=(SPACING_SM, 0))
+
         self._comp_cancel_btn = ctk.CTkButton(
             header_row, text="Cancel",
             command=self._comp_cancel,
@@ -2715,12 +3028,12 @@ class GencoSearchApp(ctk.CTk):
         )
         self._comp_progress_label.pack(anchor="w", pady=(SPACING_SM, 0))
 
-        # Overall progress bar (files)
+        # Overall progress bar
         overall_frame = ctk.CTkFrame(inner, fg_color="transparent")
         overall_frame.pack(fill="x", pady=(SPACING_SM, 0))
 
         ctk.CTkLabel(
-            overall_frame, text="Overall",
+            overall_frame, text="Overall progress",
             font=ctk.CTkFont(family=FONT_FAMILY, size=10),
             text_color=TEXT_MUTED,
         ).pack(anchor="w")
@@ -2729,20 +3042,21 @@ class GencoSearchApp(ctk.CTk):
             overall_frame, fg_color=BORDER_COLOR,
             progress_color=ACCENT,
             corner_radius=CORNER_RADIUS_SM,
-            height=10,
+            height=12,
         )
         self._comp_batch_progress_bar.pack(fill="x", pady=(SPACING_XS, 0))
-        self._comp_batch_progress_bar.set(current / total if total > 0 else 0)
+        self._comp_batch_progress_bar.set(0)
 
-        # Per-file progress bar (for videos)
+        # Per-file progress bar (visible for videos)
         file_frame = ctk.CTkFrame(inner, fg_color="transparent")
         file_frame.pack(fill="x", pady=(SPACING_SM, 0))
 
-        ctk.CTkLabel(
+        self._comp_file_progress_label = ctk.CTkLabel(
             file_frame, text="Current file",
             font=ctk.CTkFont(family=FONT_FAMILY, size=10),
             text_color=TEXT_MUTED,
-        ).pack(anchor="w")
+        )
+        self._comp_file_progress_label.pack(anchor="w")
 
         self._comp_progress_bar = ctk.CTkProgressBar(
             file_frame, fg_color=BORDER_COLOR,
@@ -2760,9 +3074,29 @@ class GencoSearchApp(ctk.CTk):
         )
         self._comp_percent_label.pack(anchor="e")
 
+        self._comp_batch_progress_created = True
+
+    def _comp_update_batch_ui(self, current, total, message):
+        """Atualiza os valores da UI de progresso sem recriar."""
+        if hasattr(self, '_comp_batch_count_label') and self._comp_batch_count_label.winfo_exists():
+            self._comp_batch_count_label.configure(text=f"File {current + 1} of {total}")
+        if hasattr(self, '_comp_batch_percent_label') and self._comp_batch_percent_label.winfo_exists():
+            pct = int((current / total) * 100) if total > 0 else 0
+            self._comp_batch_percent_label.configure(text=f"{pct}%")
+        if hasattr(self, '_comp_progress_label') and self._comp_progress_label.winfo_exists():
+            self._comp_progress_label.configure(text=message)
+        if hasattr(self, '_comp_batch_progress_bar') and self._comp_batch_progress_bar.winfo_exists():
+            self._comp_batch_progress_bar.set(current / total if total > 0 else 0)
+        # Reset per-file bar for the new file
+        if self._comp_progress_bar and self._comp_progress_bar.winfo_exists():
+            self._comp_progress_bar.set(0)
+
     def _comp_update_batch_file_count(self, current, total):
         if hasattr(self, '_comp_batch_count_label') and self._comp_batch_count_label.winfo_exists():
             self._comp_batch_count_label.configure(text=f"File {current} of {total}")
+        if hasattr(self, '_comp_batch_percent_label') and self._comp_batch_percent_label.winfo_exists():
+            pct = int((current / total) * 100) if total > 0 else 0
+            self._comp_batch_percent_label.configure(text=f"{pct}%")
         if hasattr(self, '_comp_batch_progress_bar') and self._comp_batch_progress_bar.winfo_exists():
             self._comp_batch_progress_bar.set(current / total if total > 0 else 0)
         # Reset per-file progress for the next file
@@ -2772,6 +3106,7 @@ class GencoSearchApp(ctk.CTk):
     # ── Compressor: Batch Result UI ───────────────────────────────
 
     def _comp_show_batch_result(self, summary, output_folder):
+        self._comp_batch_progress_created = False
         if summary.get("error") == "cancelled":
             self._comp_cancel()
             return
@@ -2879,8 +3214,28 @@ class GencoSearchApp(ctk.CTk):
             text_color=SUCCESS_TEXT,
         ).pack(padx=SPACING_LG, pady=SPACING_MD)
 
+        # "Compress more" button to return to the queue screen
+        ctk.CTkButton(
+            inner, text="Compress more files",
+            command=self._comp_reset_to_queue,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+            fg_color=ACCENT,
+            hover_color=ACCENT_HOVER,
+            text_color="white",
+            corner_radius=CORNER_RADIUS_LG,
+            width=200, height=38, cursor="hand2",
+        ).pack(pady=(SPACING_LG, 0))
+
+    def _comp_reset_to_queue(self):
+        """Limpa a fila e volta para a tela inicial do compressor."""
+        self._comp_queue.clear()
+        self._comp_queue_images = 0
+        self._comp_queue_videos = 0
+        self._comp_render_queue()
+
     def _comp_cancel(self):
         """Cancela a compressão em andamento."""
+        self._comp_batch_progress_created = False
         if self._comp_cancel_event:
             self._comp_cancel_event.set()
         # Limpar UI de progresso
@@ -2909,6 +3264,17 @@ class GencoSearchApp(ctk.CTk):
             font=ctk.CTkFont(family=FONT_FAMILY, size=12),
             text_color=TEXT_LIGHT,
         ).pack(anchor="w", pady=(SPACING_XS, 0))
+
+        ctk.CTkButton(
+            inner, text="Back to queue",
+            command=self._comp_render_queue,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            fg_color=ACCENT,
+            hover_color=ACCENT_HOVER,
+            text_color="white",
+            corner_radius=CORNER_RADIUS_SM,
+            width=140, height=32, cursor="hand2",
+        ).pack(pady=(SPACING_MD, 0))
 
     # ── Compressor: Progress UI ───────────────────────────────────
 
