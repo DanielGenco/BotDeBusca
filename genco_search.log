@@ -181,3 +181,94 @@
 2026-04-22 16:59:09,002 - INFO - _comp_start_batch - === Compress All clicked ===
 2026-04-22 16:59:09,003 - INFO - _comp_start_batch - Quality=15, preset=high
 2026-04-22 16:59:09,003 - WARNING - _show_warning - No Destination: Please choose a destination folder before compressing.
+2026-04-23 16:35:14,263 - INFO - _setup_logging - ============================================================
+2026-04-23 16:35:14,265 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-23 16:35:14,267 - INFO - _setup_logging - ============================================================
+2026-04-23 16:35:14,545 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-23 16:35:14,547 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-23 16:35:14,755 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-23 16:35:15,070 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-23 16:35:15,857 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-23 16:37:20,111 - INFO - _setup_logging - ============================================================
+2026-04-23 16:37:20,160 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-23 16:37:20,165 - INFO - _setup_logging - ============================================================
+2026-04-23 16:37:20,349 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-23 16:37:20,350 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-23 16:37:20,467 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-23 16:37:20,595 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-23 16:37:20,900 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-23 16:37:44,437 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-23 16:37:44,437 - INFO - _comp_start_batch - Quality=10, preset=high
+2026-04-23 16:37:44,438 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Desktop
+2026-04-23 16:37:44,445 - INFO - _comp_start_batch - Total files to compress: 33
+2026-04-23 16:37:44,474 - INFO - _run_queue - Starting batch thread for 33 files
+2026-04-23 16:37:44,476 - INFO - _run_queue - [1/33] Processing image: IMG_20260209_140630.jpg
+2026-04-23 16:37:44,793 - INFO - _run_queue - [2/33] Processing image: IMG_20260209_140722.jpg
+2026-04-23 16:37:44,947 - INFO - _run_queue - [3/33] Processing image: IMG_20260209_140727.jpg
+2026-04-23 16:37:45,103 - INFO - _run_queue - [4/33] Processing image: IMG_20260209_140809.jpg
+2026-04-23 16:37:45,265 - INFO - _run_queue - [5/33] Processing image: IMG_20260209_140918.jpg
+2026-04-23 16:37:45,436 - INFO - _run_queue - [6/33] Processing image: IMG_20260209_140954.jpg
+2026-04-23 16:37:45,606 - INFO - _run_queue - [7/33] Processing image: IMG_20260209_141038.jpg
+2026-04-23 16:37:45,752 - INFO - _run_queue - [8/33] Processing image: IMG_20260209_141102.jpg
+2026-04-23 16:37:45,902 - INFO - _run_queue - [9/33] Processing image: IMG_20260209_141240.jpg
+2026-04-23 16:37:46,068 - INFO - _run_queue - [10/33] Processing image: IMG_20260209_141246.jpg
+2026-04-23 16:37:46,241 - INFO - _run_queue - [11/33] Processing image: IMG_20260209_141252.jpg
+2026-04-23 16:37:46,408 - INFO - _run_queue - [12/33] Processing image: IMG_20260209_141257.jpg
+2026-04-23 16:37:46,594 - INFO - _run_queue - [13/33] Processing image: IMG_20260209_141307.jpg
+2026-04-23 16:37:46,824 - INFO - _run_queue - [14/33] Processing image: IMG_20260209_141311.jpg
+2026-04-23 16:37:47,023 - INFO - _run_queue - [15/33] Processing image: IMG_20260209_141454.jpg
+2026-04-23 16:37:47,238 - INFO - _run_queue - [16/33] Processing image: IMG_20260209_141504.jpg
+2026-04-23 16:37:47,421 - INFO - _run_queue - [17/33] Processing image: IMG_20260209_141545.jpg
+2026-04-23 16:37:47,597 - INFO - _run_queue - [18/33] Processing image: IMG_20260209_141549.jpg
+2026-04-23 16:37:47,777 - INFO - _run_queue - [19/33] Processing image: IMG_20260209_141642.jpg
+2026-04-23 16:37:47,966 - INFO - _run_queue - [20/33] Processing image: IMG_20260209_141825.jpg
+2026-04-23 16:37:48,160 - INFO - _run_queue - [21/33] Processing image: IMG_20260209_141842.jpg
+2026-04-23 16:37:48,372 - INFO - _run_queue - [22/33] Processing image: IMG_20260209_141908.jpg
+2026-04-23 16:37:48,575 - INFO - _run_queue - [23/33] Processing image: IMG_20260209_141911.jpg
+2026-04-23 16:37:48,761 - INFO - _run_queue - [24/33] Processing image: IMG_20260209_141930.jpg
+2026-04-23 16:37:48,979 - INFO - _run_queue - [25/33] Processing image: IMG_20260209_141934.jpg
+2026-04-23 16:37:49,197 - INFO - _run_queue - [26/33] Processing image: IMG_20260209_142615.jpg
+2026-04-23 16:37:49,465 - INFO - _run_queue - [27/33] Processing image: IMG_20260209_142621.jpg
+2026-04-23 16:37:49,713 - INFO - _run_queue - [28/33] Processing image: IMG_20260209_143950.jpg
+2026-04-23 16:37:49,908 - INFO - _run_queue - [29/33] Processing image: IMG_20260209_144004.jpg
+2026-04-23 16:37:50,094 - INFO - _run_queue - [30/33] Processing image: IMG_20260209_145915.jpg
+2026-04-23 16:37:50,274 - INFO - _run_queue - [31/33] Processing image: IMG_20260209_150140.jpg
+2026-04-23 16:37:50,456 - INFO - _run_queue - [32/33] Processing video: VID_20260209_140414.mp4
+2026-04-23 16:37:50,604 - INFO - _get_video_duration - Duração do vídeo detectada: 0.2s
+2026-04-23 16:37:50,604 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_140414.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\GNC 3407 - QC 1402\VID_20260209_140414.mp4
+2026-04-23 16:37:50,856 - INFO - _run_queue - [33/33] Processing video: VID_20260209_141227.mp4
+2026-04-23 16:37:50,924 - INFO - _get_video_duration - Duração do vídeo detectada: 0.1s
+2026-04-23 16:37:50,924 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\GNC 3407 - QC 1402\VID_20260209_141227.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\GNC 3407 - QC 1402\VID_20260209_141227.mp4
+2026-04-23 16:39:51,226 - INFO - _setup_logging - ============================================================
+2026-04-23 16:39:51,227 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-23 16:39:51,227 - INFO - _setup_logging - ============================================================
+2026-04-23 16:39:51,376 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-23 16:39:51,380 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-23 16:39:51,503 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-23 16:39:51,669 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-23 16:39:51,991 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-23 16:41:29,717 - INFO - _setup_logging - ============================================================
+2026-04-23 16:41:29,717 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-23 16:41:29,718 - INFO - _setup_logging - ============================================================
+2026-04-23 16:41:29,832 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-23 16:41:29,835 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-23 16:41:29,921 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-23 16:41:30,042 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-23 16:41:30,364 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-23 16:46:23,279 - INFO - _setup_logging - ============================================================
+2026-04-23 16:46:23,279 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-23 16:46:23,279 - INFO - _setup_logging - ============================================================
+2026-04-23 16:46:23,417 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-23 16:46:23,419 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-23 16:46:23,529 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-23 16:46:23,726 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-23 16:46:24,097 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-23 16:47:09,262 - INFO - _start_search - Iniciando busca: termo='tiefu', pasta='Shipments - GNC'
+2026-04-23 16:47:09,266 - INFO - _folder_thread - Buscando em: C:\GencoServer\Shipments - GNC
+2026-04-23 16:47:26,571 - INFO - _search_in - Busca concluída: 1 exatos, 3 relacionados
+2026-04-23 16:47:26,571 - INFO - _folder_thread - Buscando em: C:\Genco Server\Shipments - GNC
+2026-04-23 16:47:26,572 - INFO - _folder_thread - Buscando em: D:\GencoServer\Shipments - GNC
+2026-04-23 16:47:26,573 - INFO - _folder_thread - Buscando em: D:\Genco Server\Shipments - GNC
+2026-04-23 16:47:26,573 - INFO - _folder_thread - Buscando em: Z:\GencoServer\Shipments - GNC
+2026-04-23 16:47:26,574 - INFO - _folder_thread - Buscando em: Z:\Genco Server\Shipments - GNC
+2026-04-23 16:47:26,574 - INFO - _folder_thread - Busca em pasta 'Shipments - GNC' concluída com 4 resultados

@@ -978,6 +978,7 @@ class GencoSearchApp(ctk.CTk):
             folder_wrap,
             values=["All folders"] + AVAILABLE_FOLDERS,
             variable=self.folder_var,
+            state="readonly",
             width=200,
             height=36,
             corner_radius=CORNER_RADIUS_SM,
@@ -1426,7 +1427,9 @@ class GencoSearchApp(ctk.CTk):
         try:
             results = []
             for bp in BASE_PATHS:
-                results += self._search_in(os.path.join(bp, folder), term)
+                search_root = os.path.join(bp, folder)
+                logging.info(f"Buscando em: {search_root}")
+                results += self._search_in(search_root, term)
             self.after(0, lambda: self._show_results(results))
             logging.info(f"Busca em pasta '{folder}' concluída com {len(results)} resultados")
         except Exception as e:
@@ -1456,13 +1459,20 @@ class GencoSearchApp(ctk.CTk):
                 return
 
             folder = self.folder_var.get().strip()
+
+            # Validar: deve ser "All folders" ou um dos AVAILABLE_FOLDERS
+            if folder != "All folders" and folder not in AVAILABLE_FOLDERS:
+                logging.warning(f"Valor inválido de pasta: '{folder}' — usando 'All folders'")
+                folder = "All folders"
+                self.folder_var.set("All folders")
+
             self._remove_empty_state()
             self._clear_results()
             self._start_spinner()
 
             logging.info(f"Iniciando busca: termo='{term}', pasta='{folder}'")
-            
-            if not folder or folder == "All folders":
+
+            if folder == "All folders":
                 threading.Thread(target=self._all_folders_thread, args=(term,), daemon=True).start()
             else:
                 threading.Thread(target=self._folder_thread, args=(term, folder), daemon=True).start()
@@ -2552,7 +2562,7 @@ class GencoSearchApp(ctk.CTk):
         preset_frame.pack(side="left", padx=(SPACING_2XL, SPACING_2XL))
 
         ctk.CTkLabel(
-            preset_frame, text="Compression",
+            preset_frame, text=" Video compression",
             font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
             text_color=TEXT_DARK,
         ).pack(anchor="w")
