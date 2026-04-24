@@ -52,7 +52,7 @@ def _setup_logging():
             ]
         )
         logging.info("=" * 60)
-        logging.info(f"Genco Search v{VERSION} iniciado")
+        logging.info(f"Genco Tools v{VERSION} iniciado")
         logging.info("=" * 60)
     except Exception as e:
         print(f"Erro ao configurar logging: {e}")
@@ -220,7 +220,7 @@ ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
 
 
-class GencoSearchApp(ctk.CTk):
+class GencoToolsApp(ctk.CTk):
     MAX_QUEUE_IMAGES = 50
     MAX_QUEUE_VIDEOS = 10
 
@@ -229,7 +229,7 @@ class GencoSearchApp(ctk.CTk):
         
         try:
             self.withdraw()
-            self.title("Genco Search")
+            self.title("Genco Tools")
             self.minsize(1180, 720)
             self.protocol("WM_DELETE_WINDOW", self._close)
             
@@ -582,30 +582,30 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             busca_row,
-            text="SEARCH",
+            text="TOOLS",
             font=ctk.CTkFont(family=FONT_FAMILY, size=40, weight="bold"),
             text_color="white",
         ).pack(side="left")
 
         try:
-            lupa_img = Image.open(os.path.join(BASE_DIR, "assets", "lupa_tela_inicial.png"))
-            lupa_ctk = ctk.CTkImage(light_image=lupa_img, dark_image=lupa_img, size=(38, 38))
-            lupa_label = ctk.CTkLabel(busca_row, image=lupa_ctk, text="", fg_color="transparent")
-            lupa_label.pack(side="left", padx=(SPACING_MD, 0), pady=(SPACING_SM, 0))
-            lupa_label.image = lupa_ctk
+            tools_img = Image.open(os.path.join(BASE_DIR, "assets", "ferramentas_tela_inicial.png"))
+            tools_ctk = ctk.CTkImage(light_image=tools_img, dark_image=tools_img, size=(60, 60))
+            tools_label = ctk.CTkLabel(busca_row, image=tools_ctk, text="", fg_color="transparent")
+            tools_label.pack(side="left", padx=(SPACING_MD, 0), pady=(SPACING_SM, 0))
+            tools_label.image = tools_ctk
         except Exception as e:
-            print("Erro ao carregar lupa:", e)
+            print("Erro ao carregar imagem de ferramentas:", e)
 
         ctk.CTkLabel(
             sb_body,
-            text="Server File Finder",
+            text="Internal Tools Suite",
             font=ctk.CTkFont(family=FONT_FAMILY, size=16),
             text_color="#BABFCE",
         ).pack(pady=(120, 0))
 
         ctk.CTkLabel(
             sb_body,
-            text="Find documents, quotations,\nand files from the internal server.",
+            text="Search files and compress media\nfor the Genco team.",
             font=ctk.CTkFont(family=FONT_FAMILY, size=13),
             text_color="#BABFCE",
             justify="center",
@@ -638,7 +638,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             inner,
-            text="Welcome to Genco Search",
+            text="Welcome to Genco Tools",
             font=ctk.CTkFont(family=FONT_FAMILY, size=24, weight="bold"),
             text_color=TEXT_DARK,
         ).pack(pady=(0, SPACING_SM))
@@ -812,7 +812,7 @@ class GencoSearchApp(ctk.CTk):
         dot.pack_propagate(False)
         ctk.CTkLabel(
             pill_inner,
-            text="Server File Finder  v1.0.6",
+            text=f"Genco Tools  v{VERSION}",
             font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
             text_color="#065F46",
         ).pack(side="left")
@@ -1121,7 +1121,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             footer,
-            text="Genco Import & Export  •  Server File Finder  •  v1.0.6",
+            text=f"Genco Import & Export  •  Genco Tools  •  v{VERSION}",
             font=ctk.CTkFont(family=FONT_FAMILY, size=9),
             text_color=TEXT_LIGHT,
         ).pack()
@@ -1134,7 +1134,7 @@ class GencoSearchApp(ctk.CTk):
 
         ctk.CTkLabel(
             self._empty_state_frame,
-            text="🔍",
+            text="🛠️",
             font=ctk.CTkFont(size=36),
         ).pack()
 
@@ -1896,7 +1896,7 @@ class GencoSearchApp(ctk.CTk):
         dot.pack(side="left", padx=(0, SPACING_SM))
         dot.pack_propagate(False)
         ctk.CTkLabel(
-            pill_inner, text=f"Compressor  v{VERSION}",
+            pill_inner, text=f"Genco Tools  v{VERSION}",
             font=ctk.CTkFont(family=FONT_FAMILY, size=10, weight="bold"),
             text_color="#065F46",
         ).pack(side="left")
@@ -3484,5 +3484,5 @@ class GencoSearchApp(ctk.CTk):
 
 
 if __name__ == "__main__":
-    app = GencoSearchApp()
+    app = GencoToolsApp()
     app.mainloop()

@@ -6,7 +6,8 @@
       "Bash(pip install *)",
       "Bash(python -c \"import imageio_ffmpeg; print\\(imageio_ffmpeg.get_ffmpeg_exe\\(\\)\\)\")",
       "Bash(timeout 8 python -c ' *)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(python -c \"import uuid; print\\('{' + str\\(uuid.uuid4\\(\\)\\).upper\\(\\) + '}'\\)\")"
     ]
   }
 }

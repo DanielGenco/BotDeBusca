@@ -417,3 +417,67 @@
 2026-04-24 16:07:12,360 - INFO - _comp_start_batch - Total files to compress: 1
 2026-04-24 16:07:12,380 - INFO - _run_queue - Starting batch thread for 1 files
 2026-04-24 16:07:12,381 - INFO - _run_queue - [1/1] Processing image: Logo Genco.png
+2026-04-24 16:36:08,056 - INFO - _setup_logging - ============================================================
+2026-04-24 16:36:08,058 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-24 16:36:08,082 - INFO - _setup_logging - ============================================================
+2026-04-24 16:36:08,360 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:36:08,361 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:36:08,486 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:36:08,642 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:36:09,030 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-24 16:39:08,444 - INFO - _setup_logging - ============================================================
+2026-04-24 16:39:08,444 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-24 16:39:08,444 - INFO - _setup_logging - ============================================================
+2026-04-24 16:39:08,595 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:39:08,605 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:39:08,711 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:39:08,842 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:39:09,202 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-24 16:39:40,377 - INFO - _setup_logging - ============================================================
+2026-04-24 16:39:40,378 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-24 16:39:40,378 - INFO - _setup_logging - ============================================================
+2026-04-24 16:39:40,614 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:39:40,617 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:39:40,742 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:39:40,867 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:39:41,058 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-24 16:39:52,950 - INFO - _setup_logging - ============================================================
+2026-04-24 16:39:52,951 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-24 16:39:52,951 - INFO - _setup_logging - ============================================================
+2026-04-24 16:39:53,077 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:39:53,085 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:39:53,181 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:39:53,292 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:39:53,419 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-24 16:42:26,463 - INFO - _setup_logging - ============================================================
+2026-04-24 16:42:26,464 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-24 16:42:26,464 - INFO - _setup_logging - ============================================================
+2026-04-24 16:42:26,598 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:42:26,600 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:42:26,705 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:42:26,816 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:42:27,148 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-24 16:45:50,716 - INFO - _setup_logging - ============================================================
+2026-04-24 16:45:50,717 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-24 16:45:50,717 - INFO - _setup_logging - ============================================================
+2026-04-24 16:45:50,845 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:45:50,846 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:45:50,973 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:45:51,821 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:45:52,188 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-24 16:50:52,512 - INFO - _setup_logging - ============================================================
+2026-04-24 16:50:52,513 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-24 16:50:52,513 - INFO - _setup_logging - ============================================================
+2026-04-24 16:50:52,811 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:50:52,816 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:50:52,948 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:50:53,152 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:50:53,531 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-24 16:52:45,234 - INFO - _setup_logging - ============================================================
+2026-04-24 16:52:45,235 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-24 16:52:45,235 - INFO - _setup_logging - ============================================================
+2026-04-24 16:52:45,549 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:52:45,551 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:52:45,723 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:52:45,987 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:52:46,411 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente

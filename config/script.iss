@@ -2,15 +2,16 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ; Non-commercial use only
 
-#define MyAppName "Genco Search"
+#define MyAppName "Genco Tools"
 #define MyAppVersion "1.0.6"
 #define MyAppPublisher "Genco Import & Export"
 #define MyAppExeName "bot_grafico.exe"
+; AppId da versão antiga "Genco Search" — usado para detectar e remover a instalação anterior.
+#define OldAppId "{{88747CF2-7741-4FC0-9899-927A7A66D05B}"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
-; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{88747CF2-7741-4FC0-9899-927A7A66D05B}
+AppId={{F2DE4FB6-870F-418D-8AB8-BA77E0DDBEE0}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -28,7 +29,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 PrivilegesRequired=admin
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
-OutputBaseFilename=GencoSearchSetup
+OutputBaseFilename=GencoToolsSetup
 SetupIconFile=C:\Users\Daniel\Desktop\Daniel\Meus Projetos\BotDeBusca\assets\icon.ico
 SolidCompression=yes
 WizardStyle=modern dynamic
@@ -50,3 +51,50 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Code]
+{ ======================================================================
+  Detecta e desinstala silenciosamente a versão antiga "Genco Search".
+  Usa o AppId antigo para encontrar o UninstallString no registro.
+====================================================================== }
+
+function GetOldUninstallString(): String;
+var
+  sUnInstPath: String;
+  sUnInstallString: String;
+begin
+  sUnInstallString := '';
+  sUnInstPath := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\{#OldAppId}_is1';
+  { Procura em HKLM primeiro (instalações admin) e depois HKCU (instalações per-user) }
+  if not RegQueryStringValue(HKLM, sUnInstPath, 'UninstallString', sUnInstallString) then
+    if not RegQueryStringValue(HKCU, sUnInstPath, 'UninstallString', sUnInstallString) then
+      sUnInstallString := '';
+  Result := sUnInstallString;
+end;
+
+function OldVersionInstalled(): Boolean;
+begin
+  Result := (GetOldUninstallString() <> '');
+end;
+
+procedure UninstallOldVersion();
+var
+  sUninstallString: String;
+  iResultCode: Integer;
+begin
+  sUninstallString := GetOldUninstallString();
+  if sUninstallString <> '' then begin
+    sUninstallString := RemoveQuotes(sUninstallString);
+    Exec(sUninstallString, '/VERYSILENT /NORESTART /SUPPRESSMSGBOXES',
+         '', SW_HIDE, ewWaitUntilTerminated, iResultCode);
+  end;
+end;
+
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  { Antes de iniciar a cópia de arquivos, remove a instalação antiga se existir }
+  if CurStep = ssInstall then begin
+    if OldVersionInstalled() then begin
+      UninstallOldVersion();
+    end;
+  end;
+end;
