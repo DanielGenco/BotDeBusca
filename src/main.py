@@ -2104,9 +2104,31 @@ class GencoSearchApp(ctk.CTk):
         if not files:
             return
         for f in files:
-            path = f.decode("utf-8") if isinstance(f, bytes) else f
+            path = self._decode_dropped_path(f)
+            if not path:
+                logging.warning(f"Ignorando arquivo arrastado (decode falhou): {f!r}")
+                continue
+            if not os.path.exists(path):
+                logging.warning(f"Caminho arrastado não existe: {path!r}")
+                continue
+            logging.info(f"Arquivo arrastado: {path}")
             self._comp_add_to_queue(path)
         self._comp_render_queue()
+
+    def _decode_dropped_path(self, raw):
+        """Decodifica um caminho vindo do windnd tentando múltiplos encodings."""
+        if isinstance(raw, str):
+            return raw
+        if not isinstance(raw, bytes):
+            return str(raw)
+        # Windows: windnd retorna bytes na codepage do sistema (normalmente cp1252 ou mbcs).
+        # Tentamos UTF-8 primeiro, depois mbcs (codepage local), depois latin-1 como fallback.
+        for enc in ("utf-8", "mbcs", "cp1252", "latin-1"):
+            try:
+                return raw.decode(enc)
+            except (UnicodeDecodeError, LookupError):
+                continue
+        return raw.decode("utf-8", errors="replace")
 
     def _comp_add_to_queue(self, path):
         """Adiciona um arquivo ou pasta à fila, respeitando os limites."""
@@ -2144,6 +2166,10 @@ class GencoSearchApp(ctk.CTk):
         else:
             file_type = get_file_type(path)
             if not file_type:
+                ext = os.path.splitext(path)[1].lower()
+                logging.warning(f"Arquivo não suportado (extensão '{ext}'): {path}")
+                self._show_warning("Unsupported File",
+                    f"File type '{ext}' not supported. Use JPG, PNG, WebP, MP4, MOV, AVI or MKV.")
                 return
 
             # Check limits
@@ -2158,6 +2184,7 @@ class GencoSearchApp(ctk.CTk):
 
             # Avoid duplicates
             if any(item["path"] == path for item in self._comp_queue):
+                logging.info(f"Arquivo já está na fila, ignorando: {path}")
                 return
 
             self._comp_queue.append({
@@ -2170,6 +2197,7 @@ class GencoSearchApp(ctk.CTk):
                 self._comp_queue_images += 1
             else:
                 self._comp_queue_videos += 1
+            logging.info(f"Adicionado à fila: {file_type} — {path}")
 
     def _comp_remove_from_queue(self, index):
         """Remove um item da fila pelo índice."""
@@ -2520,71 +2548,40 @@ class GencoSearchApp(ctk.CTk):
             width=110, height=28, cursor="hand2",
         ).pack(side="left", padx=(SPACING_SM, 0))
 
-        # Row 2: quality + preset + compress button
+        # Fixed compression settings
+        self._comp_img_quality = ctk.IntVar(value=25)      # Max compression, still visible
+        self._comp_vid_preset = ctk.StringVar(value="high")
+        self._comp_batch_debounce_id = None
+
+        has_images = self._comp_queue_images > 0
+        has_videos = self._comp_queue_videos > 0
+
+        # Row 2: info + compress button
         row2 = ctk.CTkFrame(frame, fg_color="transparent")
         row2.pack(fill="x")
 
-        # Image quality slider
-        qual_frame = ctk.CTkFrame(row2, fg_color="transparent")
-        qual_frame.pack(side="left", fill="x", expand=True)
+        # Info label describing fixed settings
+        info_parts = []
+        if has_images:
+            info_parts.append("Images: maximum compression")
+        if has_videos:
+            info_parts.append("Videos: high compression at 480p")
+        info_text = "  •  ".join(info_parts) if info_parts else ""
 
-        qual_label = ctk.CTkLabel(
-            qual_frame, text="Image Quality: 75%",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
-            text_color=TEXT_DARK,
-        )
-        qual_label.pack(anchor="w")
-
-        self._comp_img_quality = ctk.IntVar(value=75)
-
-        self._comp_batch_debounce_id = None
-
-        def on_quality_change(val):
-            self._comp_img_quality.set(int(val))
-            qual_label.configure(text=f"Image Quality: {int(val)}%")
-            if self._comp_batch_debounce_id:
-                self.after_cancel(self._comp_batch_debounce_id)
-            self._comp_batch_debounce_id = self.after(300, self._comp_update_preview)
-
-        ctk.CTkSlider(
-            qual_frame, from_=10, to=100,
-            variable=self._comp_img_quality,
-            command=on_quality_change,
-            fg_color=BORDER_COLOR,
-            progress_color=ACCENT,
-            button_color=ACCENT,
-            button_hover_color=ACCENT_HOVER,
-            width=250, height=16,
-        ).pack(anchor="w", pady=(SPACING_SM, 0))
-
-        # Video preset
-        preset_frame = ctk.CTkFrame(row2, fg_color="transparent")
-        preset_frame.pack(side="left", padx=(SPACING_2XL, SPACING_2XL))
+        info_frame = ctk.CTkFrame(row2, fg_color="transparent")
+        info_frame.pack(side="left", fill="x", expand=True)
 
         ctk.CTkLabel(
-            preset_frame, text=" Video compression",
+            info_frame, text="Compression settings",
             font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
             text_color=TEXT_DARK,
         ).pack(anchor="w")
 
-        self._comp_vid_preset = ctk.StringVar(value="medium")
-
-        ctk.CTkOptionMenu(
-            preset_frame,
-            variable=self._comp_vid_preset,
-            values=["low", "medium", "high"],
+        ctk.CTkLabel(
+            info_frame, text=info_text,
             font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            fg_color=INPUT_BG,
-            button_color=ACCENT,
-            button_hover_color=ACCENT_HOVER,
-            text_color=TEXT_DARK,
-            dropdown_fg_color=BG_WHITE,
-            dropdown_text_color=TEXT_DARK,
-            dropdown_hover_color=ACCENT_LIGHT,
-            corner_radius=CORNER_RADIUS_SM,
-            width=140,
-            command=lambda _: self._comp_update_preview(),
-        ).pack(anchor="w", pady=(SPACING_SM, 0))
+            text_color=TEXT_MUTED,
+        ).pack(anchor="w", pady=(SPACING_XS, 0))
 
         # Compress button
         ctk.CTkButton(
@@ -2596,7 +2593,7 @@ class GencoSearchApp(ctk.CTk):
             text_color="white",
             corner_radius=CORNER_RADIUS_LG,
             width=180, height=44, cursor="hand2",
-        ).pack(side="right", pady=(SPACING_SM, 0))
+        ).pack(side="right")
 
         # Preview
         self._comp_create_preview(frame)
@@ -2693,12 +2690,20 @@ class GencoSearchApp(ctk.CTk):
 
             for item in self._comp_queue:
                 if item["type"] == "folder":
-                    est = estimate_batch_size(item.get("files", []),
-                                              image_quality=quality, video_preset=preset)
+                    sub_original = 0
+                    sub_estimated = 0
+                    for f in item.get("files", []):
+                        if f["type"] == "image":
+                            e = estimate_image_size(f["path"], quality=quality)
+                        else:
+                            e = estimate_video_size(f["path"], quality_preset=preset, max_resolution=480)
+                        sub_original += e["original_size"]
+                        sub_estimated += e["estimated_size"]
+                    est = {"original_size": sub_original, "estimated_size": sub_estimated}
                 elif item["type"] == "image":
                     est = estimate_image_size(item["path"], quality=quality)
                 elif item["type"] == "video":
-                    est = estimate_video_size(item["path"], quality_preset=preset)
+                    est = estimate_video_size(item["path"], quality_preset=preset, max_resolution=480)
                 else:
                     continue
                 total_original += est["original_size"]
@@ -2930,6 +2935,7 @@ class GencoSearchApp(ctk.CTk):
                             compress_video(
                                 finfo["path"], out_path,
                                 quality_preset=video_preset,
+                                max_resolution=480,
                                 on_progress=_on_vid_progress,
                                 on_complete=_on_vid_complete,
                                 cancel_event=self._comp_cancel_event,
