@@ -385,3 +385,35 @@
 2026-04-24 15:55:25,700 - INFO - _run_queue - [1/1] Processing video: 5f6a7a8504a88eb5c2592f47866770e8.mp4
 2026-04-24 15:55:25,901 - INFO - _get_video_duration - Duração do vídeo detectada: 4.7s
 2026-04-24 15:55:25,901 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\5f6a7a8504a88eb5c2592f47866770e8.mp4 -y -c:v libx264 -crf 32 -preset fast -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Documents\5f6a7a8504a88eb5c2592f47866770e8.mp4
+2026-04-24 16:06:00,742 - INFO - _setup_logging - ============================================================
+2026-04-24 16:06:00,743 - INFO - _setup_logging - Genco Search v1.0.6 iniciado
+2026-04-24 16:06:00,743 - INFO - _setup_logging - ============================================================
+2026-04-24 16:06:01,001 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-24 16:06:01,005 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-24 16:06:01,145 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-24 16:06:01,315 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-24 16:06:01,759 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-24 16:06:09,423 - INFO - _comp_on_drop - Arquivo arrastado: C:\Users\Daniel\Downloads\5f6a7a8504a88eb5c2592f47866770e8.mp4
+2026-04-24 16:06:09,424 - INFO - _comp_add_to_queue - Adicionado à fila: video — C:\Users\Daniel\Downloads\5f6a7a8504a88eb5c2592f47866770e8.mp4
+2026-04-24 16:06:13,175 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-24 16:06:13,175 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-24 16:06:13,176 - WARNING - _show_warning - No Destination: Please choose a destination folder before compressing.
+2026-04-24 16:06:22,003 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-24 16:06:22,004 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-24 16:06:22,004 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Documents
+2026-04-24 16:06:22,012 - INFO - _comp_start_batch - Total files to compress: 1
+2026-04-24 16:06:22,045 - INFO - _run_queue - Starting batch thread for 1 files
+2026-04-24 16:06:22,046 - INFO - _run_queue - [1/1] Processing video: 5f6a7a8504a88eb5c2592f47866770e8.mp4
+2026-04-24 16:06:22,261 - INFO - _get_video_duration - Duração do vídeo detectada: 4.7s
+2026-04-24 16:06:22,261 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\5f6a7a8504a88eb5c2592f47866770e8.mp4 -y -c:v libx264 -crf 32 -preset fast -vf scale=-2:'480' -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Documents\5f6a7a8504a88eb5c2592f47866770e8.mp4
+2026-04-24 16:07:05,415 - INFO - _comp_on_drop - Arquivo arrastado: C:\Users\Daniel\Desktop\Daniel\Logo Genco.png
+2026-04-24 16:07:05,416 - INFO - _comp_add_to_queue - Adicionado à fila: image — C:\Users\Daniel\Desktop\Daniel\Logo Genco.png
+2026-04-24 16:07:08,439 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-24 16:07:08,440 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-24 16:07:08,440 - WARNING - _show_warning - No Destination: Please choose a destination folder before compressing.
+2026-04-24 16:07:12,357 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-24 16:07:12,357 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-24 16:07:12,357 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Documents
+2026-04-24 16:07:12,360 - INFO - _comp_start_batch - Total files to compress: 1
+2026-04-24 16:07:12,380 - INFO - _run_queue - Starting batch thread for 1 files
+2026-04-24 16:07:12,381 - INFO - _run_queue - [1/1] Processing image: Logo Genco.png
