@@ -2781,14 +2781,13 @@ class GencoToolsApp(ctk.CTk):
         elif res_choice == "480p":
             max_res = 480
 
-        # Ask where to save
+        # Ask where to save (sempre MP4 para compatibilidade universal)
         base_name = os.path.splitext(os.path.basename(self._comp_file_path))[0]
-        out_ext = os.path.splitext(self._comp_file_path)[1]
         output_path = filedialog.asksaveasfilename(
             title="Save compressed video as",
-            initialfile=f"{base_name}_compressed{out_ext}",
-            defaultextension=out_ext,
-            filetypes=[("Video files", f"*{out_ext}"), ("MP4 files", "*.mp4"), ("All files", "*.*")],
+            initialfile=f"{base_name}_compressed.mp4",
+            defaultextension=".mp4",
+            filetypes=[("MP4 files", "*.mp4"), ("All files", "*.*")],
         )
         if not output_path:
             return
@@ -2897,6 +2896,9 @@ class GencoToolsApp(ctk.CTk):
                         dest_dir = os.path.join(output_folder, os.path.dirname(dest_rel))
                         os.makedirs(dest_dir, exist_ok=True)
                         out_path = os.path.join(output_folder, dest_rel)
+                        # Forçar saída de vídeos como .mp4 (container compatível com H.264/AAC)
+                        if finfo["type"] == "video":
+                            out_path = os.path.splitext(out_path)[0] + ".mp4"
 
                         fname = os.path.basename(finfo["path"])
                         ftype = finfo["type"]

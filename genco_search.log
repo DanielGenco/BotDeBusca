@@ -628,3 +628,60 @@
 2026-04-27 10:06:39,001 - INFO - _run_queue - [1/1] Processing video: Warehouse.mp4
 2026-04-27 10:06:39,294 - INFO - _get_video_duration - Duração do vídeo detectada: 19.5s
 2026-04-27 10:06:39,294 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Warehouse.mp4 -y -c:v libx264 -crf 32 -preset fast -pix_fmt yuv420p -profile:v high -level 4.0 -vf scale=-2:480 -c:a aac -b:a 128k -movflags +faststart -progress pipe:1 -nostats C:/Users/Daniel/Desktop\Warehouse.mp4
+2026-04-27 10:33:34,304 - INFO - _setup_logging - ============================================================
+2026-04-27 10:33:34,305 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-27 10:33:34,305 - INFO - _setup_logging - ============================================================
+2026-04-27 10:33:34,499 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-27 10:33:34,500 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-27 10:33:34,635 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-27 10:33:34,886 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-27 10:33:35,416 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-27 10:33:41,127 - INFO - _comp_on_drop - Arquivo arrastado: C:\Users\Daniel\Downloads\Vídeos
+2026-04-27 10:33:43,836 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-27 10:33:43,836 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-27 10:33:43,836 - WARNING - _show_warning - No Destination: Please choose a destination folder before compressing.
+2026-04-27 10:33:49,987 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-27 10:33:49,988 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-27 10:33:49,988 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Desktop
+2026-04-27 10:33:49,994 - INFO - _comp_start_batch - Total files to compress: 2
+2026-04-27 10:33:50,025 - INFO - _run_queue - Starting batch thread for 2 files
+2026-04-27 10:33:50,028 - INFO - _run_queue - [1/2] Processing video: Outer Package.mp4
+2026-04-27 10:33:50,296 - INFO - _get_video_duration - Duração do vídeo detectada: 38.2s
+2026-04-27 10:33:50,297 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Vídeos\Outer Package.mp4 -y -c:v libx264 -crf 32 -preset fast -pix_fmt yuv420p -profile:v high -level 4.0 -vf scale=-2:480 -c:a aac -b:a 128k -movflags +faststart -progress pipe:1 -nostats C:/Users/Daniel/Desktop\Vídeos\Outer Package.mp4
+2026-04-27 10:34:02,175 - INFO - _run_queue - [2/2] Processing video: Warehouse.mp4
+2026-04-27 10:34:02,271 - INFO - _get_video_duration - Duração do vídeo detectada: 19.5s
+2026-04-27 10:34:02,271 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Vídeos\Warehouse.mp4 -y -c:v libx264 -crf 32 -preset fast -pix_fmt yuv420p -profile:v high -level 4.0 -vf scale=-2:480 -c:a aac -b:a 128k -movflags +faststart -progress pipe:1 -nostats C:/Users/Daniel/Desktop\Vídeos\Warehouse.mp4
+2026-04-27 10:39:42,339 - INFO - _setup_logging - ============================================================
+2026-04-27 10:39:42,341 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-27 10:39:42,341 - INFO - _setup_logging - ============================================================
+2026-04-27 10:39:42,485 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-27 10:39:42,485 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-27 10:39:42,609 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-27 10:39:42,831 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-27 10:39:43,625 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-27 10:39:51,080 - INFO - _comp_on_drop - Arquivo arrastado: C:\Users\Daniel\Downloads\Vídeos
+2026-04-27 10:39:58,911 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-27 10:39:58,912 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-27 10:39:58,912 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Desktop
+2026-04-27 10:39:58,918 - INFO - _comp_start_batch - Total files to compress: 8
+2026-04-27 10:39:58,971 - INFO - _run_queue - Starting batch thread for 8 files
+2026-04-27 10:39:58,974 - INFO - _run_queue - [1/8] Processing image: 1.png
+2026-04-27 10:39:59,352 - INFO - _run_queue - [2/8] Processing image: 2.png
+2026-04-27 10:39:59,544 - INFO - _run_queue - [3/8] Processing image: 3.JPG
+2026-04-27 10:39:59,755 - INFO - _run_queue - [4/8] Processing image: 4.JPG
+2026-04-27 10:39:59,966 - INFO - _run_queue - [5/8] Processing image: 5.JPG
+2026-04-27 10:40:00,287 - INFO - _run_queue - [6/8] Processing image: 6.JPG
+2026-04-27 10:40:00,589 - INFO - _run_queue - [7/8] Processing video: Outer Package.mp4
+2026-04-27 10:40:01,772 - INFO - _get_video_duration - Duração do vídeo detectada: 38.2s
+2026-04-27 10:40:01,772 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Vídeos\Outer Package.mp4 -y -c:v libx264 -crf 32 -preset fast -pix_fmt yuv420p -profile:v high -level 4.0 -vf scale=-2:480 -c:a aac -b:a 128k -movflags +faststart -progress pipe:1 -nostats C:/Users/Daniel/Desktop\Vídeos\Outer Package.mp4
+2026-04-27 10:40:12,960 - INFO - _run_queue - [8/8] Processing video: Warehouse.mp4
+2026-04-27 10:40:13,038 - INFO - _get_video_duration - Duração do vídeo detectada: 19.5s
+2026-04-27 10:40:13,039 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Vídeos\Warehouse.mp4 -y -c:v libx264 -crf 32 -preset fast -pix_fmt yuv420p -profile:v high -level 4.0 -vf scale=-2:480 -c:a aac -b:a 128k -movflags +faststart -progress pipe:1 -nostats C:/Users/Daniel/Desktop\Vídeos\Warehouse.mp4
+2026-04-27 10:47:21,507 - INFO - _setup_logging - ============================================================
+2026-04-27 10:47:21,507 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-27 10:47:21,508 - INFO - _setup_logging - ============================================================
+2026-04-27 10:47:21,649 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-27 10:47:21,649 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-27 10:47:21,759 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-27 10:47:21,953 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-27 10:47:22,341 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente

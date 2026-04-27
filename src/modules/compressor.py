@@ -320,6 +320,12 @@ def compress_video(input_path, output_path, quality_preset="medium",
                 result = {"success": False, "error": "cancelled"}
             elif process.returncode != 0:
                 logging.error(f"FFmpeg failed with code {process.returncode}")
+                # Remover arquivo parcial/corrompido para o usuário não ficar com lixo no disco
+                if os.path.exists(output_path):
+                    try:
+                        os.remove(output_path)
+                    except OSError as cleanup_err:
+                        logging.warning(f"Não foi possível remover arquivo parcial: {cleanup_err}")
                 result = {"success": False, "error": f"FFmpeg failed (code {process.returncode})"}
             else:
                 compressed_size = os.path.getsize(output_path)
@@ -339,6 +345,12 @@ def compress_video(input_path, output_path, quality_preset="medium",
             logging.error(f"Erro ao comprimir vídeo: {e}", exc_info=True)
             if process and process.poll() is None:
                 process.terminate()
+            # Remover arquivo parcial deixado pelo FFmpeg, se houver
+            if os.path.exists(output_path):
+                try:
+                    os.remove(output_path)
+                except OSError as cleanup_err:
+                    logging.warning(f"Não foi possível remover arquivo parcial: {cleanup_err}")
             result = {"success": False, "error": str(e)}
 
         if on_complete:
