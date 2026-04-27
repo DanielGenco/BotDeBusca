@@ -1501,21 +1501,27 @@ class GencoToolsApp(ctk.CTk):
             logging.error(f"Erro ao limpar: {e}", exc_info=True)
 
     def _open(self, path):
-        """Abre arquivo/pasta com tratamento robusto"""
+        """Revela o resultado no Explorer: abre a pasta-pai (com arquivo selecionado) ou a própria pasta."""
         try:
             if not os.path.exists(path):
                 self._show_error("File Not Found", f"The file or folder could not be found:\n{path}")
                 logging.warning(f"Tentativa de abrir caminho inexistente: {path}")
                 return
-                
-            os.startfile(path)
-            logging.info(f"Arquivo/pasta aberto: {path}")
+
+            normalized = os.path.normpath(path)
+            if os.path.isdir(normalized):
+                os.startfile(normalized)
+                logging.info(f"Pasta aberta: {normalized}")
+            else:
+                # Arquivo: abrir Explorer mostrando a pasta com o arquivo selecionado, sem abrir o arquivo
+                subprocess.Popen(['explorer', '/select,', normalized])
+                logging.info(f"Pasta do arquivo revelada no Explorer: {normalized}")
         except PermissionError:
             self._show_error("Permission Denied", f"You don't have permission to open:\n{path}")
             logging.warning(f"Permissão negada: {path}")
         except Exception as e:
-            self._show_error("Cannot Open", f"Failed to open file:\n{type(e).__name__}: {e}")
-            logging.error(f"Erro ao abrir arquivo {path}: {e}", exc_info=True)
+            self._show_error("Cannot Open", f"Failed to open location:\n{type(e).__name__}: {e}")
+            logging.error(f"Erro ao revelar caminho {path}: {e}", exc_info=True)
 
     def _copy(self, path):
         """Copia caminho para área de transferência com feedback"""

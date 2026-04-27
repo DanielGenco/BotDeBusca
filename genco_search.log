@@ -685,3 +685,133 @@
 2026-04-27 10:47:21,759 - INFO - _load_spinner - Spinner GIF carregado com sucesso
 2026-04-27 10:47:21,953 - INFO - __init__ - Aplicação inicializada com sucesso
 2026-04-27 10:47:22,341 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-27 11:13:53,917 - INFO - _setup_logging - ============================================================
+2026-04-27 11:13:53,918 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-27 11:13:53,919 - INFO - _setup_logging - ============================================================
+2026-04-27 11:13:54,088 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-27 11:13:54,090 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-27 11:13:54,193 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-27 11:13:54,427 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-27 11:13:54,808 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-27 11:14:04,769 - INFO - _start_search - Iniciando busca: termo='cpf isabella', pasta='All folders'
+2026-04-27 11:14:06,709 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:09,126 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:09,292 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:09,491 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:13,878 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:16,924 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:18,093 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:21,064 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:21,245 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:34,361 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:35,417 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:35,424 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 0 resultados
+2026-04-27 11:14:41,668 - INFO - _start_search - Iniciando busca: termo='isabella', pasta='All folders'
+2026-04-27 11:14:41,777 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:41,943 - INFO - _search_in - Busca concluída: 0 exatos, 2 relacionados
+2026-04-27 11:14:41,957 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:41,990 - INFO - _search_in - Busca concluída: 1 exatos, 2 relacionados
+2026-04-27 11:14:42,488 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:42,858 - INFO - _search_in - Busca concluída: 0 exatos, 5 relacionados
+2026-04-27 11:14:43,095 - INFO - _search_in - Busca concluída: 2 exatos, 83 relacionados
+2026-04-27 11:14:43,373 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:43,405 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:45,628 - INFO - _search_in - Busca concluída: 0 exatos, 1 relacionados
+2026-04-27 11:14:45,887 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:14:45,891 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 96 resultados
+2026-04-27 11:15:11,153 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Office BR\RH Novo\TRANSFERÊNCIA DE CONTABILIDADE 1\TRANSFERÊNCIA DE CONTABILIDADE\FÉRIAS\2025\02.2025\ISABELLA
+2026-04-27 11:15:24,870 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Office BR\Clientes cobranças\Financeiro\Comprovantes folha de pagamento\comprovante massagens fausta e isabella.pdf
+2026-04-27 11:15:35,168 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Office BR\Clientes cobranças\Financeiro\Comprovantes folha de pagamento\2022\comprovante Isabella taxi beauty fair.pdf
+2026-04-27 11:15:39,923 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Office BR\Clientes cobranças\Financeiro\Comprovantes folha de pagamento\2022\comprovante Isabella taxi beauty fair.pdf
+2026-04-27 11:15:45,188 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Office BR\Clientes cobranças\Financeiro\Comprovantes folha de pagamento\2022\comprovante Isabella taxi beauty fair.pdf
+2026-04-27 11:15:52,330 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Office BR\Clientes cobranças\Financeiro\Comprovantes folha de pagamento\2022\Salário Julho\comprovante salário Isabella julho.pdf
+2026-04-27 11:16:10,883 - INFO - _setup_logging - ============================================================
+2026-04-27 11:16:10,883 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-27 11:16:10,883 - INFO - _setup_logging - ============================================================
+2026-04-27 11:16:11,039 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-27 11:16:11,040 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-27 11:16:11,152 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-27 11:16:11,378 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-27 11:16:11,743 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-27 11:16:16,629 - INFO - _start_search - Iniciando busca: termo='isabella', pasta='All folders'
+2026-04-27 11:16:17,014 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:16:17,717 - INFO - _search_in - Busca concluída: 0 exatos, 2 relacionados
+2026-04-27 11:16:17,795 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:16:18,061 - INFO - _search_in - Busca concluída: 1 exatos, 2 relacionados
+2026-04-27 11:16:19,710 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:16:21,202 - INFO - _search_in - Busca concluída: 0 exatos, 5 relacionados
+2026-04-27 11:16:22,639 - INFO - _search_in - Busca concluída: 2 exatos, 83 relacionados
+2026-04-27 11:16:24,047 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:16:24,221 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:16:32,389 - INFO - _search_in - Busca concluída: 0 exatos, 1 relacionados
+2026-04-27 11:16:33,035 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:16:33,041 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 96 resultados
+2026-04-27 11:17:20,931 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Genco Various\Projetos Genco\Odoo\Isabella
+2026-04-27 11:17:31,436 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Genco Various\Viagem China\Abril-2025\Cartas Convites\CARTA CONVITE - Goar Isabella Guimarães Yarid.docx
+2026-04-27 11:17:31,660 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Genco Various\Viagem China\Abril-2025\Cartas Convites\CARTA CONVITE - Goar Isabella Guimarães Yarid.docx
+2026-04-27 11:17:31,907 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Genco Various\Viagem China\Abril-2025\Cartas Convites\CARTA CONVITE - Goar Isabella Guimarães Yarid.docx
+2026-04-27 11:17:32,007 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Genco Various\Viagem China\Abril-2025\Cartas Convites\CARTA CONVITE - Goar Isabella Guimarães Yarid.docx
+2026-04-27 11:17:32,185 - INFO - _open - Arquivo/pasta aberto: C:\GencoServer\Genco Various\Viagem China\Abril-2025\Cartas Convites\CARTA CONVITE - Goar Isabella Guimarães Yarid.docx
+2026-04-27 11:21:36,821 - INFO - _setup_logging - ============================================================
+2026-04-27 11:21:36,822 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-27 11:21:36,822 - INFO - _setup_logging - ============================================================
+2026-04-27 11:21:37,095 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-27 11:21:37,096 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-27 11:21:37,204 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-27 11:21:37,388 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-27 11:21:37,751 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-27 11:21:44,896 - INFO - _start_search - Iniciando busca: termo='isabelal', pasta='All folders'
+2026-04-27 11:21:45,347 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:46,148 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:46,258 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:46,363 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:47,068 - INFO - _clear - Busca limpa e contexto resetado
+2026-04-27 11:21:50,162 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:51,113 - INFO - _start_search - Iniciando busca: termo='isabella', pasta='All folders'
+2026-04-27 11:21:51,229 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:51,444 - INFO - _search_in - Busca concluída: 0 exatos, 2 relacionados
+2026-04-27 11:21:51,462 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:51,501 - INFO - _search_in - Busca concluída: 1 exatos, 2 relacionados
+2026-04-27 11:21:51,986 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:54,115 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:54,115 - INFO - _search_in - Busca concluída: 0 exatos, 5 relacionados
+2026-04-27 11:21:55,180 - INFO - _search_in - Busca concluída: 2 exatos, 83 relacionados
+2026-04-27 11:21:55,180 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:56,311 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:56,312 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:56,442 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:21:56,442 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:04,882 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:04,882 - INFO - _search_in - Busca concluída: 0 exatos, 1 relacionados
+2026-04-27 11:22:05,420 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:05,420 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:05,425 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 96 resultados
+2026-04-27 11:22:06,714 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 0 resultados
+2026-04-27 11:22:16,194 - INFO - _start_search - Iniciando busca: termo='isabella', pasta='All folders'
+2026-04-27 11:22:16,320 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:16,506 - INFO - _search_in - Busca concluída: 0 exatos, 2 relacionados
+2026-04-27 11:22:16,524 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:16,557 - INFO - _search_in - Busca concluída: 1 exatos, 2 relacionados
+2026-04-27 11:22:17,171 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:17,627 - INFO - _search_in - Busca concluída: 0 exatos, 5 relacionados
+2026-04-27 11:22:17,879 - INFO - _search_in - Busca concluída: 2 exatos, 83 relacionados
+2026-04-27 11:22:18,284 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:18,325 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:20,732 - INFO - _search_in - Busca concluída: 0 exatos, 1 relacionados
+2026-04-27 11:22:21,059 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:21,067 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 96 resultados
+2026-04-27 11:22:27,821 - INFO - _open - Pasta aberta: C:\GencoServer\Cotação - CTC\CTC1362 Injet (CF)\Fotos Isabella
+2026-04-27 11:22:41,664 - INFO - _open - Pasta do arquivo revelada no Explorer: C:\GencoServer\Office BR\Clientes cobranças\Isabella_10.21.pdf
+2026-04-27 11:22:51,835 - INFO - _start_search - Iniciando busca: termo='cpf', pasta='All folders'
+2026-04-27 11:22:52,295 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:53,044 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:53,169 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:53,497 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:55,801 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:57,687 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:58,532 - INFO - _search_in - Busca concluída: 11 exatos, 3 relacionados
+2026-04-27 11:22:59,676 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:22:59,815 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:23:08,201 - INFO - _search_in - Busca concluída: 0 exatos, 3 relacionados
+2026-04-27 11:23:08,562 - INFO - _search_in - Busca concluída: 0 exatos, 0 relacionados
+2026-04-27 11:23:08,567 - INFO - _all_folders_thread - Busca em todas as pastas concluída com 17 resultados
