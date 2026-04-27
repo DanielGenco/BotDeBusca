@@ -1850,7 +1850,7 @@ class GencoToolsApp(ctk.CTk):
         ctk.CTkButton(
             nav_frame, text="Search",
             command=self._show_search,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=14),
             fg_color="transparent",
             hover_color=ACCENT_LIGHT,
             text_color=TEXT_MUTED,
@@ -1861,7 +1861,7 @@ class GencoToolsApp(ctk.CTk):
         # Active tab
         comp_tab = ctk.CTkButton(
             nav_frame, text="Compressor",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
             fg_color=ACCENT_LIGHT,
             hover_color=ACCENT_LIGHT,
             text_color=ACCENT,
@@ -1965,14 +1965,14 @@ class GencoToolsApp(ctk.CTk):
 
         ctk.CTkLabel(
             drop_row, text="Click or drag files / folders here to add to the queue",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=13),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=14),
             text_color=TEXT_SECONDARY,
         ).pack(side="left")
 
         ctk.CTkLabel(
             drop_inner,
             text=f"JPG, PNG, WebP, MP4, MOV, AVI, MKV  •  Max {self.MAX_QUEUE_IMAGES} images, {self.MAX_QUEUE_VIDEOS} videos",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=10),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12),
             text_color=TEXT_MUTED,
         ).pack(pady=(SPACING_XS, 0))
 
@@ -2022,7 +2022,7 @@ class GencoToolsApp(ctk.CTk):
         # Title
         ctk.CTkLabel(
             inner, text="How it works",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=15, weight="bold"),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=21, weight="bold"),
             text_color=TEXT_DARK,
         ).pack(anchor="w", pady=(0, SPACING_LG))
 
@@ -2254,7 +2254,7 @@ class GencoToolsApp(ctk.CTk):
         ctk.CTkButton(
             header, text="Clear all",
             command=self._comp_clear_queue,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=10),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=13),
             fg_color="transparent",
             hover_color=ACCENT_LIGHT,
             text_color=TEXT_MUTED,
