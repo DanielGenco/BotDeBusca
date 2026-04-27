@@ -589,3 +589,42 @@
 2026-04-27 09:53:26,777 - INFO - _run_queue - [1/1] Processing video: Workshop(1).mp4
 2026-04-27 09:53:27,069 - INFO - _get_video_duration - Duração do vídeo detectada: 25.7s
 2026-04-27 09:53:27,070 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Workshop(1).mp4 -y -c:v libx264 -crf 32 -preset fast -vf scale=-2:'480' -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Downloads\Workshop(1).mp4
+2026-04-27 10:02:17,478 - INFO - _setup_logging - ============================================================
+2026-04-27 10:02:17,479 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-27 10:02:17,480 - INFO - _setup_logging - ============================================================
+2026-04-27 10:02:17,684 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-27 10:02:17,685 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-27 10:02:17,850 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-27 10:02:18,081 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-27 10:02:18,477 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-27 10:02:23,202 - INFO - _comp_on_drop - Arquivo arrastado: C:\Users\Daniel\Downloads\Warehouse.mp4
+2026-04-27 10:02:23,202 - INFO - _comp_add_to_queue - Adicionado à fila: video — C:\Users\Daniel\Downloads\Warehouse.mp4
+2026-04-27 10:02:25,933 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-27 10:02:25,935 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-27 10:02:25,938 - WARNING - _show_warning - No Destination: Please choose a destination folder before compressing.
+2026-04-27 10:02:31,315 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-27 10:02:31,315 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-27 10:02:31,315 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Desktop
+2026-04-27 10:02:31,319 - INFO - _comp_start_batch - Total files to compress: 1
+2026-04-27 10:02:31,342 - INFO - _run_queue - Starting batch thread for 1 files
+2026-04-27 10:02:31,344 - INFO - _run_queue - [1/1] Processing video: Warehouse.mp4
+2026-04-27 10:02:31,658 - INFO - _get_video_duration - Duração do vídeo detectada: 19.5s
+2026-04-27 10:02:31,659 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Warehouse.mp4 -y -c:v libx264 -crf 32 -preset fast -vf scale=-2:'480' -c:a aac -b:a 128k -progress pipe:1 -nostats C:/Users/Daniel/Desktop\Warehouse.mp4
+2026-04-27 10:06:24,113 - INFO - _setup_logging - ============================================================
+2026-04-27 10:06:24,115 - INFO - _setup_logging - Genco Tools v1.0.6 iniciado
+2026-04-27 10:06:24,116 - INFO - _setup_logging - ============================================================
+2026-04-27 10:06:24,259 - INFO - _load_config - Configurações carregadas: tema light
+2026-04-27 10:06:24,261 - INFO - _apply_theme - Tema 'light' aplicado com sucesso
+2026-04-27 10:06:24,382 - INFO - _load_spinner - Spinner GIF carregado com sucesso
+2026-04-27 10:06:24,601 - INFO - __init__ - Aplicação inicializada com sucesso
+2026-04-27 10:06:24,983 - INFO - _check_for_updates - Versão atual (1.0.6) é a mais recente
+2026-04-27 10:06:32,558 - INFO - _comp_on_drop - Arquivo arrastado: C:\Users\Daniel\Downloads\Warehouse.mp4
+2026-04-27 10:06:32,558 - INFO - _comp_add_to_queue - Adicionado à fila: video — C:\Users\Daniel\Downloads\Warehouse.mp4
+2026-04-27 10:06:38,948 - INFO - _comp_start_batch - === Compress All clicked ===
+2026-04-27 10:06:38,949 - INFO - _comp_start_batch - Quality=25, preset=high
+2026-04-27 10:06:38,949 - INFO - _comp_start_batch - Destination: C:/Users/Daniel/Desktop
+2026-04-27 10:06:38,952 - INFO - _comp_start_batch - Total files to compress: 1
+2026-04-27 10:06:38,999 - INFO - _run_queue - Starting batch thread for 1 files
+2026-04-27 10:06:39,001 - INFO - _run_queue - [1/1] Processing video: Warehouse.mp4
+2026-04-27 10:06:39,294 - INFO - _get_video_duration - Duração do vídeo detectada: 19.5s
+2026-04-27 10:06:39,294 - INFO - _run - FFmpeg cmd: C:\Users\Daniel\AppData\Local\Programs\Python\Python313\Lib\site-packages\imageio_ffmpeg\binaries\ffmpeg-win-x86_64-v7.1.exe -i C:\Users\Daniel\Downloads\Warehouse.mp4 -y -c:v libx264 -crf 32 -preset fast -pix_fmt yuv420p -profile:v high -level 4.0 -vf scale=-2:480 -c:a aac -b:a 128k -movflags +faststart -progress pipe:1 -nostats C:/Users/Daniel/Desktop\Warehouse.mp4

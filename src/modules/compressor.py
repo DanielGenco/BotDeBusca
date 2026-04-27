@@ -250,14 +250,19 @@ def compress_video(input_path, output_path, quality_preset="medium",
 
             # Codec de vídeo
             cmd += ["-c:v", "libx264", "-crf", str(preset_config["crf"]),
-                    "-preset", preset_config["preset"]]
+                    "-preset", preset_config["preset"],
+                    "-pix_fmt", "yuv420p",
+                    "-profile:v", "high", "-level", "4.0"]
 
             # Limitar resolução
             if max_resolution:
-                cmd += ["-vf", f"scale=-2:'{max_resolution}'"]
+                cmd += ["-vf", f"scale=-2:{max_resolution}"]
 
             # Codec de áudio
             cmd += ["-c:a", "aac", "-b:a", "128k"]
+
+            # Otimização para reprodução: moov atom no início do arquivo
+            cmd += ["-movflags", "+faststart"]
 
             # Progresso
             cmd += ["-progress", "pipe:1", "-nostats"]
