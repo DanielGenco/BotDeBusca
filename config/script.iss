@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Genco Tools"
-#define MyAppVersion "1.0.6"
+#define MyAppVersion "1.0.7"
 #define MyAppPublisher "Genco Import & Export"
 #define MyAppExeName "bot_grafico.exe"
 ; AppId da versão antiga "Genco Search" — usado para detectar e remover a instalação anterior.
