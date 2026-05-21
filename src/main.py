@@ -1907,14 +1907,11 @@ class GencoToolsApp(ctk.CTk):
             text_color="#065F46",
         ).pack(side="left")
 
-        # ── Main area (scrollable so advanced settings never cut off the buttons) ──
-        main = ctk.CTkScrollableFrame(
-            comp_frame, fg_color="transparent", corner_radius=0,
-            scrollbar_button_color="#D1D5DB",
-            scrollbar_button_hover_color=ACCENT,
-        )
+        # ── Main area ─────────────────────────────────────────────
+        main = ctk.CTkFrame(comp_frame, fg_color="transparent", corner_radius=0)
         main.pack(fill="both", expand=True, padx=SPACING_2XL, pady=(SPACING_LG, SPACING_SM))
         main.grid_columnconfigure(0, weight=1)
+        main.grid_rowconfigure(2, weight=1)
 
         # ── Page title ────────────────────────────────────────────
         title_row = ctk.CTkFrame(main, fg_color="transparent")
@@ -2606,8 +2603,16 @@ class GencoToolsApp(ctk.CTk):
         )
         self._comp_info_label.pack(anchor="w", pady=(SPACING_XS, 0))
 
-        # Advanced controls frame (built now, only packed when toggled open)
-        self._comp_advanced_frame = ctk.CTkFrame(frame, fg_color="transparent")
+        # Advanced controls panel — constrained height with internal scroll so it
+        # never pushes the Compress button below the visible area.
+        advanced_height = 220 if (has_images and has_videos) else 160
+        self._comp_advanced_frame = ctk.CTkScrollableFrame(
+            frame, fg_color="transparent",
+            corner_radius=CORNER_RADIUS_SM,
+            height=advanced_height,
+            scrollbar_button_color="#D1D5DB",
+            scrollbar_button_hover_color=ACCENT,
+        )
         self._comp_build_advanced_controls(self._comp_advanced_frame)
 
         # Row 3: compress button (kept as instance ref so toggle can pack before it)
