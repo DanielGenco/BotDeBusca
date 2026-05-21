@@ -1907,11 +1907,14 @@ class GencoToolsApp(ctk.CTk):
             text_color="#065F46",
         ).pack(side="left")
 
-        # ── Main area ─────────────────────────────────────────────
-        main = ctk.CTkFrame(comp_frame, fg_color="transparent", corner_radius=0)
+        # ── Main area (scrollable so advanced settings never cut off the buttons) ──
+        main = ctk.CTkScrollableFrame(
+            comp_frame, fg_color="transparent", corner_radius=0,
+            scrollbar_button_color="#D1D5DB",
+            scrollbar_button_hover_color=ACCENT,
+        )
         main.pack(fill="both", expand=True, padx=SPACING_2XL, pady=(SPACING_LG, SPACING_SM))
         main.grid_columnconfigure(0, weight=1)
-        main.grid_rowconfigure(2, weight=1)
 
         # ── Page title ────────────────────────────────────────────
         title_row = ctk.CTkFrame(main, fg_color="transparent")
