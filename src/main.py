@@ -222,7 +222,7 @@ ctk.set_default_color_theme("blue")
 
 class GencoToolsApp(ctk.CTk):
     MAX_QUEUE_IMAGES = 50
-    MAX_QUEUE_VIDEOS = 10
+    MAX_QUEUE_VIDEOS = 20
 
     def __init__(self):
         super().__init__()
