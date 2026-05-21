@@ -2554,19 +2554,41 @@ class GencoToolsApp(ctk.CTk):
             width=110, height=28, cursor="hand2",
         ).pack(side="left", padx=(SPACING_SM, 0))
 
-        # Fixed compression settings
-        self._comp_img_quality = ctk.IntVar(value=25)      # Max compression, still visible
+        # Default compression settings (used when "Advanced settings" stays collapsed)
+        self._comp_img_quality = ctk.IntVar(value=25)
         self._comp_vid_preset = ctk.StringVar(value="high")
+        self._comp_vid_resolution = ctk.StringVar(value="480p")
         self._comp_batch_debounce_id = None
 
         has_images = self._comp_queue_images > 0
         has_videos = self._comp_queue_videos > 0
+        self._comp_batch_has_images = has_images
+        self._comp_batch_has_videos = has_videos
 
-        # Row 2: info + compress button
-        row2 = ctk.CTkFrame(frame, fg_color="transparent")
-        row2.pack(fill="x")
+        # Row 2: settings header + advanced toggle
+        header_row = ctk.CTkFrame(frame, fg_color="transparent")
+        header_row.pack(fill="x")
 
-        # Info label describing fixed settings
+        ctk.CTkLabel(
+            header_row, text="Compression settings",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+            text_color=TEXT_DARK,
+        ).pack(side="left")
+
+        self._comp_advanced_open = False
+        self._comp_advanced_btn = ctk.CTkButton(
+            header_row, text="Advanced settings",
+            command=self._comp_toggle_advanced,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            fg_color=BTN_SECONDARY,
+            hover_color=BTN_SEC_HOVER,
+            text_color=BTN_SEC_TEXT,
+            corner_radius=CORNER_RADIUS_SM,
+            width=170, height=28, cursor="hand2",
+        )
+        self._comp_advanced_btn.pack(side="right")
+
+        # Info label (visible when advanced panel is collapsed)
         info_parts = []
         if has_images:
             info_parts.append("Images: maximum compression")
@@ -2574,24 +2596,23 @@ class GencoToolsApp(ctk.CTk):
             info_parts.append("Videos: high compression at 480p")
         info_text = "  •  ".join(info_parts) if info_parts else ""
 
-        info_frame = ctk.CTkFrame(row2, fg_color="transparent")
-        info_frame.pack(side="left", fill="x", expand=True)
-
-        ctk.CTkLabel(
-            info_frame, text="Compression settings",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
-            text_color=TEXT_DARK,
-        ).pack(anchor="w")
-
-        ctk.CTkLabel(
-            info_frame, text=info_text,
+        self._comp_info_label = ctk.CTkLabel(
+            frame, text=info_text,
             font=ctk.CTkFont(family=FONT_FAMILY, size=11),
             text_color=TEXT_MUTED,
-        ).pack(anchor="w", pady=(SPACING_XS, 0))
+        )
+        self._comp_info_label.pack(anchor="w", pady=(SPACING_XS, 0))
 
-        # Compress button
+        # Advanced controls frame (built now, only packed when toggled open)
+        self._comp_advanced_frame = ctk.CTkFrame(frame, fg_color="transparent")
+        self._comp_build_advanced_controls(self._comp_advanced_frame)
+
+        # Row 3: compress button (kept as instance ref so toggle can pack before it)
+        self._comp_batch_btn_row = ctk.CTkFrame(frame, fg_color="transparent")
+        self._comp_batch_btn_row.pack(fill="x", pady=(SPACING_MD, 0))
+
         ctk.CTkButton(
-            row2, text="Compress All",
+            self._comp_batch_btn_row, text="Compress All",
             command=self._comp_start_batch,
             font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
             fg_color=ACCENT,
@@ -2604,6 +2625,122 @@ class GencoToolsApp(ctk.CTk):
         # Preview
         self._comp_create_preview(frame)
         self._comp_update_preview()
+
+    def _comp_toggle_advanced(self):
+        """Alterna entre o resumo fixo e o painel de configurações avançadas."""
+        self._comp_advanced_open = not self._comp_advanced_open
+        if self._comp_advanced_open:
+            self._comp_info_label.pack_forget()
+            self._comp_advanced_frame.pack(
+                fill="x", pady=(SPACING_XS, 0),
+                before=self._comp_batch_btn_row,
+            )
+            self._comp_advanced_btn.configure(text="Hide advanced settings")
+        else:
+            self._comp_advanced_frame.pack_forget()
+            self._comp_info_label.pack(
+                anchor="w", pady=(SPACING_XS, 0),
+                before=self._comp_batch_btn_row,
+            )
+            self._comp_advanced_btn.configure(text="Advanced settings")
+
+    def _comp_build_advanced_controls(self, parent):
+        """Constrói slider de imagem, presets e resolução para uso no modo batch."""
+        has_images = self._comp_batch_has_images
+        has_videos = self._comp_batch_has_videos
+
+        if has_images:
+            img_frame = ctk.CTkFrame(parent, fg_color="transparent")
+            img_frame.pack(fill="x", pady=(SPACING_SM, 0))
+
+            qual_label = ctk.CTkLabel(
+                img_frame, text=f"Image quality: {self._comp_img_quality.get()}%",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+                text_color=TEXT_DARK,
+            )
+            qual_label.pack(anchor="w")
+
+            ctk.CTkLabel(
+                img_frame, text="Lower = smaller file, less quality",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=10),
+                text_color=TEXT_MUTED,
+            ).pack(anchor="w")
+
+            def on_quality_change(val):
+                self._comp_img_quality.set(int(val))
+                qual_label.configure(text=f"Image quality: {int(val)}%")
+                self._comp_update_preview()
+
+            ctk.CTkSlider(
+                img_frame, from_=10, to=100,
+                variable=self._comp_img_quality,
+                command=on_quality_change,
+                fg_color=BORDER_COLOR,
+                progress_color=ACCENT,
+                button_color=ACCENT,
+                button_hover_color=ACCENT_HOVER,
+                width=300, height=16,
+            ).pack(anchor="w", pady=(SPACING_SM, 0))
+
+        if has_videos:
+            vid_frame = ctk.CTkFrame(parent, fg_color="transparent")
+            vid_frame.pack(fill="x", pady=(SPACING_MD if has_images else SPACING_SM, 0))
+
+            ctk.CTkLabel(
+                vid_frame, text="Video compression level",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
+                text_color=TEXT_DARK,
+            ).pack(anchor="w")
+
+            ctk.CTkLabel(
+                vid_frame, text="Higher compression = smaller file, less quality",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=10),
+                text_color=TEXT_MUTED,
+            ).pack(anchor="w")
+
+            presets_row = ctk.CTkFrame(vid_frame, fg_color="transparent")
+            presets_row.pack(anchor="w", pady=(SPACING_SM, 0))
+
+            current_preset = self._comp_vid_preset.get()
+            for key, config in QUALITY_PRESETS.items():
+                is_selected = key == current_preset
+                btn = ctk.CTkButton(
+                    presets_row, text=config["label"],
+                    font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+                    fg_color=ACCENT if is_selected else BTN_SECONDARY,
+                    hover_color=ACCENT_HOVER if is_selected else BTN_SEC_HOVER,
+                    text_color="white" if is_selected else BTN_SEC_TEXT,
+                    corner_radius=CORNER_RADIUS_SM,
+                    height=32, cursor="hand2",
+                )
+                btn.pack(side="left", padx=(0, SPACING_SM))
+                btn.configure(command=lambda k=key, b=btn, r=presets_row: self._comp_select_preset(k, b, r))
+
+            res_row = ctk.CTkFrame(vid_frame, fg_color="transparent")
+            res_row.pack(anchor="w", pady=(SPACING_SM, 0))
+
+            ctk.CTkLabel(
+                res_row, text="Max resolution:",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=11, weight="bold"),
+                text_color=TEXT_DARK,
+            ).pack(side="left", padx=(0, SPACING_SM))
+
+            ctk.CTkOptionMenu(
+                res_row,
+                variable=self._comp_vid_resolution,
+                values=["Original", "1080p", "720p", "480p"],
+                font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+                fg_color=INPUT_BG,
+                button_color=ACCENT,
+                button_hover_color=ACCENT_HOVER,
+                text_color=TEXT_DARK,
+                dropdown_fg_color=BG_WHITE,
+                dropdown_text_color=TEXT_DARK,
+                dropdown_hover_color=ACCENT_LIGHT,
+                corner_radius=CORNER_RADIUS_SM,
+                width=130,
+                command=lambda _: self._comp_update_preview(),
+            ).pack(side="left")
 
     def _comp_choose_dest_folder(self):
         path = filedialog.askdirectory(title="Select destination folder for compressed files")
@@ -2690,6 +2827,7 @@ class GencoToolsApp(ctk.CTk):
         def _do_estimate():
             quality = self._comp_img_quality.get() if hasattr(self, '_comp_img_quality') else 75
             preset = self._comp_vid_preset.get() if hasattr(self, '_comp_vid_preset') else "medium"
+            max_res = self._comp_resolution_value()
 
             total_original = 0
             total_estimated = 0
@@ -2702,14 +2840,14 @@ class GencoToolsApp(ctk.CTk):
                         if f["type"] == "image":
                             e = estimate_image_size(f["path"], quality=quality)
                         else:
-                            e = estimate_video_size(f["path"], quality_preset=preset, max_resolution=480)
+                            e = estimate_video_size(f["path"], quality_preset=preset, max_resolution=max_res)
                         sub_original += e["original_size"]
                         sub_estimated += e["estimated_size"]
                     est = {"original_size": sub_original, "estimated_size": sub_estimated}
                 elif item["type"] == "image":
                     est = estimate_image_size(item["path"], quality=quality)
                 elif item["type"] == "video":
-                    est = estimate_video_size(item["path"], quality_preset=preset, max_resolution=480)
+                    est = estimate_video_size(item["path"], quality_preset=preset, max_resolution=max_res)
                 else:
                     continue
                 total_original += est["original_size"]
@@ -2734,6 +2872,17 @@ class GencoToolsApp(ctk.CTk):
             self._comp_preview_reduction.configure(text=f"~{reduction:.0f}%")
 
     # ── Compressor: Start Compression ─────────────────────────────
+
+    def _comp_resolution_value(self):
+        """Converte a StringVar de resolução em int (ou None para 'Original')."""
+        choice = self._comp_vid_resolution.get() if hasattr(self, '_comp_vid_resolution') else "480p"
+        if choice == "1080p":
+            return 1080
+        if choice == "720p":
+            return 720
+        if choice == "480p":
+            return 480
+        return None
 
     def _comp_start_image(self):
         if not self._comp_file_path:
@@ -2829,7 +2978,8 @@ class GencoToolsApp(ctk.CTk):
 
             image_quality = self._comp_img_quality.get()
             video_preset = self._comp_vid_preset.get()
-            logging.info(f"Quality={image_quality}, preset={video_preset}")
+            video_max_res = self._comp_resolution_value()
+            logging.info(f"Quality={image_quality}, preset={video_preset}, max_res={video_max_res}")
 
             # Use pre-selected folder
             output_folder = self._comp_dest_folder.get() if hasattr(self, '_comp_dest_folder') else ""
@@ -2943,7 +3093,7 @@ class GencoToolsApp(ctk.CTk):
                             compress_video(
                                 finfo["path"], out_path,
                                 quality_preset=video_preset,
-                                max_resolution=480,
+                                max_resolution=video_max_res,
                                 on_progress=_on_vid_progress,
                                 on_complete=_on_vid_complete,
                                 cancel_event=self._comp_cancel_event,

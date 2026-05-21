@@ -9,7 +9,8 @@
       "Bash(python -c ' *)",
       "Bash(python -c \"import uuid; print\\('{' + str\\(uuid.uuid4\\(\\)\\).upper\\(\\) + '}'\\)\")",
       "PowerShell($path = 'C:\\\\Users\\\\Daniel\\\\Desktop\\\\Daniel\\\\Meus Projetos\\\\BotDeBusca\\\\build\\\\bot_grafico\\\\localpycs'; if \\(Test-Path $path\\) { Get-ChildItem $path -Force | Select-Object Name, Mode, LastWriteTime; Write-Output \"---\"; Write-Output \"Tentando handle check via openfiles...\"; try { Remove-Item $path -Recurse -Force -ErrorAction Stop; Write-Output \"REMOVIDO COM SUCESSO\" } catch { Write-Output \\(\"FALHA: \" + $_.Exception.Message\\) } } else { Write-Output \"Pasta ja nao existe\" })",
-      "PowerShell($root = 'C:\\\\Users\\\\Daniel\\\\Desktop\\\\Daniel\\\\Meus Projetos\\\\BotDeBusca'; foreach \\($dir in @\\('build', 'dist'\\)\\) { $full = Join-Path $root $dir; if \\(Test-Path $full\\) { try { Remove-Item $full -Recurse -Force -ErrorAction Stop; Write-Output \"$dir : limpo\" } catch { Write-Output \\(\"$dir : FALHA - \" + $_.Exception.Message\\) } } else { Write-Output \"$dir : ja nao existe\" } })"
+      "PowerShell($root = 'C:\\\\Users\\\\Daniel\\\\Desktop\\\\Daniel\\\\Meus Projetos\\\\BotDeBusca'; foreach \\($dir in @\\('build', 'dist'\\)\\) { $full = Join-Path $root $dir; if \\(Test-Path $full\\) { try { Remove-Item $full -Recurse -Force -ErrorAction Stop; Write-Output \"$dir : limpo\" } catch { Write-Output \\(\"$dir : FALHA - \" + $_.Exception.Message\\) } } else { Write-Output \"$dir : ja nao existe\" } })",
+      "Bash(python -c \"import ast; ast.parse\\(open\\(r'c:\\\\Users\\\\Daniel\\\\Desktop\\\\Daniel\\\\Meus Projetos\\\\BotDeBusca\\\\src\\\\main.py', encoding='utf-8'\\).read\\(\\)\\); print\\('OK'\\)\")"
     ]
   }
 }
