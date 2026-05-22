@@ -35,7 +35,7 @@ else:
 CONFIG_FILE = os.path.join(APP_DIR, "config", "config.json")
 LOG_FILE = os.path.join(APP_DIR, "genco_search.log")
 
-VERSION = "1.0.7"
+VERSION = "1.0.8"
 GITHUB_REPO = "DanielGenco/BotDeBusca"
 
 # ── Logging Setup ──────────────────────────────────────────────
