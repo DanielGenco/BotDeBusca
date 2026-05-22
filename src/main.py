@@ -35,7 +35,7 @@ else:
 CONFIG_FILE = os.path.join(APP_DIR, "config", "config.json")
 LOG_FILE = os.path.join(APP_DIR, "genco_search.log")
 
-VERSION = "1.0.7"
+VERSION = "1.0.8"
 GITHUB_REPO = "DanielGenco/BotDeBusca"
 
 # ── Logging Setup ──────────────────────────────────────────────
@@ -264,10 +264,6 @@ class GencoToolsApp(ctk.CTk):
             self._empty_state_frame = None
 
             # Compressor state
-            self._comp_file_path = None
-            self._comp_file_type = None
-            self._comp_batch_folder = None
-            self._comp_batch_files = []
             self._comp_progress_bar = None
             self._comp_progress_label = None
             self._comp_result_frame = None
@@ -1806,10 +1802,6 @@ class GencoToolsApp(ctk.CTk):
         self.minsize(1180, 720)
         self.state("zoomed")
 
-        # Reset state
-        self._comp_file_path = None
-        self._comp_file_type = None
-
         comp_frame = ctk.CTkFrame(self, fg_color=BG_MAIN, corner_radius=0)
         comp_frame.pack(fill="both", expand=True)
 
@@ -2324,202 +2316,14 @@ class GencoToolsApp(ctk.CTk):
             ).pack(side="right")
 
         # Show options
-        self._comp_show_options("queue")
-
-    # ── Compressor: Options Panel ─────────────────────────────────
-
-    def _comp_show_options(self, file_type):
-        # Clear previous options
         for w in self._comp_options_frame.winfo_children():
             w.destroy()
         for w in self._comp_result_frame.winfo_children():
             w.destroy()
-
         self._comp_options_frame.pack(fill="x", pady=(0, SPACING_LG))
+        self._comp_show_batch_options()
 
-        # Queue mode always uses batch options
-        if file_type == "queue":
-            self._comp_show_batch_options()
-        elif file_type == "folder":
-            self._comp_show_batch_options()
-        elif file_type == "image":
-            self._comp_show_image_options()
-        else:
-            self._comp_show_video_options()
-
-    def _comp_show_image_options(self):
-        frame = self._comp_options_frame
-
-        # Row: quality + format + compress button
-        row = ctk.CTkFrame(frame, fg_color="transparent")
-        row.pack(fill="x")
-
-        # Quality slider
-        qual_frame = ctk.CTkFrame(row, fg_color="transparent")
-        qual_frame.pack(side="left", fill="x", expand=True)
-
-        qual_label = ctk.CTkLabel(
-            qual_frame, text="Quality: 75%",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
-            text_color=TEXT_DARK,
-        )
-        qual_label.pack(anchor="w")
-
-        ctk.CTkLabel(
-            qual_frame, text="Lower = smaller file, less quality",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=10),
-            text_color=TEXT_MUTED,
-        ).pack(anchor="w")
-
-        self._comp_img_quality = ctk.IntVar(value=75)
-
-        def on_quality_change(val):
-            self._comp_img_quality.set(int(val))
-            qual_label.configure(text=f"Quality: {int(val)}%")
-            self._comp_update_preview()
-
-        slider = ctk.CTkSlider(
-            qual_frame, from_=10, to=100,
-            variable=self._comp_img_quality,
-            command=on_quality_change,
-            fg_color=BORDER_COLOR,
-            progress_color=ACCENT,
-            button_color=ACCENT,
-            button_hover_color=ACCENT_HOVER,
-            width=300, height=16,
-        )
-        slider.pack(anchor="w", pady=(SPACING_SM, 0))
-
-        # Format dropdown
-        fmt_frame = ctk.CTkFrame(row, fg_color="transparent")
-        fmt_frame.pack(side="left", padx=(SPACING_2XL, SPACING_2XL))
-
-        ctk.CTkLabel(
-            fmt_frame, text="Output Format",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
-            text_color=TEXT_DARK,
-        ).pack(anchor="w")
-
-        self._comp_img_format = ctk.StringVar(value="Same as original")
-
-        ctk.CTkOptionMenu(
-            fmt_frame,
-            variable=self._comp_img_format,
-            values=["Same as original", "JPEG", "PNG", "WEBP"],
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            fg_color=INPUT_BG,
-            button_color=ACCENT,
-            button_hover_color=ACCENT_HOVER,
-            text_color=TEXT_DARK,
-            dropdown_fg_color=BG_WHITE,
-            dropdown_text_color=TEXT_DARK,
-            dropdown_hover_color=ACCENT_LIGHT,
-            corner_radius=CORNER_RADIUS_SM,
-            width=160,
-            command=lambda _: self._comp_update_preview(),
-        ).pack(anchor="w", pady=(SPACING_SM, 0))
-
-        # Compress button
-        ctk.CTkButton(
-            row, text="Compress Image",
-            command=self._comp_start_image,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
-            fg_color=ACCENT,
-            hover_color=ACCENT_HOVER,
-            text_color="white",
-            corner_radius=CORNER_RADIUS_LG,
-            width=180, height=44, cursor="hand2",
-        ).pack(side="right", pady=(SPACING_SM, 0))
-
-        # Preview
-        self._comp_create_preview(frame)
-        self._comp_update_preview()
-
-    def _comp_show_video_options(self):
-        frame = self._comp_options_frame
-
-        row = ctk.CTkFrame(frame, fg_color="transparent")
-        row.pack(fill="x")
-
-        # Quality preset
-        preset_frame = ctk.CTkFrame(row, fg_color="transparent")
-        preset_frame.pack(side="left", fill="x", expand=True)
-
-        ctk.CTkLabel(
-            preset_frame, text="Compression Level",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
-            text_color=TEXT_DARK,
-        ).pack(anchor="w")
-
-        ctk.CTkLabel(
-            preset_frame, text="Higher compression = smaller file, less quality",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=10),
-            text_color=TEXT_MUTED,
-        ).pack(anchor="w")
-
-        self._comp_vid_preset = ctk.StringVar(value="medium")
-
-        presets_row = ctk.CTkFrame(preset_frame, fg_color="transparent")
-        presets_row.pack(anchor="w", pady=(SPACING_SM, 0))
-
-        for key, config in QUALITY_PRESETS.items():
-            is_selected = key == "medium"
-            btn = ctk.CTkButton(
-                presets_row, text=config["label"],
-                font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-                fg_color=ACCENT if is_selected else BTN_SECONDARY,
-                hover_color=ACCENT_HOVER if is_selected else BTN_SEC_HOVER,
-                text_color="white" if is_selected else BTN_SEC_TEXT,
-                corner_radius=CORNER_RADIUS_SM,
-                height=32, cursor="hand2",
-            )
-            btn.pack(side="left", padx=(0, SPACING_SM))
-            btn.configure(command=lambda k=key, b=btn, r=presets_row: self._comp_select_preset(k, b, r))
-
-        # Resolution dropdown
-        res_frame = ctk.CTkFrame(row, fg_color="transparent")
-        res_frame.pack(side="left", padx=(SPACING_2XL, SPACING_2XL))
-
-        ctk.CTkLabel(
-            res_frame, text="Max Resolution",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=12, weight="bold"),
-            text_color=TEXT_DARK,
-        ).pack(anchor="w")
-
-        self._comp_vid_resolution = ctk.StringVar(value="Original")
-
-        ctk.CTkOptionMenu(
-            res_frame,
-            variable=self._comp_vid_resolution,
-            values=["Original", "1080p", "720p", "480p"],
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            fg_color=INPUT_BG,
-            button_color=ACCENT,
-            button_hover_color=ACCENT_HOVER,
-            text_color=TEXT_DARK,
-            dropdown_fg_color=BG_WHITE,
-            dropdown_text_color=TEXT_DARK,
-            dropdown_hover_color=ACCENT_LIGHT,
-            corner_radius=CORNER_RADIUS_SM,
-            width=140,
-            command=lambda _: self._comp_update_preview(),
-        ).pack(anchor="w", pady=(SPACING_SM, 0))
-
-        # Compress button
-        ctk.CTkButton(
-            row, text="Compress Video",
-            command=self._comp_start_video,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
-            fg_color=ACCENT,
-            hover_color=ACCENT_HOVER,
-            text_color="white",
-            corner_radius=CORNER_RADIUS_LG,
-            width=180, height=44, cursor="hand2",
-        ).pack(side="right", pady=(SPACING_SM, 0))
-
-        # Preview
-        self._comp_create_preview(frame)
-        self._comp_update_preview()
+    # ── Compressor: Options Panel ─────────────────────────────────
 
     def _comp_show_batch_options(self):
         frame = self._comp_options_frame
@@ -2558,7 +2362,6 @@ class GencoToolsApp(ctk.CTk):
         self._comp_img_quality = ctk.IntVar(value=25)
         self._comp_vid_preset = ctk.StringVar(value="high")
         self._comp_vid_resolution = ctk.StringVar(value="480p")
-        self._comp_batch_debounce_id = None
 
         has_images = self._comp_queue_images > 0
         has_videos = self._comp_queue_videos > 0
@@ -2891,85 +2694,6 @@ class GencoToolsApp(ctk.CTk):
         if choice == "480p":
             return 480
         return None
-
-    def _comp_start_image(self):
-        if not self._comp_file_path:
-            return
-
-        quality = self._comp_img_quality.get()
-        fmt_choice = self._comp_img_format.get()
-        output_format = None if fmt_choice == "Same as original" else fmt_choice
-
-        # Determine output extension
-        if output_format:
-            ext_map = {"JPEG": ".jpg", "PNG": ".png", "WEBP": ".webp"}
-            out_ext = ext_map.get(output_format, ".jpg")
-        else:
-            out_ext = os.path.splitext(self._comp_file_path)[1]
-
-        # Ask where to save
-        base_name = os.path.splitext(os.path.basename(self._comp_file_path))[0]
-        output_path = filedialog.asksaveasfilename(
-            title="Save compressed image as",
-            initialfile=f"{base_name}_compressed{out_ext}",
-            defaultextension=out_ext,
-            filetypes=[("Image files", f"*{out_ext}"), ("All files", "*.*")],
-        )
-        if not output_path:
-            return
-
-        self._comp_show_progress("Compressing image...")
-
-        # Image compression is fast — run directly but use after() to update UI
-        def do_compress():
-            result = compress_image(
-                self._comp_file_path, output_path,
-                quality=quality, output_format=output_format,
-            )
-            self.after(0, lambda: self._comp_show_result(result, output_path))
-
-        threading.Thread(target=do_compress, daemon=True).start()
-
-    def _comp_start_video(self):
-        if not self._comp_file_path:
-            return
-
-        preset = self._comp_vid_preset.get()
-        res_choice = self._comp_vid_resolution.get()
-        max_res = None
-        if res_choice == "1080p":
-            max_res = 1080
-        elif res_choice == "720p":
-            max_res = 720
-        elif res_choice == "480p":
-            max_res = 480
-
-        # Ask where to save (sempre MP4 para compatibilidade universal)
-        base_name = os.path.splitext(os.path.basename(self._comp_file_path))[0]
-        output_path = filedialog.asksaveasfilename(
-            title="Save compressed video as",
-            initialfile=f"{base_name}_compressed.mp4",
-            defaultextension=".mp4",
-            filetypes=[("MP4 files", "*.mp4"), ("All files", "*.*")],
-        )
-        if not output_path:
-            return
-
-        self._comp_cancel_event = threading.Event()
-        self._comp_show_progress("Compressing video... This may take a while.")
-
-        def on_progress(percent):
-            self.after(0, lambda p=percent: self._comp_update_progress(p))
-
-        def on_complete(result):
-            self.after(0, lambda: self._comp_show_result(result, output_path))
-
-        self._comp_thread = compress_video(
-            self._comp_file_path, output_path,
-            quality_preset=preset, max_resolution=max_res,
-            on_progress=on_progress, on_complete=on_complete,
-            cancel_event=self._comp_cancel_event,
-        )
 
     def _comp_start_batch(self):
         try:
@@ -3460,186 +3184,11 @@ class GencoToolsApp(ctk.CTk):
 
     # ── Compressor: Progress UI ───────────────────────────────────
 
-    def _comp_show_progress(self, message):
-        # Clear results
-        for w in self._comp_result_frame.winfo_children():
-            w.destroy()
-
-        progress_card = ctk.CTkFrame(
-            self._comp_result_frame, fg_color=BG_WHITE,
-            corner_radius=CORNER_RADIUS_XL,
-            border_width=1, border_color=BORDER_COLOR,
-        )
-        progress_card.pack(fill="x", pady=(0, SPACING_SM))
-
-        inner = ctk.CTkFrame(progress_card, fg_color="transparent")
-        inner.pack(fill="x", padx=SPACING_XL, pady=SPACING_LG)
-
-        # Header row: message + cancel button
-        header_row = ctk.CTkFrame(inner, fg_color="transparent")
-        header_row.pack(fill="x")
-
-        self._comp_progress_label = ctk.CTkLabel(
-            header_row, text=message,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=13),
-            text_color=TEXT_SECONDARY,
-        )
-        self._comp_progress_label.pack(side="left")
-
-        self._comp_cancel_btn = ctk.CTkButton(
-            header_row, text="Cancel",
-            command=self._comp_cancel,
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            fg_color="#DC2626",
-            hover_color="#B91C1C",
-            text_color="white",
-            corner_radius=CORNER_RADIUS_SM,
-            width=80, height=30, cursor="hand2",
-        )
-        self._comp_cancel_btn.pack(side="right")
-
-        self._comp_progress_bar = ctk.CTkProgressBar(
-            inner, fg_color=BORDER_COLOR,
-            progress_color=ACCENT,
-            corner_radius=CORNER_RADIUS_SM,
-            height=12, width=400,
-        )
-        self._comp_progress_bar.pack(fill="x", pady=(SPACING_SM, 0))
-        self._comp_progress_bar.set(0)
-
-        self._comp_percent_label = ctk.CTkLabel(
-            inner, text="0%",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            text_color=TEXT_MUTED,
-        )
-        self._comp_percent_label.pack(anchor="e", pady=(SPACING_XS, 0))
-
     def _comp_update_progress(self, percent):
         if self._comp_progress_bar and self._comp_progress_bar.winfo_exists():
             self._comp_progress_bar.set(percent / 100.0)
         if hasattr(self, '_comp_percent_label') and self._comp_percent_label.winfo_exists():
             self._comp_percent_label.configure(text=f"{percent:.0f}%")
-
-    # ── Compressor: Results UI ────────────────────────────────────
-
-    def _comp_show_result(self, result, output_path):
-        # Ignorar se foi cancelado (UI já mostra mensagem de cancelamento)
-        if result.get("error") == "cancelled":
-            return
-
-        for w in self._comp_result_frame.winfo_children():
-            w.destroy()
-
-        result_card = ctk.CTkFrame(
-            self._comp_result_frame, fg_color=BG_WHITE,
-            corner_radius=CORNER_RADIUS_XL,
-            border_width=1, border_color=BORDER_COLOR,
-        )
-        result_card.pack(fill="x", pady=(0, SPACING_SM))
-
-        inner = ctk.CTkFrame(result_card, fg_color="transparent")
-        inner.pack(fill="x", padx=SPACING_XL, pady=SPACING_LG)
-
-        if not result.get("success"):
-            # Error state
-            ctk.CTkLabel(
-                inner, text="Compression failed",
-                font=ctk.CTkFont(family=FONT_FAMILY, size=16, weight="bold"),
-                text_color="#DC2626",
-            ).pack(anchor="w")
-
-            ctk.CTkLabel(
-                inner, text=result.get("error", "Unknown error"),
-                font=ctk.CTkFont(family=FONT_FAMILY, size=12),
-                text_color=TEXT_MUTED,
-            ).pack(anchor="w", pady=(SPACING_SM, 0))
-            return
-
-        # Success state
-        success_header = ctk.CTkFrame(inner, fg_color="transparent")
-        success_header.pack(fill="x")
-
-        ctk.CTkLabel(
-            success_header, text="Compression complete!",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=16, weight="bold"),
-            text_color=SUCCESS_TEXT,
-        ).pack(side="left")
-
-        # Open folder button
-        ctk.CTkButton(
-            success_header, text="Open folder",
-            command=lambda: self._comp_open_folder(output_path),
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            fg_color=BTN_SECONDARY,
-            hover_color=BTN_SEC_HOVER,
-            text_color=BTN_SEC_TEXT,
-            corner_radius=CORNER_RADIUS_SM,
-            width=100, height=30, cursor="hand2",
-        ).pack(side="right")
-
-        # Stats
-        stats_frame = ctk.CTkFrame(inner, fg_color=ACCENT_LIGHT, corner_radius=CORNER_RADIUS_MD)
-        stats_frame.pack(fill="x", pady=(SPACING_LG, 0))
-
-        stats_inner = ctk.CTkFrame(stats_frame, fg_color="transparent")
-        stats_inner.pack(fill="x", padx=SPACING_LG, pady=SPACING_LG)
-
-        original_size = result["original_size"]
-        compressed_size = result["compressed_size"]
-        reduction = result["reduction_percent"]
-
-        # Three columns: Original | Compressed | Reduction
-        stats_inner.grid_columnconfigure((0, 1, 2), weight=1)
-
-        # Original
-        orig_frame = ctk.CTkFrame(stats_inner, fg_color="transparent")
-        orig_frame.grid(row=0, column=0)
-        ctk.CTkLabel(
-            orig_frame, text="Original",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            text_color=TEXT_MUTED,
-        ).pack()
-        ctk.CTkLabel(
-            orig_frame, text=get_file_size_str(original_size),
-            font=ctk.CTkFont(family=FONT_FAMILY, size=18, weight="bold"),
-            text_color=TEXT_DARK,
-        ).pack()
-
-        # Arrow
-        ctk.CTkLabel(
-            stats_inner, text="->",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=18),
-            text_color=TEXT_MUTED,
-        ).grid(row=0, column=1, padx=SPACING_SM)
-
-        # Compressed
-        comp_frame = ctk.CTkFrame(stats_inner, fg_color="transparent")
-        comp_frame.grid(row=0, column=1)
-
-        # Reduction badge
-        reduce_frame = ctk.CTkFrame(stats_inner, fg_color="transparent")
-        reduce_frame.grid(row=0, column=2)
-        ctk.CTkLabel(
-            reduce_frame, text="Compressed",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
-            text_color=TEXT_MUTED,
-        ).pack()
-        ctk.CTkLabel(
-            reduce_frame, text=get_file_size_str(compressed_size),
-            font=ctk.CTkFont(family=FONT_FAMILY, size=18, weight="bold"),
-            text_color=ACCENT,
-        ).pack()
-
-        # Reduction percentage — big badge
-        badge_frame = ctk.CTkFrame(inner, fg_color=SUCCESS_BG, corner_radius=CORNER_RADIUS_MD)
-        badge_frame.pack(fill="x", pady=(SPACING_SM, 0))
-
-        ctk.CTkLabel(
-            badge_frame,
-            text=f"Reduced by {reduction:.1f}%  •  Saved {get_file_size_str(original_size - compressed_size)}",
-            font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
-            text_color=SUCCESS_TEXT,
-        ).pack(padx=SPACING_LG, pady=SPACING_MD)
 
     def _comp_open_folder(self, filepath):
         try:
